@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 
-export type ScaleStage = 'wafer' | 'field' | 'die' | 'feature' | 'layer';
+export type ScaleStage = 'wafer' | 'field' | 'die' | 'layer' | 'feature';
 
 export interface ScaleStageInfo {
   id: ScaleStage;
@@ -56,30 +56,31 @@ export const SCALE_STAGES: ScaleStageInfo[] = [
     dimensions: 'Die size varies by design · Separated along scribe lanes',
   },
   {
-    id: 'feature',
-    label: 'Nanoscale Feature',
-    levelNumber: 4,
-    scaleMetric: 'Nanoscale (sub-micron to ~10 nm)',
-    headline: 'Transistors, Vias & Microscopic Interconnects',
-    definition:
-      'A feature is a small physical structure that forms part of the chip, such as a transistor gate fin, contact via, or metal interconnect line.',
-    callout: 'Billions of nanoscale features switch currents and route electrical signals.',
-    details:
-      'Advanced microchips contain billions of individual 3D features—such as FinFET or nanosheet channels, insulating oxide barriers, and multi-tier copper wires. Precise dimensional control at this scale determines chip performance.',
-    dimensions: 'Illustrative scenario value: nanometer scale (<100 nm down to ~10 nm) · Conceptual microscopic view',
-  },
-  {
     id: 'layer',
     label: 'Layer',
-    levelNumber: 5,
+    levelNumber: 4,
     scaleMetric: 'Thin films and patterned structures',
     headline: 'Structures Built in Successive Layers',
     definition:
       'A layer is material deposited or formed across the wafer, then often patterned into useful device or interconnect structures.',
-    callout: 'The feature you just saw belongs to a three-dimensional stack of materials.',
+    callout:
+      'Devices and interconnects are built up through a three-dimensional stack of microscopic patterned layers.',
     details:
       'A simplified cross section shows a silicon substrate, patterned dielectric, and a metal connection. Real chip stacks use many materials and repeated deposition, patterning, and removal steps.',
     dimensions: 'Illustrative cross section · Thicknesses and spacing are not to scale',
+  },
+  {
+    id: 'feature',
+    label: 'Nanoscale Feature',
+    levelNumber: 5,
+    scaleMetric: 'Nanoscale (sub-micron to ~10 nm)',
+    headline: 'Transistors, Vias & Microscopic Interconnects',
+    definition:
+      'A feature is a small physical structure that forms part of the chip, such as a transistor gate fin, contact via, or metal interconnect line.',
+    callout: 'Within these patterned layers, billions of nanoscale 3D features switch currents and route electrical signals.',
+    details:
+      'Advanced microchips contain billions of individual 3D features—such as FinFET or nanosheet channels, insulating oxide barriers, and multi-tier copper wires. Precise dimensional control at this scale determines chip performance.',
+    dimensions: 'Illustrative scenario value: nanometer scale (<100 nm down to ~10 nm) · Conceptual microscopic view',
   },
 ];
 
@@ -148,7 +149,7 @@ export const ScaleZoomViewer: React.FC<ScaleZoomViewerProps> = ({
       id="scale-viewer"
       ref={containerRef}
       role="region"
-      aria-label="Interactive scale viewer: Wafer to Layer zoom sequence"
+      aria-label="Interactive scale viewer: Wafer to Nanoscale Feature zoom sequence"
       tabIndex={0}
       onKeyDown={handleKeyDown}
       onTouchStart={handleTouchStart}
@@ -168,10 +169,10 @@ export const ScaleZoomViewer: React.FC<ScaleZoomViewerProps> = ({
             className="text-2xl sm:text-3xl font-bold tracking-tight text-[#102A43]"
             style={{ fontFamily: "'Space Grotesk', sans-serif" }}
           >
-            From a Silicon Wafer to a Device Layer
+            From a Silicon Wafer to a Nanoscale Feature
           </h2>
           <p className="mt-1 text-sm sm:text-base text-slate-600 max-w-2xl font-body">
-            Explore the wafer, an exposure field, a die, a microscopic feature, and the layer that contains it.
+            Explore the wafer, an exposure field, a die, the material layer stack, and the nanoscale features within it.
           </p>
         </div>
 
@@ -273,12 +274,53 @@ export const ScaleZoomViewer: React.FC<ScaleZoomViewerProps> = ({
           )}
 
           {/* ======================================================== */}
-          {/* STAGE 4: Nanoscale Feature — Large 3D FinFET View */}
+          {/* STAGE 4: Layer — Patterned Material Stack Cutaway */}
+          {/* ======================================================== */}
+          {currentStage === 'layer' && (
+            <div className="relative w-full h-full flex flex-col items-center justify-center py-4">
+              <div className="absolute top-3 left-3 bg-slate-900/85 px-3 py-1 rounded-lg text-white font-mono text-xs border border-white/10 z-10">
+                <span className="text-[#00A6A6] font-bold">4/5</span> Patterned Material Stack
+              </div>
+              <svg
+                viewBox="0 0 480 330"
+                className="w-full max-w-[520px]"
+                role="img"
+                aria-label="Conceptual cross section: silicon substrate supports patterned dielectric with a metal connection above it"
+              >
+                <defs>
+                  <linearGradient id="layerSilicon" x2="0" y2="1">
+                    <stop stopColor="#64748b" />
+                    <stop offset="1" stopColor="#334155" />
+                  </linearGradient>
+                  <linearGradient id="layerOxide" x2="0" y2="1">
+                    <stop stopColor="#bae6fd" />
+                    <stop offset="1" stopColor="#0284c7" />
+                  </linearGradient>
+                </defs>
+                <rect x="35" y="242" width="410" height="66" rx="5" fill="url(#layerSilicon)" />
+                <path d="M35 239 H194 V165 H286 V239 H445 V242 H35Z" fill="url(#layerOxide)" />
+                <path d="M206 165 V117 H274 V165" fill="#fbbf24" stroke="#fcd34d" strokeWidth="2" />
+                <path d="M90 117 H390 V139 H274 M206 139 H90Z" fill="#d97706" stroke="#fbbf24" strokeWidth="2" />
+                <path d="M35 239 H194 V165 H206 M274 165 H286 V239 H445" fill="none" stroke="#7dd3fc" strokeWidth="2" />
+                <text x="240" y="76" fill="#f8fafc" textAnchor="middle" fontSize="16" fontWeight="600">Metal connection</text>
+                <path d="M240 83 V111" stroke="#fbbf24" strokeWidth="2" />
+                <text x="352" y="193" fill="#e0f2fe" fontSize="15" fontWeight="600">Dielectric</text>
+                <path d="M349 198 L319 218" stroke="#7dd3fc" strokeWidth="2" />
+                <text x="240" y="282" fill="#f8fafc" textAnchor="middle" fontSize="16" fontWeight="600">Silicon substrate</text>
+              </svg>
+              <p className="absolute bottom-3 text-xs font-mono text-slate-300">
+                Conceptual cross section · not to scale
+              </p>
+            </div>
+          )}
+
+          {/* ======================================================== */}
+          {/* STAGE 5: Nanoscale Feature — Large 3D FinFET View */}
           {/* ======================================================== */}
           {currentStage === 'feature' && (
             <div className="relative w-full h-full flex flex-col items-center justify-center py-2">
               <div className="absolute top-3 left-3 bg-slate-900/85 backdrop-blur-md px-3 py-1 rounded-lg text-white font-mono text-xs border border-white/10 z-10 flex items-center gap-2">
-                <span className="text-[#00A6A6] font-bold">4/5</span>
+                <span className="text-[#00A6A6] font-bold">5/5</span>
                 <span>Nanoscale 3D FinFET Transistor</span>
               </div>
 
@@ -380,44 +422,6 @@ export const ScaleZoomViewer: React.FC<ScaleZoomViewerProps> = ({
                   <span className="text-slate-400">Conceptual microscopic view — not to scale</span>
                 </div>
               </div>
-            </div>
-          )}
-
-          {currentStage === 'layer' && (
-            <div className="relative w-full h-full flex flex-col items-center justify-center py-4">
-              <div className="absolute top-3 left-3 bg-slate-900/85 px-3 py-1 rounded-lg text-white font-mono text-xs border border-white/10 z-10">
-                <span className="text-[#00A6A6] font-bold">5/5</span> Patterned Material Stack
-              </div>
-              <svg
-                viewBox="0 0 480 330"
-                className="w-full max-w-[520px]"
-                role="img"
-                aria-label="Conceptual cross section: silicon substrate supports patterned dielectric with a metal connection above it"
-              >
-                <defs>
-                  <linearGradient id="layerSilicon" x2="0" y2="1">
-                    <stop stopColor="#64748b" />
-                    <stop offset="1" stopColor="#334155" />
-                  </linearGradient>
-                  <linearGradient id="layerOxide" x2="0" y2="1">
-                    <stop stopColor="#bae6fd" />
-                    <stop offset="1" stopColor="#0284c7" />
-                  </linearGradient>
-                </defs>
-                <rect x="35" y="242" width="410" height="66" rx="5" fill="url(#layerSilicon)" />
-                <path d="M35 239 H194 V165 H286 V239 H445 V242 H35Z" fill="url(#layerOxide)" />
-                <path d="M206 165 V117 H274 V165" fill="#fbbf24" stroke="#fcd34d" strokeWidth="2" />
-                <path d="M90 117 H390 V139 H274 M206 139 H90Z" fill="#d97706" stroke="#fbbf24" strokeWidth="2" />
-                <path d="M35 239 H194 V165 H206 M274 165 H286 V239 H445" fill="none" stroke="#7dd3fc" strokeWidth="2" />
-                <text x="240" y="76" fill="#f8fafc" textAnchor="middle" fontSize="16" fontWeight="600">Metal connection</text>
-                <path d="M240 83 V111" stroke="#fbbf24" strokeWidth="2" />
-                <text x="352" y="193" fill="#e0f2fe" fontSize="15" fontWeight="600">Dielectric</text>
-                <path d="M349 198 L319 218" stroke="#7dd3fc" strokeWidth="2" />
-                <text x="240" y="282" fill="#f8fafc" textAnchor="middle" fontSize="16" fontWeight="600">Silicon substrate</text>
-              </svg>
-              <p className="absolute bottom-3 text-xs font-mono text-slate-300">
-                Conceptual cross section · not to scale
-              </p>
             </div>
           )}
 

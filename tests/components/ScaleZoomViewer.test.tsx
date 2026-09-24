@@ -27,15 +27,15 @@ describe('VF-014 ScaleZoomViewer', () => {
     expect(screen.getByRole('tab', { name: /Die/i })).toHaveAttribute('aria-selected', 'true');
     expect(screen.getAllByText(/Product-dependent size/i).length).toBeGreaterThanOrEqual(1);
 
-    // Advance to Stage 4: Feature
-    fireEvent.click(nextBtn);
-    expect(screen.getByRole('tab', { name: /Feature/i })).toHaveAttribute('aria-selected', 'true');
-    expect(screen.getAllByText(/Nanoscale/i).length).toBeGreaterThanOrEqual(1);
-
-    // A physical feature belongs to a material layer.
+    // Advance to Stage 4: Layer
     fireEvent.click(nextBtn);
     expect(screen.getByRole('tab', { name: /Layer/i })).toHaveAttribute('aria-selected', 'true');
     expect(screen.getByRole('img', { name: /Conceptual cross section/i })).toBeInTheDocument();
+
+    // Advance to Stage 5: Nanoscale Feature
+    fireEvent.click(nextBtn);
+    expect(screen.getByRole('tab', { name: /Feature/i })).toHaveAttribute('aria-selected', 'true');
+    expect(screen.getAllByText(/Nanoscale/i).length).toBeGreaterThanOrEqual(1);
   });
 
   it('allows clicking direct tab buttons to jump to a specific scale', () => {
@@ -49,7 +49,7 @@ describe('VF-014 ScaleZoomViewer', () => {
 
   it('calls onNavigateToFab when clicking Explore in Virtual Fab at the final stage', () => {
     const handleNav = vi.fn();
-    render(<ScaleZoomViewer initialStage="layer" onNavigateToFab={handleNav} />);
+    render(<ScaleZoomViewer initialStage="feature" onNavigateToFab={handleNav} />);
 
     const ctaBtn = screen.getByRole('button', { name: /Experience scale in Virtual Fab/i });
     fireEvent.click(ctaBtn);
