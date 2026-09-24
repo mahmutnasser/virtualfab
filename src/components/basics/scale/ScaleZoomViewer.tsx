@@ -38,8 +38,8 @@ export const SCALE_STAGES: ScaleStageInfo[] = [
       'An exposure field is the rectangular area of the wafer patterned during one lithography exposure pass.',
     callout: 'Lithography scanners step across the wafer, printing one exposure field per exposure shot.',
     details:
-      'Scanners expose one field at a time. This diagram uses an illustrative field with six dies arranged in two columns and three rows; field size and die count vary with the product and process.',
-    dimensions: 'Illustrative layout: 2 columns × 3 rows · Dimensions vary by product',
+      'Scanners expose one field at a time. This image illustrates a field containing four dies in two columns and two rows; field size and die count vary with the product and process.',
+    dimensions: 'Illustrative layout: 2 columns × 2 rows · Dimensions vary by product',
   },
   {
     id: 'die',
@@ -49,9 +49,9 @@ export const SCALE_STAGES: ScaleStageInfo[] = [
     headline: 'The Independent Functional Integrated Circuit',
     definition:
       'A die is one individual integrated-circuit area on the wafer. Its function depends on the product being manufactured.',
-    callout: 'Die #4 at row 2, column 2 is shown here as an enlarged illustrative floorplan.',
+    callout: 'The upper-right die in the four-die field is highlighted as one individual chip area.',
     details:
-      'This die shares the major floorplan of the highlighted field die. The two images are illustrative views, rather than a pixel-exact optical crop. After wafer-level processing and testing, dies are separated along scribe lanes.',
+      'The successive insets show the wafer, a four-die field, and one highlighted die. This is an illustrative hierarchy, rather than a pixel-exact optical crop. After wafer-level processing and testing, dies are separated along scribe lanes before packaging.',
     dimensions: 'Die size varies by design · Separated along scribe lanes',
   },
   {
@@ -88,12 +88,12 @@ const SCALE_IMAGES: Record<ScaleStage, { src: string; alt: string }> = {
     alt: 'Patterned silicon wafer held by gloved hands inside a cleanroom',
   },
   field: {
-    src: '/images/basics/scale/02_field_2x3.jpg',
-    alt: 'Illustrative exposure field containing six complete dies in two columns and three rows',
+    src: '/images/basics/wafer-field-zoom.jpg',
+    alt: 'Patterned wafer with a magnified inset illustrating a four-die exposure field',
   },
   die: {
-    src: '/images/basics/scale/03_die_4.jpg',
-    alt: 'Complete illustrative die with four visible edges, gold perimeter pads, logic blocks, memory, and routing',
+    src: '/images/basics/wafer-field-die-hierarchy.jpg',
+    alt: 'Patterned wafer, four-die field, and highlighted individual die in successive insets',
   },
   feature: {
     src: '/images/basics/scale/04_feature_finfet.jpg',
@@ -253,15 +253,7 @@ export const ScaleZoomViewer: React.FC<ScaleZoomViewerProps> = ({
                 stage.id === currentStage ? 'opacity-100 z-10' : 'opacity-0 pointer-events-none'
               }`}
             >
-              <div
-                className={
-                  stage.id === 'field'
-                    ? 'relative h-[320px] sm:h-[420px] max-w-full aspect-[1084/1451]'
-                    : stage.id === 'die'
-                      ? 'relative w-full max-w-[550px] aspect-[4/3] max-h-[420px]'
-                      : 'relative w-full max-w-[740px] aspect-[1672/941] max-h-[420px]'
-                }
-              >
+              <div className="relative w-full max-w-[740px] aspect-video max-h-[420px]">
                 <img
                   src={SCALE_IMAGES[stage.id].src}
                   alt={stage.id === currentStage ? SCALE_IMAGES[stage.id].alt : ''}
@@ -273,23 +265,13 @@ export const ScaleZoomViewer: React.FC<ScaleZoomViewerProps> = ({
                   <div className="absolute left-[60%] top-[33%] w-[7%] h-[10%] border-2 border-cyan-300 bg-cyan-300/15 shadow-[0_0_12px_rgba(0,166,166,0.8)] pointer-events-none" aria-hidden="true" />
                 )}
 
-                {stage.id === 'field' && currentStage === 'field' && (
-                  <button
-                    type="button"
-                    onClick={() => setCurrentStage('die')}
-                    aria-label="View Die 4, row 2 column 2"
-                    className="absolute left-[50.5%] top-[34.8%] w-[39%] h-[28.5%] rounded-sm border-2 border-cyan-300 bg-cyan-300/10 hover:bg-cyan-300/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white cursor-pointer shadow-[0_0_12px_rgba(0,166,166,0.7)]"
-                  >
-                    <span className="absolute bottom-1 right-1 rounded bg-slate-950/90 px-1.5 py-0.5 text-[10px] font-mono font-semibold text-cyan-200 whitespace-nowrap">Die 4 →</span>
-                  </button>
-                )}
               </div>
             </div>
           ))}
 
           <div className="absolute z-20 top-3 left-3 max-w-[calc(100%-7rem)] rounded-lg border border-white/10 bg-slate-900/85 px-3 py-1 text-xs font-mono text-white backdrop-blur-md pointer-events-none">
             <span className="font-bold text-[#00A6A6]">{currentIndex + 1}/5</span> {currentInfo.label}
-            {currentStage === 'field' && <span> · 2×3 dies</span>}
+            {currentStage === 'field' && <span> · 2×2 dies</span>}
           </div>
 
           {currentStage === 'feature' && (

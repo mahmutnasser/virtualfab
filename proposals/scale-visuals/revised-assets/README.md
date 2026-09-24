@@ -1,5 +1,7 @@
 # Revised Scale imagery for visual review
 
+> **Proposal archive:** The 2×3 field and enlarged Die #4 files here remain available for comparison. The runtime viewer uses Gemini's four-die hierarchy images for Field and Die; see `public/images/basics/wafer-field-zoom.jpg` and `public/images/basics/wafer-field-die-hierarchy.jpg`.
+
 This is a five-image alternative to the earlier `../assets/` set. It follows the supplied reference direction: a bright cleanroom wafer, iridescent top-down circuitry, and restrained grayscale microscopy-inspired views at device scale. The images contain no educational labels or UI. All callouts and measurements belong in React/SVG.
 
 | Stage | Image | Intended relationship |

@@ -1,5 +1,7 @@
 # Fab Basics Scale Visual Specification: Wafer → Field → Die → Feature → Layer
 
+> **Historical proposal:** This document specifies the earlier six-die, 2×3 visual concept and its quarantined assets. The selected Gemini field and die hierarchy images now illustrate a four-die, 2×2 field with the upper-right die highlighted. See `src/components/basics/scale/ScaleZoomViewer.tsx` and `docs/visual-system.md` for the current runtime mapping and copy. Keep this document for provenance; do not apply its die numbering or crop coordinates to the selected images.
+
 **Branch:** `gemini/scale-visuals`  
 **Status:** Visual Direction Proposal (Separate from Production Assets)  
 **Baseline:** `origin/main` (`5cd7916` / PR #1 merged)  
