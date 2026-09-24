@@ -180,26 +180,23 @@ Visual assets must render crisply across Desktop (ultrawide down to standard 144
 
 ---
 
-## 6. Review Sample Visuals
+## 6. Complete 5-Stage Physical Asset Catalog
 
-The following sample visuals have been generated strictly according to this pure physical discipline and saved in `proposals/scale-visuals/assets/`:
+All five clean physical assets are generated and saved in `proposals/scale-visuals/assets/`. Every asset obeys the pure physical discipline: **zero baked text, zero arrows, zero dimensions, zero UI frames, and exactly one physical subject per image.**
 
-1. **`sample_field_2x3_clean.jpg` (Exposure Field Sample):**
-   - Pure physical 2×3 die array in portrait orientation.
-   - Clean dicing streets separating all 6 dies.
-   - Genuine microchip surface texture on dark polished silicon.
-   - **Zero baked text, zero numbers, zero arrows, zero UI elements.**
-2. **`sample_feature_transistor_clean.jpg` (3D Nanoscale Feature Sample):**
-   - Pure physical 3D monolithic block with nanoscale vertical fins and micro-machined bus interconnects.
-   - Neutral studio background with realistic depth of field.
-   - **Zero baked text, zero UI overlays.**
+| Stage | Asset Filename | Physical Scale | Subject & Framing |
+| :--- | :--- | :--- | :--- |
+| **1. Wafer** | [`01_wafer_clean.jpg`](file:///C:/Users/Utente/Desktop/Virtual%20Fab/virtual-fab/proposals/scale-visuals/assets/01_wafer_clean.jpg) | $300\text{ mm}$ | Pristine monocrystalline silicon wafer centered on cleanroom pedestal. Rainbow diffraction rings, orientation notch at 6 o'clock. |
+| **2. Field** | [`02_field_2x3_clean.jpg`](file:///C:/Users/Utente/Desktop/Virtual%20Fab/virtual-fab/proposals/scale-visuals/assets/02_field_2x3_clean.jpg) | $\sim 26 \times 33\text{ mm}$ | Exactly 2 dies in X by 3 dies in Y (6 dies total) in portrait orientation. Subtle dicing streets separate all 6 dies cleanly. |
+| **3. Die** | [`03_die_clean.jpg`](file:///C:/Users/Utente/Desktop/Virtual%20Fab/virtual-fab/proposals/scale-visuals/assets/03_die_clean.jpg) | $\sim 10 \times 12\text{ mm}$ | One complete microprocessor die. All 4 dicing edges and corners visible. Perimeter gold bond pads, multi-core and cache floorplan. |
+| **4. Feature** | [`04_feature_finfet_clean.jpg`](file:///C:/Users/Utente/Desktop/Virtual%20Fab/virtual-fab/proposals/scale-visuals/assets/04_feature_finfet_clean.jpg) | $\sim 10\text{--}50\text{ nm}$ | 3D monolithic nanostructure displaying nanoscale vertical crystalline fins and micro-machined interconnect bus routing. |
+| **5. Layer** | [`05_layer_stack_clean.jpg`](file:///C:/Users/Utente/Desktop/Virtual%20Fab/virtual-fab/proposals/scale-visuals/assets/05_layer_stack_clean.jpg) | $\sim 1\text{ nm -- } 1\ \mu\text{m}$ | 3D isometric cutaway prism of thin-film stack: silicon substrate, STI trenches, tungsten contact plugs, and multi-tier copper interconnects. |
 
 ---
 
 ## 7. Next Steps for Collaborative Implementation
 
-1. **Review & Approval:** User reviews the visual specification and sample asset `sample_field_2x3_clean.jpg`.
-2. **Asset Generation:** Once approved, generate the complete 5-stage pure-physical asset set (`01_wafer_clean.jpg`, `02_field_2x3_clean.jpg`, `03_die_clean.jpg`, `04_feature_finfet_clean.jpg`, `05_layer_stack_clean.jpg`).
-3. **Integration Handoff:**
-   - Production code (`ScaleZoomViewer.tsx`) and runtime image folders remain untouched on `gemini/scale-visuals`.
-   - Codex merges `dbdb9b8`, updates `ScaleStage` to include `'layer'`, and connects the approved assets with interactive React/SVG overlays.
+1. **Review & Approval:** User verifies the 5 physical assets against the visual specification and crop rules.
+2. **Handoff to Codex:**
+   - Production code (`ScaleZoomViewer.tsx`), types, and runtime image directories remain completely untouched on `gemini/scale-visuals`.
+   - Codex can now update `ScaleStage = 'wafer' | 'field' | 'die' | 'feature' | 'layer'`, integrate the five clean assets from `proposals/scale-visuals/assets/` into runtime `/public/images/basics/`, and wire the responsive React/SVG overlays (dynamic measurement calipers, scan reticles, and die indicators).
