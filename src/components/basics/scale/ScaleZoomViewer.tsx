@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 
-export type ScaleStage = 'wafer' | 'field' | 'die' | 'feature' | 'layer';
+export type ScaleStage = 'wafer' | 'field' | 'die' | 'layer' | 'feature';
 
 export interface ScaleStageInfo {
   id: ScaleStage;
@@ -25,7 +25,7 @@ export const SCALE_STAGES: ScaleStageInfo[] = [
       'A wafer is a thin, round slice of semiconductor—usually high-purity monocrystalline silicon—on which many chips are manufactured at the same time.',
     callout: 'Repeating patterned fields across a 300 mm wafer contain many individual dies.',
     details:
-      'This cleanroom view shows a patterned 300 mm wafer. The colorful diffraction reveals repeated structures across its surface; the marked field is an illustrative zoom target.',
+      'This cleanroom view shows a patterned 300 mm wafer. The colorful diffraction reveals repeated structures across its surface.',
     dimensions: 'Diameter: 300 mm · Thickness: ~775 µm (Silicon substrate)',
   },
   {
@@ -55,36 +55,36 @@ export const SCALE_STAGES: ScaleStageInfo[] = [
     dimensions: 'Die size varies by design · Separated along scribe lanes',
   },
   {
-    id: 'feature',
-    label: 'Nanoscale Feature',
-    levelNumber: 4,
-    scaleMetric: 'Nanoscale (sub-micron to ~10 nm)',
-    headline: 'A Three-Fin Transistor Feature',
-    definition:
-      'A feature is a small physical structure that forms part of the chip, such as a transistor gate fin, contact via, or metal interconnect line.',
-    callout: 'Three silicon fins pass beneath a transverse gate in this conceptual FinFET view.',
-    details:
-      'The fins form channels while the gate crosses over them. This microscopy-inspired rendering explains their arrangement; it is not a measurement from an instrument.',
-    dimensions: 'Illustrative nanoscale geometry · Not to scale',
-  },
-  {
     id: 'layer',
     label: 'Layer',
-    levelNumber: 5,
+    levelNumber: 4,
     scaleMetric: 'Thin films and patterned structures',
     headline: 'Structures Built in Successive Layers',
     definition:
       'A layer is material deposited or formed across the wafer, then often patterned into useful device or interconnect structures.',
-    callout: 'A cutaway of the same three-fin feature reveals its material interfaces.',
+    callout: 'The cutaway reveals the material interfaces of a three-fin gate structure.',
     details:
-      'The conceptual cutaway distinguishes silicon fins and substrate, trench isolation, a thin gate dielectric, and the gate material. These drawn interfaces and thicknesses are not metrology data.',
+      'The conceptual cutaway distinguishes silicon fins and substrate, trench isolation, a thin gate dielectric, and the gate material. The next view shows the complete feature. These drawn interfaces and thicknesses are not metrology data.',
     dimensions: 'Illustrative gate cross section · Thicknesses and spacing are not to scale',
+  },
+  {
+    id: 'feature',
+    label: 'Nanoscale Feature',
+    levelNumber: 5,
+    scaleMetric: 'Nanoscale (sub-micron to ~10 nm)',
+    headline: 'A Three-Fin Transistor Feature',
+    definition:
+      'A feature is a small physical structure that forms part of the chip, such as a transistor gate fin, contact via, or metal interconnect line.',
+    callout: 'The same gate structure is shown intact: three silicon fins pass beneath a transverse gate.',
+    details:
+      'Within the patterned layers, the fins form channels while the gate crosses over them. This microscopy-inspired rendering explains their arrangement; it is not a measurement from an instrument.',
+    dimensions: 'Illustrative nanoscale geometry · Not to scale',
   },
 ];
 
 const SCALE_IMAGES: Record<ScaleStage, { src: string; alt: string }> = {
   wafer: {
-    src: '/images/basics/scale/01_wafer_cleanroom.jpg',
+    src: '/images/basics/hero-wafer-cleanroom.jpg',
     alt: 'Patterned silicon wafer held by gloved hands inside a cleanroom',
   },
   field: {
@@ -148,7 +148,7 @@ export const ScaleZoomViewer: React.FC<ScaleZoomViewerProps> = ({
       setCurrentStage('wafer');
     } else if (e.key === 'End') {
       e.preventDefault();
-      setCurrentStage('layer');
+      setCurrentStage('feature');
     }
   };
 
@@ -170,7 +170,7 @@ export const ScaleZoomViewer: React.FC<ScaleZoomViewerProps> = ({
       id="scale-viewer"
       ref={containerRef}
       role="region"
-      aria-label="Interactive scale viewer: Wafer to Layer zoom sequence"
+      aria-label="Interactive scale viewer: Wafer to Nanoscale Feature zoom sequence"
       tabIndex={0}
       onKeyDown={handleKeyDown}
       onTouchStart={handleTouchStart}
@@ -190,10 +190,10 @@ export const ScaleZoomViewer: React.FC<ScaleZoomViewerProps> = ({
             className="text-2xl sm:text-3xl font-bold tracking-tight text-[#102A43]"
             style={{ fontFamily: "'Space Grotesk', sans-serif" }}
           >
-            From a Silicon Wafer to a Device Layer
+            From a Silicon Wafer to a Nanoscale Feature
           </h2>
           <p className="mt-1 text-sm sm:text-base text-slate-600 max-w-2xl font-body">
-            Explore the wafer, an exposure field, a die, a microscopic feature, and the layer that contains it.
+            Explore the wafer, an exposure field, a die, the material stack, and a nanoscale feature within it.
           </p>
         </div>
 
@@ -260,10 +260,6 @@ export const ScaleZoomViewer: React.FC<ScaleZoomViewerProps> = ({
                   className="absolute inset-0 w-full h-full object-contain rounded-2xl"
                   decoding="async"
                 />
-
-                {stage.id === 'wafer' && currentStage === 'wafer' && (
-                  <div className="absolute left-[60%] top-[33%] w-[7%] h-[10%] border-2 border-cyan-300 bg-cyan-300/15 shadow-[0_0_12px_rgba(0,166,166,0.8)] pointer-events-none" aria-hidden="true" />
-                )}
 
               </div>
             </div>

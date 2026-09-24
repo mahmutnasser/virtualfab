@@ -11,8 +11,8 @@
 ## Current inventory
 
 - Fab World plates remain in `public/images/plates/`. The fallback overview now uses the same file as the WebGL overview.
-- The Fab Basics hero uses `public/images/basics/hero-wafer-cleanroom.jpg`. The Scale viewer uses a cleanroom wafer, Gemini's two labeled wafer/field/die hierarchy images, and two microscopy-inspired conceptual FinFET renders. The hierarchy images illustrate a four-die, 2×2 field; they already contain their own labels and zoom frames. The device views are not raw SEM data.
-- Patterning, CD, Overlay, Yield, and DUV/EUV currently use DOM/SVG visuals. The unused composite posters and crops are retained in `assets/reference/basics/`, outside the served directory.
+- The Fab Basics hero and Scale Stage 1 share the updated `public/images/basics/hero-wafer-cleanroom.jpg`. The Scale sequence is Wafer → Field → Die → Layer → Nanoscale Feature. Gemini's two labeled hierarchy images illustrate a four-die, 2×2 field; they already contain their own labels and zoom frames. The cutaway and intact FinFET are microscopy-inspired conceptual renders, not raw SEM data.
+- Patterning's Resist Coat "after" state uses `public/images/basics/patterning-01-resist-coat.png`; its other states, CD, Overlay, Yield, and DUV/EUV currently use DOM/SVG visuals. The unused composite posters and crops are retained in `assets/reference/basics/`, outside the served directory.
 - The HTML material legend and the SVG cross-section legend serve distinct views. Their names now reflect those different roles.
 
 ## Next visual work

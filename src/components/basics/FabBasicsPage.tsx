@@ -109,7 +109,7 @@ export const FabBasicsPage: React.FC<FabBasicsPageProps> = ({
           </button>
         </div>
 
-        {/* 3. Section 01: Signature Scale Hierarchy (Wafer -> Field -> Die -> Feature) */}
+        {/* 3. Section 01: Scale Hierarchy (Wafer -> Field -> Die -> Layer -> Feature) */}
         <ScaleZoomViewer onNavigateToFab={onOpenFab} />
 
         {/* 4. Section 02: Patterning Visual Story (2.5D Cutaways) */}
