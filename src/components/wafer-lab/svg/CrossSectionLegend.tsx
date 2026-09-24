@@ -1,12 +1,12 @@
 import React from 'react';
 
-export interface LayerLegendProps {
+export interface CrossSectionLegendProps {
   hasOxide: boolean;
   hasResist: boolean;
   hasExposure: boolean;
 }
 
-export const LayerLegend: React.FC<LayerLegendProps> = ({
+export const CrossSectionLegend: React.FC<CrossSectionLegendProps> = ({
   hasOxide,
   hasResist,
   hasExposure,
@@ -119,4 +119,4 @@ export const LayerLegend: React.FC<LayerLegendProps> = ({
   );
 };
 
-export default LayerLegend;
+export default CrossSectionLegend;

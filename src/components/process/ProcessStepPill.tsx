@@ -38,7 +38,7 @@ export const ProcessStepPill: React.FC<ProcessStepPillProps> = ({
     ? 'active'
     : isCompleted
       ? 'completed'
-      : step.status;
+      : 'upcoming';
 
   const accessibleLabel = `${accessiblePrefix}. Status: ${effectiveStatus}.`;
 

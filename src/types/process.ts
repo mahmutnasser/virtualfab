@@ -1,5 +1,3 @@
-export type ProcessStepStatus = 'completed' | 'active' | 'upcoming' | 'locked';
-
 export interface TypedFact {
   label: string;
   value: string;
@@ -23,7 +21,6 @@ export interface ProcessStep {
     thickness?: string;
     toolType?: string;
   };
-  status: ProcessStepStatus;
 }
 
 export const CANONICAL_PROCESS_STEPS: ProcessStep[] = [
@@ -44,7 +41,6 @@ export const CANONICAL_PROCESS_STEPS: ProcessStep[] = [
       thickness: '775 µm substrate',
       toolType: 'Automated Material Handling (AMHS) Load Port',
     },
-    status: 'completed',
   },
   {
     id: 'deposition',
@@ -64,7 +60,6 @@ export const CANONICAL_PROCESS_STEPS: ProcessStep[] = [
       thickness: '~100 nm (illustrative, not to scale)',
       toolType: 'Deposition tool · CVD example',
     },
-    status: 'active',
   },
   {
     id: 'coat',
@@ -84,7 +79,6 @@ export const CANONICAL_PROCESS_STEPS: ProcessStep[] = [
       thickness: '~300 nm',
       toolType: 'Coater / Developer Track System',
     },
-    status: 'upcoming',
   },
   {
     id: 'lithography',
@@ -105,7 +99,6 @@ export const CANONICAL_PROCESS_STEPS: ProcessStep[] = [
       thickness: 'DUV or EUV exposure examples',
       toolType: 'Lithography Scanner · DUV/EUV examples',
     },
-    status: 'upcoming',
   },
   {
     id: 'develop',
@@ -125,7 +118,6 @@ export const CANONICAL_PROCESS_STEPS: ProcessStep[] = [
       thickness: 'Chemical rinse & post-bake',
       toolType: 'Coater / Developer Track System',
     },
-    status: 'upcoming',
   },
   {
     id: 'adi',
@@ -147,7 +139,6 @@ export const CANONICAL_PROCESS_STEPS: ProcessStep[] = [
       thickness: 'Conceptual pattern check',
       toolType: 'Metrology / Inspection Bay',
     },
-    status: 'upcoming',
   },
   {
     id: 'etch',
@@ -168,7 +159,6 @@ export const CANONICAL_PROCESS_STEPS: ProcessStep[] = [
       thickness: 'Directional anisotropic etching',
       toolType: 'Reactive Ion Etch (RIE) System',
     },
-    status: 'upcoming',
   },
   {
     id: 'aei',
@@ -190,7 +180,6 @@ export const CANONICAL_PROCESS_STEPS: ProcessStep[] = [
       thickness: 'Conceptual pattern-transfer check',
       toolType: 'Metrology / Inspection Bay',
     },
-    status: 'upcoming',
   },
   {
     id: 'strip',
@@ -211,7 +200,6 @@ export const CANONICAL_PROCESS_STEPS: ProcessStep[] = [
       thickness: 'Complete organic removal',
       toolType: 'Resist Strip Station',
     },
-    status: 'upcoming',
   },
   {
     id: 'repeat',
@@ -236,7 +224,6 @@ export const CANONICAL_PROCESS_STEPS: ProcessStep[] = [
       thickness: 'Multilevel metallization',
       toolType: 'Full Automated Fab Line',
     },
-    status: 'upcoming',
   },
 ];
 

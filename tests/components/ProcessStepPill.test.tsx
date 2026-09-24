@@ -50,6 +50,13 @@ describe('ProcessStepPill Component', () => {
     expect(handleClick).toHaveBeenCalledTimes(1);
   });
 
+  it('derives the status from live progress rather than the step definition', () => {
+    const { rerender } = render(<ProcessStepPill step={depositionStep} />);
+    expect(screen.getByRole('button', { name: /Status: upcoming/i })).toBeInTheDocument();
+    rerender(<ProcessStepPill step={depositionStep} isCompleted />);
+    expect(screen.getByRole('button', { name: /Status: completed/i })).toBeInTheDocument();
+  });
+
   it('renders all canonical steps with compact labels without any ellipsis truncation', () => {
     for (const step of CANONICAL_PROCESS_STEPS) {
       const { container, unmount } = render(<ProcessStepPill step={step} />);

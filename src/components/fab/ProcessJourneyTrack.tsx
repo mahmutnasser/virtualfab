@@ -106,7 +106,7 @@ export const ProcessJourneyTrack: React.FC<ProcessJourneyTrackProps> = ({
       >
         {steps.map((step, idx) => {
           const isActive = step.id === activeStepId;
-          const isCompleted = completedStepIds.includes(step.id);
+          const isCompleted = step.order === 'start' || completedStepIds.includes(step.id);
 
           return (
             <React.Fragment key={step.id}>

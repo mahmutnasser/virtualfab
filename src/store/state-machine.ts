@@ -123,6 +123,33 @@ export const CANONICAL_OPERATIONS = [
 
 export const CANONICAL_CHECKPOINTS = ['adi', 'aei'] as const;
 
+function normalizeEvent(event: FabEvent): FabEvent {
+  const canonical = (id: string) => normalizeCanonicalNodeId(id) ?? id;
+  switch (event.type) {
+    case 'SELECT_NODE':
+      return { ...event, nodeId: canonical(event.nodeId) };
+    case 'SELECT_STEP':
+    case 'OPEN_STATION':
+      return { ...event, stepId: canonical(event.stepId) };
+    case 'OPEN_CHECKPOINT':
+      return { ...event, checkpointId: canonical(event.checkpointId) };
+    case 'COMPLETE_CHECKPOINT':
+      return event.checkpointId
+        ? { ...event, checkpointId: canonical(event.checkpointId) }
+        : event;
+    case 'PROCEED_TO_NEXT_NODE':
+      return event.nextNodeId
+        ? { ...event, nextNodeId: canonical(event.nextNodeId) }
+        : event;
+    case 'PROCEED_TO_NEXT_STEP':
+      return event.nextStepId
+        ? { ...event, nextStepId: canonical(event.nextStepId) }
+        : event;
+    default:
+      return event;
+  }
+}
+
 /**
  * Creates the initial baseline MachineContext.
  */
@@ -172,27 +199,7 @@ export function machineReducer(
   rawEvent: FabEvent,
 ): MachineContext {
   // Normalize any incoming event node/step/checkpoint aliases to canonical IDs
-  const event = { ...rawEvent } as any;
-  if ('nodeId' in event && typeof event.nodeId === 'string') {
-    const normalized = normalizeCanonicalNodeId(event.nodeId);
-    if (normalized) event.nodeId = normalized;
-  }
-  if ('stepId' in event && typeof event.stepId === 'string') {
-    const normalized = normalizeCanonicalNodeId(event.stepId);
-    if (normalized) event.stepId = normalized;
-  }
-  if ('checkpointId' in event && typeof event.checkpointId === 'string') {
-    const normalized = normalizeCanonicalNodeId(event.checkpointId);
-    if (normalized) event.checkpointId = normalized;
-  }
-  if ('nextNodeId' in event && typeof event.nextNodeId === 'string') {
-    const normalized = normalizeCanonicalNodeId(event.nextNodeId);
-    if (normalized) event.nextNodeId = normalized;
-  }
-  if ('nextStepId' in event && typeof event.nextStepId === 'string') {
-    const normalized = normalizeCanonicalNodeId(event.nextStepId);
-    if (normalized) event.nextStepId = normalized;
-  }
+  const event = normalizeEvent(rawEvent);
 
   // Global event: RESET_JOURNEY resets entire system to baseline
   if (event.type === 'RESET_JOURNEY') {

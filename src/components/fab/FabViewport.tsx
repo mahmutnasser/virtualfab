@@ -172,7 +172,7 @@ export const FabViewport: React.FC<FabViewportProps> = ({
       >
         {/* Photorealistic Cleanroom Background Scene */}
         <img
-          src="/images/cleanroom-bg.jpg"
+          src="/images/plates/fab_overview.jpg"
           alt="Semiconductor fabrication cleanroom"
           className="absolute inset-0 w-full h-full object-cover object-center"
         />
