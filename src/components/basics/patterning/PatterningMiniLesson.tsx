@@ -99,6 +99,52 @@ export const PATTERNING_STEPS: PatterningStep[] = [
   },
 ];
 
+export interface PatterningAsset {
+  after: string;
+  before: string | null;
+  altAfter: string;
+  altBefore: string;
+}
+
+export const PATTERNING_ASSETS: PatterningAsset[] = [
+  {
+    after: '/images/basics/patterning-01-resist-coat.png',
+    before: null,
+    altAfter: 'After Coating: Continuous photoresist film over dielectric and silicon substrate',
+    altBefore: 'Before Coating: Bare dielectric film over silicon substrate',
+  },
+  {
+    after: '/images/basics/patterning-02-optical-exposure.png',
+    before: '/images/basics/patterning-01-resist-coat.png',
+    altAfter: 'Optical Exposure: UV light projecting reticle pattern into photoresist',
+    altBefore: 'Before Exposure: Uniform photoresist film ready for patterning',
+  },
+  {
+    after: '/images/basics/patterning-03-chemical-change.png',
+    before: '/images/basics/patterning-02-optical-exposure.png',
+    altAfter: 'Chemical Change: Exposed resist chemically altered and soluble',
+    altBefore: 'Before Chemical Change: Latent optical exposure',
+  },
+  {
+    after: '/images/basics/patterning-04-aqueous-development.png',
+    before: '/images/basics/patterning-03-chemical-change.png',
+    altAfter: 'Aqueous Development: Soluble resist dissolved away, revealing 3D stencil mask',
+    altBefore: 'Before Development: Continuous resist with soluble regions',
+  },
+  {
+    after: '/images/basics/patterning-05-etch-transfer.png',
+    before: '/images/basics/patterning-04-aqueous-development.png',
+    altAfter: 'Etch Transfer: Reactive plasma directionally etching dielectric down to substrate',
+    altBefore: 'Before Etch: Unetched dielectric beneath photoresist stencil',
+  },
+  {
+    after: '/images/basics/patterning-06-resist-strip.png',
+    before: '/images/basics/patterning-05-etch-transfer.png',
+    altAfter: 'Resist Strip: Sacrificial photoresist removed, permanent dielectric microstructure remains',
+    altBefore: 'Before Strip: Sacrificial photoresist still covering etched dielectric',
+  },
+];
+
 // Unified Isometric Material Block Component with identical geometry & perspective
 const IsometricPatternBlock: React.FC<{
   stepIndex: number;
@@ -106,11 +152,15 @@ const IsometricPatternBlock: React.FC<{
   className?: string;
   isThumbnail?: boolean;
 }> = ({ stepIndex, showAfter, className = '', isThumbnail = false }) => {
-  if (stepIndex === 0 && showAfter) {
+  const asset = PATTERNING_ASSETS[stepIndex];
+  const imgSrc = showAfter ? asset?.after : asset?.before;
+  const imgAlt = showAfter ? asset?.altAfter : asset?.altBefore;
+
+  if (imgSrc) {
     return (
       <img
-        src="/images/basics/patterning-01-resist-coat.png"
-        alt="After Coating: Continuous photoresist film over dielectric and silicon substrate"
+        src={imgSrc}
+        alt={imgAlt || `Step ${stepIndex + 1} Visual`}
         className={`w-full h-full object-contain rounded-xl ${className}`.trim()}
       />
     );
