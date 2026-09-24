@@ -2,7 +2,7 @@
 
 The images in `basics/` are historical composites, crops, and visual experiments. They are retained for art direction and source comparison, but are outside `public/` and cannot be served as runtime content.
 
-Production Basics visuals are authored in React/SVG in `src/components/basics/`. The only current Basics raster image is `public/images/basics/hero-wafer-cleanroom.jpg`.
+Production Basics visuals combine React/SVG annotations with the five Scale images in `public/images/basics/scale/`. The separate `public/images/basics/hero-wafer-cleanroom.jpg` remains the Fab Basics hero image. The generated Scale device views are conceptual illustrations, not measured microscopy data.
 
 When creating a replacement raster asset, use one scientific subject per image. Keep text, arrows, dimensions, highlights, and controls in React/SVG. Verify the crop at desktop and mobile sizes before adding the image to `public/`.
 
