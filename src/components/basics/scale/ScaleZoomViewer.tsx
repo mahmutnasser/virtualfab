@@ -278,73 +278,14 @@ export const ScaleZoomViewer: React.FC<ScaleZoomViewerProps> = ({
           {/* STAGE 3: Die (Chip) — One Complete Die with 4 Edges */}
           {/* ======================================================== */}
           {currentStage === 'die' && (
-            <div className="relative w-full h-full flex flex-col items-center justify-center py-2">
+            <div className="relative w-full h-full flex items-center justify-center">
+              <img
+                src="/images/basics/wafer-field-die-hierarchy.jpg"
+                alt="Die: One individual chip area within a field, separated and packaged"
+                className="w-full h-full max-h-[420px] object-contain rounded-2xl"
+              />
               <div className="absolute top-3 left-3 bg-slate-900/85 backdrop-blur-md px-3 py-1 rounded-lg text-white font-mono text-xs border border-white/10 z-10">
-                <span className="text-[#00A6A6] font-bold">3/5</span> Single Complete Die · Scribe Edges Visible
-              </div>
-
-              {/* Complete Die Container (75–85% of visual pane) */}
-              <div className="relative w-full max-w-[380px] aspect-[13/11] rounded-2xl overflow-hidden border-2 border-amber-400/70 shadow-2xl bg-slate-950 p-3.5 flex flex-col justify-between">
-                {/* Outer Scribe Lane Margin & Label */}
-                <div className="flex items-center justify-between text-[11px] font-mono text-amber-300 border-b border-amber-500/30 pb-1.5">
-                  <span className="font-bold flex items-center gap-1.5">
-                    <span className="w-2 h-2 rounded-full bg-amber-400" />
-                    Complete Silicon Die Layout
-                  </span>
-                  <span className="text-slate-400 text-[10px]">Size depends on product</span>
-                </div>
-
-                {/* Main Die Body with Peripheral I/O Pads and Internal Architecture */}
-                <div className="relative flex-1 my-2 bg-gradient-to-br from-slate-900 via-slate-950 to-slate-900 rounded-xl border border-slate-700/80 p-3 flex flex-col justify-between overflow-hidden shadow-inner">
-                  {/* Peripheral Bond Pads (All 4 Edges) */}
-                  <div className="flex justify-between gap-1 mb-1">
-                    {[...Array(10)].map((_, i) => (
-                      <div key={i} className="w-2 h-1.5 bg-amber-300/80 rounded-xs border border-amber-200/50" />
-                    ))}
-                  </div>
-
-                  {/* Core Architecture Layout */}
-                  <div className="grid grid-cols-12 gap-2 my-auto">
-                    {/* CPU / Logic Cores */}
-                    <div className="col-span-7 grid grid-cols-2 gap-1.5 p-2 bg-blue-950/40 rounded-lg border border-blue-500/30">
-                      <div className="h-8 bg-blue-500/20 rounded border border-blue-400/40 flex items-center justify-center text-[9px] font-mono text-blue-200 font-bold">
-                        CORE 0
-                      </div>
-                      <div className="h-8 bg-blue-500/20 rounded border border-blue-400/40 flex items-center justify-center text-[9px] font-mono text-blue-200 font-bold">
-                        CORE 1
-                      </div>
-                      <div className="h-8 bg-blue-500/20 rounded border border-blue-400/40 flex items-center justify-center text-[9px] font-mono text-blue-200 font-bold">
-                        CORE 2
-                      </div>
-                      <div className="h-8 bg-blue-500/20 rounded border border-blue-400/40 flex items-center justify-center text-[9px] font-mono text-blue-200 font-bold">
-                        CORE 3
-                      </div>
-                    </div>
-
-                    {/* Shared SRAM Cache & Interconnect */}
-                    <div className="col-span-5 flex flex-col justify-between gap-1.5 p-2 bg-indigo-950/40 rounded-lg border border-indigo-500/30">
-                      <div className="h-7 bg-indigo-500/20 rounded border border-indigo-400/40 flex items-center justify-center text-[9px] font-mono text-indigo-200 font-semibold">
-                        L3 CACHE
-                      </div>
-                      <div className="h-7 bg-cyan-500/20 rounded border border-cyan-400/40 flex items-center justify-center text-[9px] font-mono text-cyan-200 font-semibold">
-                        MEM CTRL
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Bottom Peripheral Bond Pads */}
-                  <div className="flex justify-between gap-1 mt-1">
-                    {[...Array(10)].map((_, i) => (
-                      <div key={i} className="w-2 h-1.5 bg-amber-300/80 rounded-xs border border-amber-200/50" />
-                    ))}
-                  </div>
-                </div>
-
-                {/* Scribe Lane Dicing Clarification */}
-                <div className="flex items-center justify-between text-[10px] font-mono text-slate-400 pt-1 border-t border-slate-800">
-                  <span>Diced along scribe lanes into standalone chip</span>
-                  <span className="text-amber-300 font-medium">All 4 Edges Defined</span>
-                </div>
+                <span className="text-[#00A6A6] font-bold">3/5</span> Die (Chip)
               </div>
             </div>
           )}
