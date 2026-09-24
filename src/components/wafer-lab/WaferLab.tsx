@@ -93,11 +93,35 @@ export const WaferLab: React.FC<WaferLabProps> = ({
 
       {/* ── 2. MAIN LEARNING CONTENT AREA ── */}
       <main className="flex-1 w-full max-w-[1280px] mx-auto p-4 sm:p-6 lg:p-8 space-y-6">
+        
+        {/* Real-Time Cleanroom Equipment Telemetry Status Strip */}
+        <div className="bg-slate-900 rounded-2xl border border-slate-800 p-3 sm:px-4 flex flex-wrap items-center justify-between gap-3 text-xs font-mono text-slate-300 shadow-sm">
+          <div className="flex items-center gap-2">
+            <span className="relative flex h-2 w-2">
+              <span className={`animate-ping absolute inline-flex h-full w-full rounded-full ${isProcessExecuted ? 'bg-emerald-400 opacity-75' : 'bg-cyan-400 opacity-75'}`}></span>
+              <span className={`relative inline-flex rounded-full h-2 w-2 ${isProcessExecuted ? 'bg-emerald-500' : 'bg-[#00A6A6]'}`}></span>
+            </span>
+            <span className="text-slate-400 uppercase tracking-wider text-[11px]">Tool Station:</span>
+            <span className="font-bold text-white">{curriculum.stationName}</span>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <span className="text-slate-400 text-[11px] hidden md:inline">Chamber Status:</span>
+            <span className={`px-2.5 py-0.5 rounded-full font-bold text-[10px] tracking-wider uppercase border ${
+              isProcessExecuted
+                ? 'bg-emerald-950/80 text-emerald-300 border-emerald-500/50'
+                : 'bg-cyan-950/80 text-cyan-300 border-cyan-500/50'
+            }`}>
+              {isProcessExecuted ? 'Recipe Cycle Complete' : 'Ready For Recipe'}
+            </span>
+          </div>
+        </div>
+
         {/* Responsive Grid: Two-Column on Desktop (60-65% / 35-40%), Stacked on Mobile */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
           {/* Left Column (60-65% on Desktop): Scientific Visualization */}
           <div className="lg:col-span-7 xl:col-span-7 space-y-4">
-            <CrossSectionPanel waferState={wafer} />
+            <CrossSectionPanel waferState={wafer} stepId={selectedNodeId} />
             <KeyIdea text={curriculum.keyIdea} />
           </div>
 
@@ -121,8 +145,8 @@ export const WaferLab: React.FC<WaferLabProps> = ({
 
         {/* ── 3. SUPPORTING SCIENTIFIC CONTEXT (Collapsible Drawers) ── */}
         <div className="pt-2 grid md:grid-cols-2 gap-4">
-          <EngineeringView />
-          <SourcePanel />
+          <EngineeringView stepId={selectedNodeId} />
+          <SourcePanel stepId={selectedNodeId} />
         </div>
       </main>
     </div>
