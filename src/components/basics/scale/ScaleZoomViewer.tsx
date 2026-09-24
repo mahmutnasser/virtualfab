@@ -231,28 +231,10 @@ export const ScaleZoomViewer: React.FC<ScaleZoomViewerProps> = ({
             <div className="relative w-full h-full flex items-center justify-center">
               <img
                 src="/images/basics/hero-wafer-cleanroom.jpg"
-                alt="Patterned silicon wafer held in a cleanroom; the highlighted field is an illustrative overlay"
+                alt="Patterned silicon wafer held in a cleanroom"
                 className="w-full h-full max-h-[420px] object-contain rounded-2xl"
               />
-              {/* Live overlay marks an illustrative field location; the photo is not a calibrated wafer map. */}
-              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                <div className="relative w-[56%] aspect-square flex items-center justify-center">
-                  <div
-                    className="absolute border-2 border-[#00A6A6] bg-cyan-400/25 rounded-xs shadow-[0_0_14px_rgba(0,166,166,0.8)] animate-pulse flex items-center justify-center"
-                    style={{
-                      right: '27%',
-                      top: '35%',
-                      width: '8.7%',
-                      height: '11.0%',
-                    }}
-                  >
-                    <span className="text-[9px] font-mono text-cyan-200 bg-slate-900/95 px-1.5 py-0.5 rounded-xs absolute -top-5.5 whitespace-nowrap border border-cyan-500/40">
-                      Exposure field
-                    </span>
-                  </div>
-                </div>
-              </div>
-              <div className="absolute top-3 left-3 bg-slate-900/85 backdrop-blur-md px-3 py-1 rounded-lg text-white font-mono text-xs border border-white/10">
+              <div className="absolute top-3 left-3 bg-slate-900/85 backdrop-blur-md px-3 py-1 rounded-lg text-white font-mono text-xs border border-white/10 z-10">
                 <span className="text-[#00A6A6] font-bold">1/5</span> Patterned Silicon Wafer
               </div>
             </div>
