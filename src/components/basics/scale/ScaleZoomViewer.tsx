@@ -262,82 +262,14 @@ export const ScaleZoomViewer: React.FC<ScaleZoomViewerProps> = ({
           {/* STAGE 2: Illustrative exposure field with six dies */}
           {/* ======================================================== */}
           {currentStage === 'field' && (
-            <div className="relative w-full h-full flex flex-col items-center justify-center py-2">
-              {/* Field Stage Header Badge */}
+            <div className="relative w-full h-full flex items-center justify-center">
+              <img
+                src="/images/basics/wafer-field-zoom.jpg"
+                alt="Field: One exposure area printed in a single scanner shot onto the wafer"
+                className="w-full h-full max-h-[420px] object-contain rounded-2xl"
+              />
               <div className="absolute top-3 left-3 bg-slate-900/85 backdrop-blur-md px-3 py-1 rounded-lg text-white font-mono text-xs border border-white/10 z-10">
-                <span className="text-[#00A6A6] font-bold">2/5</span> Exposure Field · 2×3 Die Arrangement
-              </div>
-
-              {/* Exposure Field SVG: Occupies 75–90% of available vertical/horizontal pane */}
-              <div className="relative w-full max-w-[320px] aspect-[26/33] rounded-2xl overflow-hidden border-2 border-cyan-400/60 shadow-2xl bg-slate-950 p-3 flex flex-col">
-                {/* Field Measurement Indicators (Top & Side) */}
-                <div className="flex items-center justify-between text-[11px] font-mono text-cyan-300 pb-1.5 border-b border-cyan-500/30">
-                  <span>Exposure field</span>
-                  <span className="text-slate-400 text-[10px]">Step-and-Scan Area</span>
-                </div>
-
-                {/* 2 Columns × 3 Rows = 6 Dies Grid with Scribe Lanes */}
-                <div className="grid grid-cols-2 grid-rows-3 gap-2 flex-1 my-1 p-1 bg-slate-900/90 rounded-xl border border-slate-800">
-                  {[
-                    { id: 1, name: 'Die 1', highlight: false },
-                    { id: 2, name: 'Die 2', highlight: false },
-                    { id: 3, name: 'Die 3', highlight: false },
-                    { id: 4, name: 'Die 4', highlight: true }, // Highlighted to foreshadow Die Stage
-                    { id: 5, name: 'Die 5', highlight: false },
-                    { id: 6, name: 'Die 6', highlight: false },
-                  ].map((d) => (
-                    <div
-                      key={d.id}
-                      className={`relative rounded-lg p-2 flex flex-col justify-between overflow-hidden transition-all ${
-                        d.highlight
-                          ? 'bg-gradient-to-br from-cyan-950/80 to-slate-900 border-2 border-cyan-400 shadow-[0_0_12px_rgba(0,166,166,0.5)]'
-                          : 'bg-gradient-to-br from-slate-900 to-slate-950 border border-slate-700/60'
-                      }`}
-                    >
-                      {/* Microscopic IC Texture inside each die */}
-                      <div className="absolute inset-0 opacity-25 pointer-events-none">
-                        <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-                          <pattern id={`die-pattern-${d.id}`} width="8" height="8" patternUnits="userSpaceOnUse">
-                            <path d="M 0 4 L 8 4 M 4 0 L 4 8" fill="none" stroke="#38BDF8" strokeWidth="0.5" />
-                          </pattern>
-                          <rect width="100%" height="100%" fill={`url(#die-pattern-${d.id})`} />
-                        </svg>
-                      </div>
-
-                      {/* Die Content Representation */}
-                      <div className="relative z-10 flex items-center justify-between text-[10px] font-mono">
-                        <span className={d.highlight ? 'text-cyan-300 font-bold' : 'text-slate-400 font-semibold'}>
-                          {d.name}
-                        </span>
-                        {d.highlight && (
-                          <span className="text-[8px] bg-cyan-400 text-slate-950 font-bold px-1 rounded-xs">
-                            NEXT STAGE
-                          </span>
-                        )}
-                      </div>
-
-                      {/* Circuit Block Layout Sketch */}
-                      <div className="relative z-10 grid grid-cols-2 gap-1 my-0.5">
-                        <div className="h-3 bg-blue-500/20 border border-blue-400/30 rounded-xs" />
-                        <div className="h-3 bg-indigo-500/20 border border-indigo-400/30 rounded-xs" />
-                        <div className="h-3 bg-cyan-500/20 border border-cyan-400/30 rounded-xs" />
-                        <div className="h-3 bg-slate-700/40 border border-slate-600/30 rounded-xs" />
-                      </div>
-
-                      {/* Perimeter bond pads */}
-                      <div className="relative z-10 flex justify-between text-[8px] text-slate-500 font-mono">
-                        <span>Die</span>
-                        {d.highlight && <span className="text-cyan-400 font-bold">● Zoom</span>}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Scribe Lane & Height Indicator */}
-                <div className="flex items-center justify-between text-[10px] font-mono text-slate-400 pt-1 border-t border-slate-800">
-                  <span>Subtle scribe lanes (streets)</span>
-                  <span className="text-cyan-300 font-semibold">Illustrative layout</span>
-                </div>
+                <span className="text-[#00A6A6] font-bold">2/5</span> Exposure Field
               </div>
             </div>
           )}
