@@ -1,0 +1,107 @@
+@import "tailwindcss";
+
+@theme {
+  /* Brand */
+  --color-brand-navy: #102A43;
+  --color-brand-blue: #1F5A94;
+  --color-brand-cyan: #00A6A6;
+
+  /* Worlds */
+  --color-world-manufacturing: #F28C28;
+  --color-world-packaging: #2E8B57;
+  --color-world-design: #6F5BD3;
+  --color-world-careers: #E6A817;
+
+  /* Surfaces */
+  --color-surface-learning: #F8FAFC;
+  --color-surface-discovery: #102A43;
+
+  /* Text */
+  --color-text-primary: #172B3A;
+  --color-text-on-dark: #F8FAFC;
+
+  /* Status */
+  --color-status-error: #C53D43;
+  --color-status-success: #2E8B57;
+  --color-status-amber: #E6A817;
+
+  /* Semiconductor Diagram Colors */
+  --color-semi-silicon: #6B7B8D;
+  --color-semi-oxide: #B0D4E8;
+  --color-semi-resist: #8B5CF6;
+  --color-semi-metal: #C4956A;
+
+  /* Typography */
+  --font-display: 'Space Grotesk', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', Consolas, monospace;
+
+  /* Layout tokens */
+  --width-reading: 720px;
+  --width-content: 1200px;
+  --radius-card: 16px;
+  --radius-control: 10px;
+}
+
+:root {
+  --focus-color: #00A6A6;
+  --focus-width: 3px;
+  --focus-offset: 2px;
+}
+
+/* Global resets and sensible defaults */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--color-text-primary);
+  background-color: var(--color-surface-discovery);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Accessible focus-visible ring */
+*:focus-visible {
+  outline: var(--focus-width) solid var(--focus-color);
+  outline-offset: var(--focus-offset);
+}
+
+/* Calm, explanatory completion animations (VF-011) */
+@keyframes checkmarkReveal {
+  from {
+    stroke-dashoffset: 24;
+    opacity: 0.3;
+  }
+  to {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+}
+
+@keyframes stepCompletePulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.04);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
