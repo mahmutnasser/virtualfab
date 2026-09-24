@@ -4,6 +4,8 @@ The images in `basics/` are historical composites, crops, and visual experiments
 
 Production Basics visuals combine React/SVG annotations with two device views in `public/images/basics/scale/` and the wafer-to-field-to-die images in `public/images/basics/`. The updated `hero-wafer-cleanroom.jpg` serves both the Fab Basics hero and Scale Stage 1. The generated device views are conceptual illustrations, not measured microscopy data.
 
+Patterning's six sequential rendered frames are served as `public/images/basics/patterning-01` through `patterning-06` PNGs. The initial uncoated "before" view remains SVG; later "before" views reuse the prior rendered frame.
+
 When creating a replacement raster asset, use one scientific subject per image. Keep text, arrows, dimensions, highlights, and controls in React/SVG. Verify the crop at desktop and mobile sizes before adding the image to `public/`.
 
 The duplicate `patterning-story-full.jpg` was removed; the identical `patterning-flow-full.jpg` remains here. The duplicate `cleanroom-bg.jpg` and `plates/start_handling.jpg` were removed; their identical production counterparts remain in `public/images/plates/`.
