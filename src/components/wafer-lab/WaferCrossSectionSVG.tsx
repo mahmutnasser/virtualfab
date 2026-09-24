@@ -7,7 +7,7 @@ import DielectricLayer from './svg/DielectricLayer';
 import PhotoresistLayer from './svg/PhotoresistLayer';
 import ExposureOverlay from './svg/ExposureOverlay';
 import InspectionOverlay from './svg/InspectionOverlay';
-import LayerLegend from './svg/LayerLegend';
+import CrossSectionLegend from './svg/CrossSectionLegend';
 
 export type SupportedWaferState = EngineWaferState | LegacyWaferState;
 
@@ -384,7 +384,7 @@ export const WaferCrossSectionSVG: React.FC<WaferCrossSectionSVGProps> = ({
         )}
 
         {/* ── LEGEND & NOT TO SCALE CALLOUTS ── */}
-        <LayerLegend
+        <CrossSectionLegend
           hasOxide={hasOxide}
           hasResist={hasResist}
           hasExposure={hasExposure}

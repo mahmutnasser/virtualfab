@@ -5,7 +5,9 @@ import reactRefresh from 'eslint-plugin-react-refresh';
 import globals from 'globals';
 
 export default tseslint.config(
-  { ignores: ['dist/**', 'node_modules/**'] },
+  // Capture/asset scripts are historical experiments with mixed browser and Node globals.
+  // Lint the maintained application and tests; keep scripts outside this gate.
+  { ignores: ['dist/**', 'node_modules/**', 'scripts/**'] },
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {

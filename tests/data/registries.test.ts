@@ -52,6 +52,7 @@ describe('Authoritative Data Registries (VF-007)', () => {
       expect(FAB_EQUIPMENT_STATIONS['EQ-ETCH-01']).toBeDefined();
       expect(FAB_EQUIPMENT_STATIONS['EQ-STRIP-01']).toBeDefined();
       expect(FAB_EQUIPMENT_STATIONS['EQ-METRO-01']).toBeDefined();
+      expect(FAB_EQUIPMENT_STATIONS['EQ-METRO-01'].stepIds).toEqual(['adi', 'aei']);
     });
 
     it('validates 3D layout coordinates and real equipment references', () => {

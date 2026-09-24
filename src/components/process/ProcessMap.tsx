@@ -26,7 +26,7 @@ export const ProcessMap: React.FC<ProcessMapProps> = ({
       <ol className="flex items-center justify-between gap-1 md:gap-2 w-full overflow-x-auto no-scrollbar py-2 px-1">
         {steps.map((step, idx) => {
           const isActive = step.id === activeStepId;
-          const isCompleted = completedStepIds.includes(step.id);
+          const isCompleted = step.order === 'start' || completedStepIds.includes(step.id);
 
           return (
             <React.Fragment key={step.id}>

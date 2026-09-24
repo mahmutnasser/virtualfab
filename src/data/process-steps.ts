@@ -6,8 +6,6 @@ import {
 import type { MaterialKind } from '../engine/types';
 import { type TypedFact, normalizeCanonicalNodeId } from '../types/process';
 
-export type ProcessStepStatus = 'completed' | 'active' | 'upcoming' | 'locked';
-
 export interface LessonScenarioDefinition {
   material: MaterialKind;
   displayName: string;
@@ -40,7 +38,6 @@ export interface ProcessStepData {
   };
   lessonScenario?: LessonScenarioDefinition;
   sourceIds: string[];
-  status: ProcessStepStatus;
   predictionQuestion?: QuestionConfig;
   interpretationQuestion?: QuestionConfig;
 }
@@ -75,7 +72,6 @@ export const CANONICAL_PROCESS_STEPS_DATA: ProcessStepData[] = [
       educationalAssumption: 'Standard 300 mm monocrystalline silicon wafer foundation.',
     },
     sourceIds: ['SRC-FAB-PROCESS-01'],
-    status: 'completed',
   },
   {
     id: 'deposition',
@@ -108,7 +104,6 @@ export const CANONICAL_PROCESS_STEPS_DATA: ProcessStepData[] = [
         'In this simplified example, blanket deposition adds a dielectric film across the wafer surface.',
     },
     sourceIds: ['SRC-FAB-PROCESS-01', 'SRC-DEPOSITION-01', 'SRC-DEVICE-ADV-01'],
-    status: 'active',
     predictionQuestion: DEPOSITION_PREDICTION_QUESTION,
     interpretationQuestion: DEPOSITION_INTERPRETATION_QUESTION,
   },
@@ -144,7 +139,6 @@ export const CANONICAL_PROCESS_STEPS_DATA: ProcessStepData[] = [
         'Positive-tone resist assumption: exposed regions become soluble in developer.',
     },
     sourceIds: ['SRC-FAB-PROCESS-01', 'SRC-METROLOGY-01'],
-    status: 'upcoming',
   },
   {
     id: 'lithography',
@@ -169,7 +163,6 @@ export const CANONICAL_PROCESS_STEPS_DATA: ProcessStepData[] = [
       toolType: 'Lithography Scanner · DUV/EUV examples',
     },
     sourceIds: ['SRC-FAB-PROCESS-01', 'SRC-METROLOGY-01'],
-    status: 'upcoming',
   },
   {
     id: 'develop',
@@ -193,7 +186,6 @@ export const CANONICAL_PROCESS_STEPS_DATA: ProcessStepData[] = [
       toolType: 'Coater / Developer Track System',
     },
     sourceIds: ['SRC-FAB-PROCESS-01'],
-    status: 'upcoming',
   },
   {
     id: 'adi',
@@ -218,7 +210,6 @@ export const CANONICAL_PROCESS_STEPS_DATA: ProcessStepData[] = [
       toolType: 'Metrology / Inspection Bay',
     },
     sourceIds: ['SRC-FAB-PROCESS-01', 'SRC-METROLOGY-01', 'SRC-PROCESS-CONTROL-01'],
-    status: 'upcoming',
   },
   {
     id: 'etch',
@@ -242,7 +233,6 @@ export const CANONICAL_PROCESS_STEPS_DATA: ProcessStepData[] = [
       toolType: 'Reactive Ion Etch (RIE) System',
     },
     sourceIds: ['SRC-FAB-PROCESS-01', 'SRC-DEPOSITION-01'],
-    status: 'upcoming',
   },
   {
     id: 'aei',
@@ -267,7 +257,6 @@ export const CANONICAL_PROCESS_STEPS_DATA: ProcessStepData[] = [
       toolType: 'Metrology / Inspection Bay',
     },
     sourceIds: ['SRC-FAB-PROCESS-01', 'SRC-METROLOGY-01', 'SRC-PROCESS-CONTROL-01'],
-    status: 'upcoming',
   },
   {
     id: 'strip',
@@ -291,7 +280,6 @@ export const CANONICAL_PROCESS_STEPS_DATA: ProcessStepData[] = [
       toolType: 'Resist Strip Station',
     },
     sourceIds: ['SRC-FAB-PROCESS-01'],
-    status: 'upcoming',
   },
   {
     id: 'repeat',
@@ -318,7 +306,6 @@ export const CANONICAL_PROCESS_STEPS_DATA: ProcessStepData[] = [
       toolType: 'Full Automated Fab Line',
     },
     sourceIds: ['SRC-FAB-PROCESS-01'],
-    status: 'upcoming',
   },
 ];
 

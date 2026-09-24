@@ -66,11 +66,15 @@ export const TermCard: React.FC<TermCardProps> = ({
         {term.id === 'photoresist' && (
           <div className="my-4 rounded-2xl overflow-hidden border border-slate-200 bg-slate-900 shadow-xs">
             <div className="relative aspect-[16/9] w-full">
-              <img
-                src="/images/basics/hero-wafer-cleanroom.jpg"
-                alt="Photoresist-coated 300 mm silicon wafer in cleanroom"
-                className="w-full h-full object-cover"
-              />
+              <svg viewBox="0 0 480 270" className="w-full h-full" role="img" aria-label="Conceptual cross section of a continuous photoresist film above dielectric and silicon">
+                <rect width="480" height="270" fill="#0f172a" />
+                <rect x="40" y="168" width="400" height="65" rx="3" fill="#64748b" />
+                <rect x="40" y="135" width="400" height="33" rx="2" fill="#7dd3fc" />
+                <rect x="40" y="94" width="400" height="41" rx="3" fill="#a78bfa" />
+                <text x="240" y="83" textAnchor="middle" fill="#ddd6fe" fontSize="16" fontWeight="600">Continuous photoresist film</text>
+                <text x="240" y="157" textAnchor="middle" fill="#082f49" fontSize="13" fontWeight="600">Dielectric</text>
+                <text x="240" y="207" textAnchor="middle" fill="white" fontSize="14" fontWeight="600">Silicon substrate</text>
+              </svg>
               <div className="absolute bottom-2.5 left-2.5 right-2.5 bg-slate-950/85 backdrop-blur-md px-3 py-1.5 rounded-lg border border-slate-700 text-[11px] font-sans text-slate-300 leading-snug">
                 <span className="font-semibold text-purple-300">Educational Note:</span> Real-world photoresists vary from amber to reddish-brown or translucent; purple is used in Silicon Journey as an instructional visual convention.
               </div>

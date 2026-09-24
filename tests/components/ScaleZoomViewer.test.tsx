@@ -10,7 +10,7 @@ describe('VF-014 ScaleZoomViewer', () => {
     expect(screen.getAllByText(/300 mm \(~12 inches\)/i).length).toBeGreaterThanOrEqual(1);
   });
 
-  it('navigates through all 4 stages using Next button', () => {
+  it('navigates through all 5 stages using Next button', () => {
     render(<ScaleZoomViewer />);
     
     // Stage 1: Wafer
@@ -20,17 +20,22 @@ describe('VF-014 ScaleZoomViewer', () => {
     // Advance to Stage 2: Field
     fireEvent.click(nextBtn);
     expect(screen.getByRole('tab', { name: /Exposure Field/i })).toHaveAttribute('aria-selected', 'true');
-    expect(screen.getAllByText(/Conceptual ~26 × 33 mm/i).length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText(/Exposure area varies by scanner/i).length).toBeGreaterThanOrEqual(1);
 
     // Advance to Stage 3: Die
     fireEvent.click(nextBtn);
     expect(screen.getByRole('tab', { name: /Die/i })).toHaveAttribute('aria-selected', 'true');
-    expect(screen.getAllByText(/Conceptual ~8 × 10 mm/i).length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText(/Product-dependent size/i).length).toBeGreaterThanOrEqual(1);
 
     // Advance to Stage 4: Feature
     fireEvent.click(nextBtn);
     expect(screen.getByRole('tab', { name: /Feature/i })).toHaveAttribute('aria-selected', 'true');
     expect(screen.getAllByText(/Nanoscale/i).length).toBeGreaterThanOrEqual(1);
+
+    // A physical feature belongs to a material layer.
+    fireEvent.click(nextBtn);
+    expect(screen.getByRole('tab', { name: /Layer/i })).toHaveAttribute('aria-selected', 'true');
+    expect(screen.getByRole('img', { name: /Conceptual cross section/i })).toBeInTheDocument();
   });
 
   it('allows clicking direct tab buttons to jump to a specific scale', () => {
@@ -44,7 +49,7 @@ describe('VF-014 ScaleZoomViewer', () => {
 
   it('calls onNavigateToFab when clicking Explore in Virtual Fab at the final stage', () => {
     const handleNav = vi.fn();
-    render(<ScaleZoomViewer initialStage="feature" onNavigateToFab={handleNav} />);
+    render(<ScaleZoomViewer initialStage="layer" onNavigateToFab={handleNav} />);
 
     const ctaBtn = screen.getByRole('button', { name: /Experience scale in Virtual Fab/i });
     fireEvent.click(ctaBtn);

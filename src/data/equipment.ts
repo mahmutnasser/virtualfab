@@ -144,7 +144,7 @@ export const FAB_EQUIPMENT_STATIONS: Record<string, EquipmentStation> = {
     name: 'Metrology / Inspection Bay',
     shortName: 'Metrology / Inspection Bay',
     category: 'inspection',
-    stepIds: ['adi', 'aei', 'metrology'],
+    stepIds: ['adi', 'aei'],
     description:
       'Cross-cutting process-control station visited at multiple checkpoints: After Develop Inspection (ADI) to verify photoresist stencils before destructive etch, and After Etch Inspection (AEI) to verify transferred film patterns.',
     cleanroomBay: 'Bay 6 — Metrology, Inspection & Process Control',

@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 
-export type ScaleStage = 'wafer' | 'field' | 'die' | 'feature';
+export type ScaleStage = 'wafer' | 'field' | 'die' | 'feature' | 'layer';
 
 export interface ScaleStageInfo {
   id: ScaleStage;
@@ -32,20 +32,20 @@ export const SCALE_STAGES: ScaleStageInfo[] = [
     id: 'field',
     label: 'Exposure Field',
     levelNumber: 2,
-    scaleMetric: 'Conceptual ~26 × 33 mm',
+    scaleMetric: 'Exposure area varies by scanner',
     headline: 'The Scanner Step-and-Scan Window',
     definition:
       'An exposure field is the rectangular area of the wafer patterned during one lithography exposure pass.',
     callout: 'Lithography scanners step across the wafer, printing one exposure field per exposure shot.',
     details:
-      'Lithography scanners project the reticle master pattern down onto one exposure field at a time. In our illustrative example, the field is portrait-oriented (26 mm X × 33 mm Y) and contains exactly 6 dies arranged in 2 columns and 3 rows.',
-    dimensions: 'Illustrative scenario value: 26 mm (X) × 33 mm (Y) · 2×3 die grid (6 dies total)',
+      'Scanners expose one field at a time. This diagram uses an illustrative field with six dies arranged in two columns and three rows; field size and die count vary with the product and process.',
+    dimensions: 'Illustrative layout: 2 columns × 3 rows · Dimensions vary by product',
   },
   {
     id: 'die',
     label: 'Die (Chip)',
     levelNumber: 3,
-    scaleMetric: 'Conceptual ~8 × 10 mm',
+    scaleMetric: 'Product-dependent size',
     headline: 'The Independent Functional Integrated Circuit',
     definition:
       'A die is one individual integrated-circuit area on the wafer. Its function depends on the product being manufactured.',
@@ -53,7 +53,7 @@ export const SCALE_STAGES: ScaleStageInfo[] = [
       'A die is one individual integrated-circuit area on the wafer. Its function depends on the product being manufactured.',
     details:
       'In this illustrative example, each exposure field contains 6 dies (2 dies in X by 3 dies in Y). After wafer-level manufacturing and probe testing, the wafer is diced along scribe lanes to separate the individual dies for packaging.',
-    dimensions: 'Illustrative scenario value: ~8–10 mm (X) × ~8–10 mm (Y) · Separated along scribe lanes',
+    dimensions: 'Die size varies by design · Separated along scribe lanes',
   },
   {
     id: 'feature',
@@ -67,6 +67,19 @@ export const SCALE_STAGES: ScaleStageInfo[] = [
     details:
       'Advanced microchips contain billions of individual 3D features—such as FinFET or nanosheet channels, insulating oxide barriers, and multi-tier copper wires. Precise dimensional control at this scale determines chip performance.',
     dimensions: 'Illustrative scenario value: nanometer scale (<100 nm down to ~10 nm) · Conceptual microscopic view',
+  },
+  {
+    id: 'layer',
+    label: 'Layer',
+    levelNumber: 5,
+    scaleMetric: 'Thin films and patterned structures',
+    headline: 'Structures Built in Successive Layers',
+    definition:
+      'A layer is material deposited or formed across the wafer, then often patterned into useful device or interconnect structures.',
+    callout: 'The feature you just saw belongs to a three-dimensional stack of materials.',
+    details:
+      'A simplified cross section shows a silicon substrate, patterned dielectric, and a metal connection. Real chip stacks use many materials and repeated deposition, patterning, and removal steps.',
+    dimensions: 'Illustrative cross section · Thicknesses and spacing are not to scale',
   },
 ];
 
@@ -135,7 +148,7 @@ export const ScaleZoomViewer: React.FC<ScaleZoomViewerProps> = ({
       id="scale-viewer"
       ref={containerRef}
       role="region"
-      aria-label="Interactive scale viewer: Wafer to Feature zoom sequence"
+      aria-label="Interactive scale viewer: Wafer to Layer zoom sequence"
       tabIndex={0}
       onKeyDown={handleKeyDown}
       onTouchStart={handleTouchStart}
@@ -155,10 +168,10 @@ export const ScaleZoomViewer: React.FC<ScaleZoomViewerProps> = ({
             className="text-2xl sm:text-3xl font-bold tracking-tight text-[#102A43]"
             style={{ fontFamily: "'Space Grotesk', sans-serif" }}
           >
-            From 300 mm Silicon to Nanoscale Features
+            From a Silicon Wafer to a Device Layer
           </h2>
           <p className="mt-1 text-sm sm:text-base text-slate-600 max-w-2xl font-body">
-            Explore how an entire 300 mm silicon wafer divides into exposure fields, individual dies, and nanoscale transistors.
+            Explore the wafer, an exposure field, a die, a microscopic feature, and the layer that contains it.
           </p>
         </div>
 
@@ -166,7 +179,7 @@ export const ScaleZoomViewer: React.FC<ScaleZoomViewerProps> = ({
         <div
           role="tablist"
           aria-label="Scale stages"
-          className="flex items-center p-1.5 bg-slate-100 rounded-2xl border border-slate-200 self-start lg:self-center"
+          className="flex items-center max-w-full overflow-x-auto p-1.5 bg-slate-100 rounded-2xl border border-slate-200 self-start lg:self-center"
         >
           {SCALE_STAGES.map((stage) => {
             const isSelected = stage.id === currentStage;
@@ -179,7 +192,7 @@ export const ScaleZoomViewer: React.FC<ScaleZoomViewerProps> = ({
                 aria-controls={`panel-${stage.id}`}
                 tabIndex={isSelected ? 0 : -1}
                 onClick={() => setCurrentStage(stage.id)}
-                className={`min-h-[40px] px-3.5 py-1.5 rounded-xl font-body font-semibold text-xs sm:text-sm transition-all cursor-pointer flex items-center gap-2 ${
+                className={`min-h-[40px] shrink-0 px-3.5 py-1.5 rounded-xl font-body font-semibold text-xs sm:text-sm transition-all cursor-pointer flex items-center gap-2 ${
                   isSelected
                     ? 'bg-white text-[#102A43] shadow-sm'
                     : 'text-slate-500 hover:text-slate-900 hover:bg-white/60'
@@ -201,7 +214,12 @@ export const ScaleZoomViewer: React.FC<ScaleZoomViewerProps> = ({
       </div>
 
       {/* MAIN VIEWPORT: VISUAL FIRST (75–90% VISUAL OCCUPANCY IN PANE) */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center my-2">
+      <div
+        role="tabpanel"
+        id={`panel-${currentStage}`}
+        aria-labelledby={`tab-${currentStage}`}
+        className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center my-2"
+      >
         
         {/* DOMINANT VISUAL CONTAINER (Col 7 / 12) */}
         <div className="lg:col-span-7 bg-slate-900 rounded-3xl overflow-hidden border border-slate-200/80 shadow-md relative min-h-[380px] sm:min-h-[460px] flex items-center justify-center p-4 sm:p-6">
@@ -213,11 +231,10 @@ export const ScaleZoomViewer: React.FC<ScaleZoomViewerProps> = ({
             <div className="relative w-full h-full flex items-center justify-center">
               <img
                 src="/images/basics/hero-wafer-cleanroom.jpg"
-                alt="300 mm monocrystalline silicon wafer showing vibrant rainbow diffraction pattern in cleanroom"
+                alt="Patterned silicon wafer held in a cleanroom; the highlighted field is an illustrative overlay"
                 className="w-full h-full max-h-[420px] object-contain rounded-2xl"
               />
-              {/* Live Overlay: Highlighting the Exposure Field window with accurate 26:33 portrait ratio */}
-              {/* On 300 mm wafer: Width ~8.7% of wafer, Height ~11% of wafer */}
+              {/* Live overlay marks an illustrative field location; the photo is not a calibrated wafer map. */}
               <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                 <div className="relative w-[56%] aspect-square flex items-center justify-center">
                   <div
@@ -230,32 +247,32 @@ export const ScaleZoomViewer: React.FC<ScaleZoomViewerProps> = ({
                     }}
                   >
                     <span className="text-[9px] font-mono text-cyan-200 bg-slate-900/95 px-1.5 py-0.5 rounded-xs absolute -top-5.5 whitespace-nowrap border border-cyan-500/40">
-                      Exposure Field (~26×33 mm)
+                      Exposure field
                     </span>
                   </div>
                 </div>
               </div>
               <div className="absolute top-3 left-3 bg-slate-900/85 backdrop-blur-md px-3 py-1 rounded-lg text-white font-mono text-xs border border-white/10">
-                <span className="text-[#00A6A6] font-bold">1/4</span> 300 mm Substrate Baseline
+                <span className="text-[#00A6A6] font-bold">1/5</span> Patterned Silicon Wafer
               </div>
             </div>
           )}
 
           {/* ======================================================== */}
-          {/* STAGE 2: Exposure Field (Rebuilt: 26×33 mm portrait, 2×3 dies) */}
+          {/* STAGE 2: Illustrative exposure field with six dies */}
           {/* ======================================================== */}
           {currentStage === 'field' && (
             <div className="relative w-full h-full flex flex-col items-center justify-center py-2">
               {/* Field Stage Header Badge */}
               <div className="absolute top-3 left-3 bg-slate-900/85 backdrop-blur-md px-3 py-1 rounded-lg text-white font-mono text-xs border border-white/10 z-10">
-                <span className="text-[#00A6A6] font-bold">2/4</span> Exposure Field · 2×3 Die Arrangement
+                <span className="text-[#00A6A6] font-bold">2/5</span> Exposure Field · 2×3 Die Arrangement
               </div>
 
               {/* Exposure Field SVG: Occupies 75–90% of available vertical/horizontal pane */}
               <div className="relative w-full max-w-[320px] aspect-[26/33] rounded-2xl overflow-hidden border-2 border-cyan-400/60 shadow-2xl bg-slate-950 p-3 flex flex-col">
                 {/* Field Measurement Indicators (Top & Side) */}
                 <div className="flex items-center justify-between text-[11px] font-mono text-cyan-300 pb-1.5 border-b border-cyan-500/30">
-                  <span>← 26 mm (X) →</span>
+                  <span>Exposure field</span>
                   <span className="text-slate-400 text-[10px]">Step-and-Scan Area</span>
                 </div>
 
@@ -309,7 +326,7 @@ export const ScaleZoomViewer: React.FC<ScaleZoomViewerProps> = ({
 
                       {/* Perimeter bond pads */}
                       <div className="relative z-10 flex justify-between text-[8px] text-slate-500 font-mono">
-                        <span>~13×11 mm</span>
+                        <span>Die</span>
                         {d.highlight && <span className="text-cyan-400 font-bold">● Zoom</span>}
                       </div>
                     </div>
@@ -319,7 +336,7 @@ export const ScaleZoomViewer: React.FC<ScaleZoomViewerProps> = ({
                 {/* Scribe Lane & Height Indicator */}
                 <div className="flex items-center justify-between text-[10px] font-mono text-slate-400 pt-1 border-t border-slate-800">
                   <span>Subtle scribe lanes (streets)</span>
-                  <span className="text-cyan-300 font-semibold">↕ ~33 mm (Y)</span>
+                  <span className="text-cyan-300 font-semibold">Illustrative layout</span>
                 </div>
               </div>
             </div>
@@ -331,7 +348,7 @@ export const ScaleZoomViewer: React.FC<ScaleZoomViewerProps> = ({
           {currentStage === 'die' && (
             <div className="relative w-full h-full flex flex-col items-center justify-center py-2">
               <div className="absolute top-3 left-3 bg-slate-900/85 backdrop-blur-md px-3 py-1 rounded-lg text-white font-mono text-xs border border-white/10 z-10">
-                <span className="text-[#00A6A6] font-bold">3/4</span> Single Complete Die · Scribe Edges Visible
+                <span className="text-[#00A6A6] font-bold">3/5</span> Single Complete Die · Scribe Edges Visible
               </div>
 
               {/* Complete Die Container (75–85% of visual pane) */}
@@ -342,7 +359,7 @@ export const ScaleZoomViewer: React.FC<ScaleZoomViewerProps> = ({
                     <span className="w-2 h-2 rounded-full bg-amber-400" />
                     Complete Silicon Die Layout
                   </span>
-                  <span className="text-slate-400 text-[10px]">~13 mm (X) × ~11 mm (Y)</span>
+                  <span className="text-slate-400 text-[10px]">Size depends on product</span>
                 </div>
 
                 {/* Main Die Body with Peripheral I/O Pads and Internal Architecture */}
@@ -406,7 +423,7 @@ export const ScaleZoomViewer: React.FC<ScaleZoomViewerProps> = ({
           {currentStage === 'feature' && (
             <div className="relative w-full h-full flex flex-col items-center justify-center py-2">
               <div className="absolute top-3 left-3 bg-slate-900/85 backdrop-blur-md px-3 py-1 rounded-lg text-white font-mono text-xs border border-white/10 z-10 flex items-center gap-2">
-                <span className="text-[#00A6A6] font-bold">4/4</span>
+                <span className="text-[#00A6A6] font-bold">4/5</span>
                 <span>Nanoscale 3D FinFET Transistor</span>
               </div>
 
@@ -508,6 +525,44 @@ export const ScaleZoomViewer: React.FC<ScaleZoomViewerProps> = ({
                   <span className="text-slate-400">Conceptual microscopic view — not to scale</span>
                 </div>
               </div>
+            </div>
+          )}
+
+          {currentStage === 'layer' && (
+            <div className="relative w-full h-full flex flex-col items-center justify-center py-4">
+              <div className="absolute top-3 left-3 bg-slate-900/85 px-3 py-1 rounded-lg text-white font-mono text-xs border border-white/10 z-10">
+                <span className="text-[#00A6A6] font-bold">5/5</span> Patterned Material Stack
+              </div>
+              <svg
+                viewBox="0 0 480 330"
+                className="w-full max-w-[520px]"
+                role="img"
+                aria-label="Conceptual cross section: silicon substrate supports patterned dielectric with a metal connection above it"
+              >
+                <defs>
+                  <linearGradient id="layerSilicon" x2="0" y2="1">
+                    <stop stopColor="#64748b" />
+                    <stop offset="1" stopColor="#334155" />
+                  </linearGradient>
+                  <linearGradient id="layerOxide" x2="0" y2="1">
+                    <stop stopColor="#bae6fd" />
+                    <stop offset="1" stopColor="#0284c7" />
+                  </linearGradient>
+                </defs>
+                <rect x="35" y="242" width="410" height="66" rx="5" fill="url(#layerSilicon)" />
+                <path d="M35 239 H194 V165 H286 V239 H445 V242 H35Z" fill="url(#layerOxide)" />
+                <path d="M206 165 V117 H274 V165" fill="#fbbf24" stroke="#fcd34d" strokeWidth="2" />
+                <path d="M90 117 H390 V139 H274 M206 139 H90Z" fill="#d97706" stroke="#fbbf24" strokeWidth="2" />
+                <path d="M35 239 H194 V165 H206 M274 165 H286 V239 H445" fill="none" stroke="#7dd3fc" strokeWidth="2" />
+                <text x="240" y="76" fill="#f8fafc" textAnchor="middle" fontSize="16" fontWeight="600">Metal connection</text>
+                <path d="M240 83 V111" stroke="#fbbf24" strokeWidth="2" />
+                <text x="352" y="193" fill="#e0f2fe" fontSize="15" fontWeight="600">Dielectric</text>
+                <path d="M349 198 L319 218" stroke="#7dd3fc" strokeWidth="2" />
+                <text x="240" y="282" fill="#f8fafc" textAnchor="middle" fontSize="16" fontWeight="600">Silicon substrate</text>
+              </svg>
+              <p className="absolute bottom-3 text-xs font-mono text-slate-300">
+                Conceptual cross section · not to scale
+              </p>
             </div>
           )}
 
