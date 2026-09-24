@@ -106,6 +106,16 @@ const IsometricPatternBlock: React.FC<{
   className?: string;
   isThumbnail?: boolean;
 }> = ({ stepIndex, showAfter, className = '', isThumbnail = false }) => {
+  if (stepIndex === 0 && showAfter) {
+    return (
+      <img
+        src="/images/basics/patterning-01-resist-coat.png"
+        alt="After Coating: Continuous photoresist film over dielectric and silicon substrate"
+        className={`w-full h-full object-contain rounded-xl ${className}`.trim()}
+      />
+    );
+  }
+
   return (
     <svg
       viewBox="0 0 520 380"
