@@ -2,13 +2,14 @@
 
 **Branch:** `gemini/scale-visuals`  
 **Status:** Visual Direction Proposal (Separate from Production Assets)  
+**Baseline:** `origin/main` (`5cd7916` / PR #1 merged)  
 **Collaborator Roles:**  
 - **Gemini:** Visual direction, scientific graphic specifications, asset generation/curation, zoom continuity, and responsive crop framing.  
 - **Codex:** Application architecture, component state, React/SVG overlay integration, unit/integration tests, and build pipeline.
 
 ---
 
-## 1. Architectural Philosophy: The Pure Physical Asset Rule
+## 1. Architectural Philosophy: Pure Physical Asset Rule
 
 In prior milestones, reference infographics containing baked-in text, arrows, dimension callouts, and HUD frames were accidentally embedded into runtime components, leading to blurry typography, unlocalized strings, and visual clutter.
 
@@ -33,109 +34,101 @@ For the **Scale Visual System**, we enforce a strict separation of concerns:
 
 To understand semiconductor manufacturing, a student must follow a single physical piece of silicon across **seven orders of magnitude** in spatial scale:
 
-$$\text{Wafer } (3 \times 10^{-1}\text{ m}) \longrightarrow \text{Field } (3 \times 10^{-2}\text{ m}) \longrightarrow \text{Die } (1 \times 10^{-2}\text{ m}) \longrightarrow \text{Feature } (1 \times 10^{-8}\text{ m}) \longrightarrow \text{Layer } (1 \times 10^{-9}\text{ m})$$
+$$\text{Wafer } (300\text{ mm}) \longrightarrow \text{Field } (\text{Scanner shot}) \longrightarrow \text{Die } (\text{Single chip}) \longrightarrow \text{Feature } (\text{Nanoscale FinFET}) \longrightarrow \text{Layer } (\text{FinFET cutaway stack})$$
 
 ```
 ┌─────────────────┐       ┌─────────────────┐       ┌─────────────────┐
 │     STAGE 1     │       │     STAGE 2     │       │     STAGE 3     │
-│  300 mm Wafer   │ ────> │ Exposure Field  │ ────> │   Single Die    │
-│  Macro Substrate│       │   2×3 Die Grid  │       │ Scribe Streets  │
+│ Patterned Wafer │ ────> │ Exposure Field  │ ────> │   Single Die    │
+│ Visible Fields  │       │ 2×3 Die Grid    │       │ Die #4 (R2, C2) │
 └─────────────────┘       └─────────────────┘       └─────────────────┘
                                                              │
                                                              ▼
                           ┌─────────────────┐       ┌─────────────────┐
                           │     STAGE 5     │       │     STAGE 4     │
-                          │ Thin-Film Layer │ <──── │3D Nanostructure │
-                          │ Material Stack  │       │  FinFET Channel │
+                          │ Layer Cutaway   │ <──── │ 3D Feature      │
+                          │ SAME FinFET Cut │       │ FinFET Channel  │
                           └─────────────────┘       └─────────────────┘
 ```
 
 ---
 
-### Stage 1: 300 mm Silicon Wafer (The Substrate Baseline)
+### Stage 1: 300 mm Patterned Silicon Wafer (The Substrate Baseline)
 
 * **Physical Scale:** $300\text{ mm}$ diameter, $\sim 775\ \mu\text{m}$ thickness.
-* **Scientific Subject:** A pristine, mirror-polished monocrystalline silicon wafer sitting flat on a cleanroom vacuum chuck or robotic end-effector. The laser-etched orientation notch is located at 6 o'clock. A faint, periodic optical diffraction pattern is visible across the thousands of patterned micro-features under glancing light.
-* **Camera & Framing:** High-angle orthographic top-down view (10° tilt from normal). The circular perimeter of the entire 300 mm wafer is centered in frame with generous safety margin (wafer diameter fills ~78–82% of viewport).
-* **Perspective & Distortion:** Near-telecentric or orthographic lens ($f \ge 85\text{ mm}$ equivalent) with minimal barrel distortion to preserve accurate circle geometry.
-* **Lighting:** Diffuse cleanroom white illumination ($5000\text{ K}$) with a soft glancing directional key light from upper-left (10 o'clock) creating natural, subtle thin-film spectral dispersion across patterned fields.
+* **Scientific Subject:** A completed, fully patterned production wafer sitting centered on a cleanroom vacuum chuck. The wafer is distinctly patterned with a regular grid of hundreds of repeating rectangular exposure fields across its entire surface, displaying vivid prismatic rainbow diffraction patterns under directional cleanroom light. A laser-cut orientation notch is clearly visible at the 6 o'clock position on the bottom edge.
+* **Camera & Framing:** High-angle orthographic top-down perspective (10° tilt from normal). The circular perimeter of the entire 300 mm wafer is centered in frame with a safety margin (wafer diameter fills ~78–82% of viewport).
+* **Perspective & Distortion:** Near-telecentric telephoto framing ($f \ge 85\text{ mm}$ equivalent) with minimal barrel distortion to preserve true circular geometry.
+* **Lighting:** Diffuse cleanroom white illumination ($5000\text{ K}$) with a directional key creating natural thin-film spectral dispersion across the patterned field grid.
 * **Materials & Colors:**
-  - Bulk substrate: Deep gunmetal mirror silicon (`#0F172A` to `#1E293B`).
-  - Specular sheen: Subdued silver-gray and slate-blue highlights.
-  - Background: Neutral matte dark cleanroom slate (`#0B0F19`) or high-end museum pedestal.
-* **Zoom Target Anchor:** Upper-right quadrant (Field coordinate `Row 4, Col 5` from wafer center), oriented orthogonally to prepare for the Stage 2 plunge.
+  - Bulk substrate: Deep gunmetal mirror silicon with crystalline diffraction sheen.
+  - Surface grid: Distinctly visible repeating exposure fields.
+  - Background: Cleanroom chuck and dark neutral slate background.
+* **Zoom Target Anchor:** Upper-right quadrant (Field coordinate `Row 4, Col 5` from wafer center), preparing the visitor for the Stage 2 plunge into one exposure field.
 
 ---
 
 ### Stage 2: Exposure Field (The Scanner Window)
 
-* **Physical Scale:** Illustrative step-and-scan rectangular window (nominal $\sim 26\text{ mm X} \times 33\text{ mm Y}$, portrait aspect ratio $\approx 0.788$).
-* **Scientific Subject:** Exactly **one complete lithography exposure field** patterned during a single scanner pass. The field contains an illustrative grid of **2 dies in X by 3 dies in Y (TOTAL = 6 dies)**. Subtle dicing streets / scribe lanes ($\sim 80\ \mu\text{m}$ width) separate each die. No die is cut off.
-* **Camera & Framing:** Direct top-down orthographic perspective, aligned precisely with the zoom target identified in Stage 1. The outer field rectangle occupies 75–85% of the visual pane.
-* **Perspective:** True 2D plan-view (zero angular distortion), matching optical lithography reticle aerial imaging.
-* **Lighting:** Neutral, flat telecentric illumination with subtle micro-relief shadows revealing dicing streets and major functional circuit blocks.
+* **Physical Scale:** Illustrative step-and-scan rectangular window (aspect ratio $\approx 0.75$, portrait orientation). Field dimensions are intentionally left unspecified in the image asset to accommodate variable scanner and product geometries.
+* **Scientific Subject:** Exactly **one complete lithography exposure field** patterned during a single scanner pass. The field contains an illustrative grid of **2 dies horizontally by 3 dies vertically (TOTAL = 6 dies)**. Clean dicing streets / scribe lanes separate all six dies without any edge clipping. Each die features golden peripheral bond pads along its outer edges and internal multi-core circuit floorplan architecture with reflective copper traces and dark slate silicon.
+* **Die Numbering & Layout (Row-by-Row Grid):**
+  - **Row 1:** Die #1 (Column 1), Die #2 (Column 2)
+  - **Row 2:** Die #3 (Column 1), **Die #4 (Column 2)** $\longleftarrow$ *Zoom Target*
+  - **Row 3:** Die #5 (Column 1), Die #6 (Column 2)
+* **Camera & Framing:** Direct top-down orthographic plan-view perspective, matching the optical projection of a scanner reticle. The outer field rectangle occupies 75–85% of the visual pane.
+* **Lighting:** Neutral, flat telecentric macro illumination highlighting dicing streets and circuit blocks.
 * **Materials & Colors:**
   - Wafer substrate baseline: Deep reflective dark slate (`#1E293B`).
-  - Scribe lanes: Subtle matte silicon trench (`#0F172A`).
-  - Micro-patterned die surfaces: Microscopic integrated circuit texture rendered as uniform optical density with distinct internal block contrasts (dense cache arrays appear darker; sparser logic/bus routing appears lighter slate).
-* **Zoom Target Anchor:** **Die #4** (located at lower-left of the 2×3 field grid, Column 1, Row 2) serves as the persistent focal target for Stage 3.
+  - Scribe lanes: Clean matte dicing streets.
+  - Die surfaces: Golden peripheral bond pads, copper trace routing, and dark silicon processing blocks.
+* **Zoom Target Anchor:** **Die #4 at row 2, column 2** (highlighted by React/SVG as `NEXT STAGE` to foreshadow Stage 3).
 
 ---
 
 ### Stage 3: Die / Chip (The Independent Functional Unit)
 
-* **Physical Scale:** Single integrated circuit chip (nominal $\sim 8\text{--}13\text{ mm X} \times 10\text{--}11\text{ mm Y}$).
-* **Scientific Subject:** **One complete standalone die**, fully bounded on all four outer edges by dicing streets. Visible peripheral bond pads / micro-bumps along the perimeter for external electrical connection. The internal layout displays functional floorplan partitions (multi-core processing units, SRAM cache banks, power rings, clock trees) rendered as genuine physical structures, not graphic symbols.
-* **Camera & Framing:** Plan-view orthographic perspective (top-down), matching the orientation of Die #4 from Stage 2. All 4 outer perimeter dicing edges and corner dicing intersections are completely visible within the frame.
-* **Perspective:** Parallel orthographic projection.
-* **Lighting:** High-resolution macro illumination highlighting the subtle metallic and dielectric reflectance differences between metal routing layers and silicon substrate.
+* **Physical Scale:** Single integrated circuit chip. Specific dimensions are left unspecified in the asset to reflect product-dependent designs.
+* **Scientific Subject:** **One complete standalone die**, representing the exact Die #4 (row 2, column 2) from Stage 2. **All four outer perimeter dicing edges and corners are 100% visible**, framed by a clean dicing street margin. Square golden bond pads neatly line all four perimeters. The internal floorplan matches the field die: top section contains multi-core processing units and cache arrays, lower left features a dense memory block, lower right features copper bus routing interconnects on dark reflective silicon.
+* **Camera & Framing:** Plan-view orthographic perspective (top-down), matching the orientation of Die #4 from Stage 2. All 4 outer perimeter dicing edges and corner intersections are completely visible within the frame.
+* **Lighting:** High-resolution macro illumination highlighting the metallic gold bond pads and copper routing layers.
 * **Materials & Colors:**
-  - Perimeter bond pads: Polished metallic copper / gold alloy sheen (`#D97706` / `#B45309`).
-  - Core logic regions: Deep indigo/cobalt textured silicon (`#1E1B4B` to `#312E81`).
-  - SRAM arrays: Regular microscopic geometric matrix with soft slate reflectance (`#334155`).
-  - Dicing street border: Deep matte silicon channel (`#090D16`).
-* **Zoom Target Anchor:** Logic Core 0 (upper-left quadrant of the die's active area), focusing on a dense standard-cell logic row.
+  - Perimeter bond pads: Polished metallic gold alloy sheen.
+  - Core logic regions: Deep indigo/cobalt textured silicon.
+  - Memory arrays: Regular microscopic geometric matrix.
+  - Dicing street border: Deep matte silicon channel.
+* **Zoom Target Anchor:** Upper active logic/transistor cluster, focusing into a standard-cell row to prepare for the nanoscale feature.
 
 ---
 
-### Stage 4: Nanoscale Feature (The 3D Transistor)
+### Stage 4: Nanoscale Feature (The 3D FinFET Transistor)
 
-* **Physical Scale:** Nanoscale ($\sim 10\text{ nm}$ fin width, $\sim 45\text{ nm}$ fin pitch, $\sim 60\text{ nm}$ fin height).
-* **Scientific Subject:** A 3D FinFET or Gate-All-Around (GAA) nanoribbon transistor architecture. Displays vertical crystalline silicon fins rising from the bulk substrate, enveloped by the high-k metal gate stack, flanked by epitaxial source and drain blocks.
-* **Camera & Framing:** Isometric 30° / 3D cutaway perspective. The 3D transistor channel and wrap-around gate fill 75–90% of the viewport.
-* **Perspective:** 3D isometric or gentle 24mm perspective cutaway that reveals three dimensions simultaneously: fin length, fin height, and gate width.
-* **Lighting:** Cinematic studio edge-lighting from high-right, casting controlled micro-shadows into fin trenches to emphasize 3D depth and topography.
+* **Physical Scale:** Nanoscale ($\sim 10\text{--}50\text{ nm}$ fin width/pitch).
+* **Scientific Subject:** A 3D multi-fin FinFET transistor architecture. Three parallel vertical crystalline silicon fins emerge from a dark monocrystalline silicon substrate with shallow trench isolation (STI) oxide between their bases. A continuous metallic wrap-around gate electrode (deep indigo/cobalt metallic) runs across and tightly drapes over the top and sidewalls of all three fins (tri-gate configuration). Flanked by source and drain crystalline regions.
+* **Camera & Framing:** 30° isometric high-angle cutaway perspective that clearly reveals three dimensions simultaneously: fin length, fin height, and gate wrap width. The transistor architecture fills 75–90% of the viewport.
+* **Lighting:** Studio edge-lighting from high-right, casting controlled micro-shadows into fin trenches to emphasize 3D topography.
 * **Materials & Colors:**
   - Bulk silicon substrate: Monocrystalline charcoal slate (`#1E293B`).
-  - Silicon fin channel: Vibrant crystalline semiconductor tint (`#0284C7` to `#38BDF8`).
-  - High-k metal gate stack: Luminous indigo/titanium nitride metallic (`#4F46E5` to `#818CF8`).
-  - Source / Drain epitaxy: Doped raised crystalline lattice (`#0D9488` to `#2DD4BF`).
-* **Zoom Target Anchor:** The vertical interface where the metal gate wraps around the crystalline silicon fin, preparing the viewer to slice open the material layers.
+  - Silicon fin channels: Crystalline semiconductor silicon with soft brushed texture.
+  - Metal gate electrode: Conformal deep indigo metallic wrap-around gate.
+  - STI oxide: Recessed insulating baseline between fin roots.
+* **Zoom Target Anchor:** Transverse cut plane directly through the gate electrode and the three fin channels, preparing the viewer to slice open the material layers.
 
 ---
 
-### Stage 5: Thin-Film Layer (The Vertical Material Stack)
+### Stage 5: Thin-Film Layer (Cross-Section of the SAME FinFET Gate and Channel)
 
-* **Physical Scale:** Vertical thin-film stack ($1\text{ nm}$ gate oxide up to $\sim 1\ \mu\text{m}$ multi-level metallization).
-* **Scientific Subject:** A high-resolution cross-sectional cutaway illustrating how semiconductor devices are physically built from the bottom up through repeated deposition, patterning, etching, and planarization. Shows:
-  1. Monocrystalline silicon base substrate.
-  2. Shallow Trench Isolation (STI) oxide trenches.
-  3. 3D Fin channel & atomic-scale high-k gate dielectric interface ($\text{HfO}_2$, $\sim 1\text{--}2\text{ nm}$).
-  4. Workfunction metal gate stack ($\text{TiN} / \text{TaN} / \text{W}$).
-  5. Inter-Layer Dielectric (ILD) glass matrix ($\text{SiO}_2$ / low-k fluorosilicate).
-  6. Vertical tungsten contact plugs (plugs connecting transistor terminals to wiring).
-  7. Multi-tier copper interconnect lines (M1, M2, M3 with barrier seed cladding).
-* **Camera & Framing:** Clean 2.5D prism cutaway or STEM (Scanning Transmission Electron Microscopy) cross-sectional plane.
-* **Perspective:** Orthographic profile slice with an isometric top facet showing trace runs.
-* **Lighting:** Studio back-illumination on dielectric matrix, crisp front-key on metallic traces and vertical contact plugs.
-* **Materials & Colors:**
-  - Silicon Substrate: Textured crystalline dark slate (`#0F172A`).
-  - STI Oxide: Translucent pale silica blue (`#94A3B8` / `#CBD5E1`).
-  - High-K Dielectric: Ultra-thin luminous turquoise boundary line (`#06B6D4`).
-  - Tungsten Plugs: Dense, brushed metallic silver/titanium (`#64748B` / `#94A3B8`).
-  - Copper Interconnects: Warm, polished authentic copper sheen (`#EA580C` to `#B45309`).
-  - ILD Matrix: High-purity dielectric low-k glass (`#F1F5F9` / `#E2E8F0`).
-* **Visual Narrative Payoff:** Closes the loop from the macro wafer to the atomic thin films, answering: *"A chip is not just a flat drawing; it is a 3D skyscraper of 50–80 stacked, nanometer-precise material layers."*
+* **Physical Scale:** Nanoscale vertical thin-film stack ($1\text{--}2\text{ nm}$ gate oxide up to gate stack height).
+* **Scientific Subject:** A vertical cross-sectional cutaway sliced directly through the transverse metal gate and three vertical silicon fins of the **exact same 3D FinFET transistor shown in Stage 4**. The camera, angle, lighting, substrate, and indigo gate are identical to Stage 4, but the front face is sliced cleanly open to reveal the layered internal anatomy:
+  1. Dark monocrystalline silicon substrate at the bottom foundation.
+  2. Shallow Trench Isolation (STI) oxide insulating the trenches between the fin roots.
+  3. The three upright rectangular crystalline silicon fin channel cross-sections.
+  4. The ultra-thin conformal high-k gate dielectric interface lining each fin's top and vertical sidewalls.
+  5. The wrap-around indigo metal gate electrode encasing all three fins.
+  6. Upper dielectric/ILD layer with contact interfaces.
+* **Camera & Framing:** Clean 3D isometric cutaway perspective, matching the exact orientation and framing of Stage 4.
+* **Lighting & Materials:** Identical to Stage 4. The sliced front plane exposes the crisp material interfaces with high contrast between dielectric and metal.
+* **Visual Narrative Payoff:** Directly answers *"What is a layer?"* by revealing that the 3D FinFET seen in Stage 4 is not a monolithic block, but an atomically precise stack of deposited, patterned, and etched thin-film materials.
 
 ---
 
@@ -145,10 +138,10 @@ To prevent disorienting jumps, every transition uses an animated zoom target anc
 
 | From Stage | To Stage | Anchor Coordinates | Optical Transition Logic |
 | :--- | :--- | :--- | :--- |
-| **1. Wafer** | **2. Field** | `X: 68%, Y: 32%` (Row 4, Col 5) | React overlays a pulsating cyan reticle box ($26 \times 33\text{ mm}$ aspect). On zoom, the camera glides into this box, expanding the single field to fill the frame. |
-| **2. Field** | **3. Die** | Die #4 (`Col 1, Row 2` of 2×3 grid) | Die #4 is highlighted with a gold/amber border. The camera plunges smoothly into Die #4, expanding it into the single complete die view. |
-| **3. Die** | **4. Feature** | Core 0 active logic cluster (`X: 30%, Y: 35%`) | React highlights a microscopic logic block ($<1\ \mu\text{m}$). The camera transitions from macro circuit layout into 3D nanoscale FinFET architecture. |
-| **4. Feature** | **5. Layer** | Gate-to-channel cross-section plane | A vertical slicing plane animates downward through the gate, tilting into the multi-layer thin-film cross-section stack. |
+| **1. Wafer** | **2. Field** | `X: 68%, Y: 32%` (Row 4, Col 5) | React overlays a pulsating cyan reticle box. On zoom, the camera glides into this box, expanding the single 2×3 field to fill the frame. |
+| **2. Field** | **3. Die** | **Die #4 at row 2, column 2** | Die #4 is highlighted with a gold border and `NEXT STAGE` badge. Camera plunges smoothly into Die #4, expanding it into the single complete die view. |
+| **3. Die** | **4. Feature** | Active logic/transistor cluster | React highlights an active transistor group. The camera transitions from macro circuit layout into the 3D nanoscale FinFET architecture. |
+| **4. Feature** | **5. Layer** | Gate-to-channel vertical plane | A vertical slicing plane animates through the indigo gate, cleanly revealing the internal thin-film cross-section of the **exact same FinFET**. |
 
 ---
 
@@ -171,32 +164,32 @@ Visual assets must render crisply across Desktop (ultrawide down to standard 144
 ## 5. Geometry Calibration Note (2×3 Die Arrangement)
 
 * **Arrangement:** Exactly **2 columns in X by 3 rows in Y = 6 complete dies per exposure field**.
-* **Orientation:** Portrait orientation ($26\text{ mm X} : 33\text{ mm Y} \approx 1 : 1.27$).
+* **Orientation:** Portrait orientation.
 * **Guidance on Exact Dimensions:**
-  - Avoid baking hardcoded millimeter numbers into the image assets.
-  - In React UI, label field dimensions as:  
-    `"Illustrative scenario: ~26 mm (X) × 33 mm (Y) field with 2×3 die grid (6 dies total)"`
+  - No hardcoded millimeter numbers are baked into the image assets.
+  - In React UI, field and die dimensions follow the approved copy on `main`:  
+    `"Illustrative layout: 2 columns × 3 rows · Dimensions vary by product"` and `"Die size varies by design · Separated along scribe lanes"`.
   - This avoids conflicts with specific fab process nodes while preserving geometric consistency.
 
 ---
 
 ## 6. Complete 5-Stage Physical Asset Catalog
 
-All five clean physical assets are generated and saved in `proposals/scale-visuals/assets/`. Every asset obeys the pure physical discipline: **zero baked text, zero arrows, zero dimensions, zero UI frames, and exactly one physical subject per image.**
+All five clean physical assets are saved in `proposals/scale-visuals/assets/`:
 
 | Stage | Asset Filename | Physical Scale | Subject & Framing |
 | :--- | :--- | :--- | :--- |
-| **1. Wafer** | [`01_wafer_clean.jpg`](file:///C:/Users/Utente/Desktop/Virtual%20Fab/virtual-fab/proposals/scale-visuals/assets/01_wafer_clean.jpg) | $300\text{ mm}$ | Pristine monocrystalline silicon wafer centered on cleanroom pedestal. Rainbow diffraction rings, orientation notch at 6 o'clock. |
-| **2. Field** | [`02_field_2x3_clean.jpg`](file:///C:/Users/Utente/Desktop/Virtual%20Fab/virtual-fab/proposals/scale-visuals/assets/02_field_2x3_clean.jpg) | $\sim 26 \times 33\text{ mm}$ | Exactly 2 dies in X by 3 dies in Y (6 dies total) in portrait orientation. Subtle dicing streets separate all 6 dies cleanly. |
-| **3. Die** | [`03_die_clean.jpg`](file:///C:/Users/Utente/Desktop/Virtual%20Fab/virtual-fab/proposals/scale-visuals/assets/03_die_clean.jpg) | $\sim 10 \times 12\text{ mm}$ | One complete microprocessor die. All 4 dicing edges and corners visible. Perimeter gold bond pads, multi-core and cache floorplan. |
-| **4. Feature** | [`04_feature_finfet_clean.jpg`](file:///C:/Users/Utente/Desktop/Virtual%20Fab/virtual-fab/proposals/scale-visuals/assets/04_feature_finfet_clean.jpg) | $\sim 10\text{--}50\text{ nm}$ | 3D monolithic nanostructure displaying nanoscale vertical crystalline fins and micro-machined interconnect bus routing. |
-| **5. Layer** | [`05_layer_stack_clean.jpg`](file:///C:/Users/Utente/Desktop/Virtual%20Fab/virtual-fab/proposals/scale-visuals/assets/05_layer_stack_clean.jpg) | $\sim 1\text{ nm -- } 1\ \mu\text{m}$ | 3D isometric cutaway prism of thin-film stack: silicon substrate, STI trenches, tungsten contact plugs, and multi-tier copper interconnects. |
+| **1. Wafer** | [`01_wafer_clean.jpg`](file:///C:/Users/Utente/Desktop/Virtual%20Fab/virtual-fab/proposals/scale-visuals/assets/01_wafer_clean.jpg) | $300\text{ mm}$ | Patterned production wafer with visible exposure fields and rainbow diffraction rings on cleanroom chuck. Notch at 6 o'clock. |
+| **2. Field** | [`02_field_2x3_clean.jpg`](file:///C:/Users/Utente/Desktop/Virtual%20Fab/virtual-fab/proposals/scale-visuals/assets/02_field_2x3_clean.jpg) | Scanner shot | Exactly 2 dies in X by 3 dies in Y (6 dies total) in portrait orientation. Scribe streets separate all 6 dies cleanly. Die #4 at row 2, col 2. |
+| **3. Die** | [`03_die_clean.jpg`](file:///C:/Users/Utente/Desktop/Virtual%20Fab/virtual-fab/proposals/scale-visuals/assets/03_die_clean.jpg) | Single die | Single complete die matching Die #4. All 4 dicing edges and corners visible. Perimeter gold bond pads, multi-core and memory floorplan. |
+| **4. Feature** | [`04_feature_finfet_clean.jpg`](file:///C:/Users/Utente/Desktop/Virtual%20Fab/virtual-fab/proposals/scale-visuals/assets/04_feature_finfet_clean.jpg) | $\sim 10\text{--}50\text{ nm}$ | 3D multi-fin FinFET transistor: 3 vertical crystalline silicon fins, STI oxide, and conformal indigo wrap-around gate. |
+| **5. Layer** | [`05_layer_stack_clean.jpg`](file:///C:/Users/Utente/Desktop/Virtual%20Fab/virtual-fab/proposals/scale-visuals/assets/05_layer_stack_clean.jpg) | Thin-film stack | Vertical cutaway of the **exact same FinFET** from Stage 4, showing substrate, STI, 3 fin cross-sections, gate dielectric interface, and wrap gate. |
 
 ---
 
 ## 7. Next Steps for Collaborative Implementation
 
-1. **Review & Approval:** User verifies the 5 physical assets against the visual specification and crop rules.
+1. **Review & Approval:** Codex and User verify the five physical assets against the visual specification and crop rules.
 2. **Handoff to Codex:**
    - Production code (`ScaleZoomViewer.tsx`), types, and runtime image directories remain completely untouched on `gemini/scale-visuals`.
-   - Codex can now update `ScaleStage = 'wafer' | 'field' | 'die' | 'feature' | 'layer'`, integrate the five clean assets from `proposals/scale-visuals/assets/` into runtime `/public/images/basics/`, and wire the responsive React/SVG overlays (dynamic measurement calipers, scan reticles, and die indicators).
+   - Codex can integrate the five clean assets from `proposals/scale-visuals/assets/` into runtime `/public/images/basics/`, wire the responsive React/SVG overlays (pulsing reticle box, calipers, bond pad highlights, and material layer tooltips), and verify all test suites.
