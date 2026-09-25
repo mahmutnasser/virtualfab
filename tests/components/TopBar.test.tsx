@@ -6,7 +6,8 @@ describe('TopBar Component', () => {
   it('renders Silicon Journey brand mark and Virtual Fab navigation', () => {
     render(<TopBar />);
     expect(screen.getByText(/SILICON/i)).toBeDefined();
-    expect(screen.getByRole('button', { name: 'Virtual Fab' })).toBeDefined();
+    expect(screen.getByText('Virtual Fab')).toBeDefined();
+    expect(screen.getByRole('button', { name: /Fab Basics/i })).toBeDefined();
   });
 
   it('displays the lessons progress counter correctly', () => {

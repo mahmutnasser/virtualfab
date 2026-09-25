@@ -8,13 +8,13 @@ export const DuvEuvComparator: React.FC = () => {
     <section
       id="duv-vs-euv"
       aria-labelledby="duv-euv-heading"
-      className="rounded-3xl border border-slate-200/80 bg-white p-6 sm:p-10 shadow-sm"
+      className="scroll-mt-24 rounded-3xl border border-[#DCE5F2] bg-white p-5 sm:p-9 shadow-sm"
     >
       {/* SECTION HEADER */}
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-slate-100 pb-6 mb-8">
         <div>
           <div className="flex items-center gap-2 mb-2">
-            <span className="text-xs font-semibold text-[#00A6A6] tracking-wider uppercase bg-cyan-50 px-2.5 py-0.5 rounded-full border border-cyan-200/60">
+            <span className="text-xs font-semibold text-[#145DB4] tracking-wider uppercase bg-[#EAF2FF] px-3 py-1 rounded-full border border-[#DCE5F2]">
               03 · Optical Architecture
             </span>
             <span className="text-xs text-slate-500 font-medium">193 nm Refractive vs. 13.5 nm Reflective</span>

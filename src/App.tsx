@@ -6,12 +6,26 @@ import { FabBasicsPage } from './components/basics/FabBasicsPage';
 
 export type AppDestination = 'fab' | 'basics';
 
+const BASICS_HASHES = new Set([
+  'basics',
+  'basics-top',
+  'scale-viewer',
+  'patterning-lesson',
+  'duv-vs-euv',
+  'process-verbs',
+  'all-terms',
+]);
+
+const isBasicsLocation = () => {
+  const path = window.location.pathname.toLowerCase();
+  const hashTarget = window.location.hash.slice(1).split('?')[0].toLowerCase();
+  return /\/basics(?:\/|$)/.test(path) || BASICS_HASHES.has(hashTarget);
+};
+
 export default function App() {
   const [destination, setDestination] = useState<AppDestination>(() => {
     if (typeof window !== 'undefined') {
-      const path = window.location.pathname.toLowerCase();
-      const hash = window.location.hash.toLowerCase();
-      if (path.includes('/basics') || hash.includes('basics')) {
+      if (isBasicsLocation()) {
         return 'basics';
       }
     }
@@ -31,12 +45,10 @@ export default function App() {
   // Handle browser back/forward and hash changes
   useEffect(() => {
     const handleLocationChange = () => {
-      const path = window.location.pathname.toLowerCase();
-      const hash = window.location.hash.toLowerCase();
-      if (path.includes('/basics') || hash.includes('basics')) {
+      if (isBasicsLocation()) {
         setDestination('basics');
         const searchParams = new URLSearchParams(
-          window.location.search || (hash.includes('?') ? hash.split('?')[1] : '')
+          window.location.search || (window.location.hash.includes('?') ? window.location.hash.split('?')[1] : '')
         );
         const term = searchParams.get('term');
         if (term) setInitialTermId(term);
@@ -65,8 +77,10 @@ export default function App() {
 
   const handleOpenFab = useCallback(() => {
     setDestination('fab');
-    if (window.location.hash !== '#fab' && window.location.hash !== '') {
-      window.history.pushState(null, '', '#fab');
+    const fabPath = window.location.pathname.replace(/\/basics(?:\/.*)?$/i, '/') || '/';
+    const newLocation = `${fabPath}#fab`;
+    if (`${window.location.pathname}${window.location.hash}` !== newLocation) {
+      window.history.pushState(null, '', newLocation);
     }
   }, []);
 
