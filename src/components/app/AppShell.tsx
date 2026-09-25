@@ -170,7 +170,7 @@ export const AppShell: React.FC<AppShellProps> = ({
       data-transition-state={transitionStatus}
       data-active-view={activeView}
       data-selected-step={selectedStepId}
-      className="h-screen w-screen flex flex-col bg-[#0c1e33] overflow-hidden font-body select-none"
+      className="h-screen w-screen flex flex-col bg-[#F6F9FE] overflow-hidden font-body select-none"
     >
       {/* Top Header with Contextual Back button (Shown during Fab World modes) */}
       {activeView !== 'wafer-lab' && (
@@ -208,6 +208,7 @@ export const AppShell: React.FC<AppShellProps> = ({
               completedStepIds={completedStepIds}
               onSelectStep={handleSelectStep}
               onStartTour={handleStartTour}
+              onOpenBasics={() => onOpenBasics?.()}
             />
           </div>
         )}

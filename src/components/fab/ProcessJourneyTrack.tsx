@@ -127,9 +127,9 @@ export const ProcessJourneyTrack: React.FC<ProcessJourneyTrackProps> = ({
                 <div
                   className={`flex-1 min-w-[4px] sm:min-w-[6px] md:min-w-[8px] lg:min-w-[10px] xl:min-w-[12px] h-[1.5px] -mt-5 lg:-mt-6 transition-colors duration-300 ${
                     isCompleted
-                      ? 'bg-[#00a6a6]'
+                      ? 'bg-[#166FE5]'
                       : isActive
-                        ? 'bg-gradient-to-r from-[#00a6a6] to-slate-200'
+                        ? 'bg-gradient-to-r from-[#166FE5] to-slate-200'
                         : 'bg-slate-200'
                   }`}
                   aria-hidden="true"

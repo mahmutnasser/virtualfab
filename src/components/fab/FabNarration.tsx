@@ -11,7 +11,7 @@ export const FabNarration: React.FC<FabNarrationProps> = ({
 }) => {
   return (
     <div
-      className={`max-w-[420px] w-full bg-white/95 border border-slate-200/80 backdrop-blur-xl rounded-2xl p-5 shadow-2xl shadow-slate-900/15 text-slate-800 select-none ${className}`.trim()}
+      className={`max-w-[420px] w-full bg-white/95 border border-[#DCE5F2] backdrop-blur-xl rounded-[22px] p-5 shadow-[0_16px_40px_rgba(21,65,112,0.14)] text-[#173348] select-none ${className}`.trim()}
     >
       <div className="flex items-start gap-4">
         {/* 3D Wafer Cylinder Stack Graphic */}
@@ -31,15 +31,15 @@ export const FabNarration: React.FC<FabNarrationProps> = ({
               cy="22"
               rx="24"
               ry="10"
-              fill="#00A6A6"
+              fill="#166FE5"
               fillOpacity="0.25"
-              stroke="#00A6A6"
+              stroke="#166FE5"
               strokeWidth="1.5"
             />
             {/* Cylinder body */}
             <path
               d="M8 22v16c0 5.5 10.7 10 24 10s24-4.5 24-10V22"
-              stroke="#00A6A6"
+              stroke="#166FE5"
               strokeWidth="1.5"
               strokeDasharray="2 2"
               strokeOpacity="0.6"
@@ -52,13 +52,13 @@ export const FabNarration: React.FC<FabNarrationProps> = ({
               ry="10"
               fill="#F0F4F8"
               fillOpacity="0.9"
-              stroke="#00A6A6"
+              stroke="#166FE5"
               strokeWidth="1.5"
             />
             {/* Interior wafer grid pattern lines */}
             <path
               d="M16 38h32 M24 33v10 M32 30v14 M40 33v10"
-              stroke="#00A6A6"
+              stroke="#166FE5"
               strokeOpacity="0.4"
               strokeWidth="1"
             />
@@ -77,7 +77,7 @@ export const FabNarration: React.FC<FabNarrationProps> = ({
           <button
             type="button"
             onClick={onExploreProcess}
-            className="text-xs font-semibold text-[#007f7f] hover:text-[#005f5f] inline-flex items-center gap-1.5 transition-colors cursor-pointer group"
+            className="min-h-[44px] text-xs font-semibold text-[#145DB4] hover:text-[#0D4A9E] inline-flex items-center gap-1.5 transition-colors cursor-pointer group"
           >
             <span>Explore the Process</span>
             <span className="transition-transform group-hover:translate-x-1">

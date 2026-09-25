@@ -9,6 +9,7 @@ export interface FabHUDProps {
   completedStepIds?: string[];
   onSelectStep?: (stepId: string) => void;
   onStartTour?: () => void;
+  onOpenBasics?: () => void;
   className?: string;
 }
 
@@ -17,6 +18,7 @@ export const FabHUD: React.FC<FabHUDProps> = ({
   completedStepIds = ['start'],
   onSelectStep,
   onStartTour,
+  onOpenBasics,
   className = '',
 }) => {
   return (
@@ -24,9 +26,9 @@ export const FabHUD: React.FC<FabHUDProps> = ({
       className={`absolute inset-0 pointer-events-none flex flex-col justify-between z-20 ${className}`.trim()}
     >
       {/* ── DESKTOP HUD LAYOUT (hidden on mobile) ── */}
-      <div className="hidden md:flex flex-col w-full h-full p-6 lg:p-8">
+      <div className="hidden md:flex flex-col w-full h-full p-4 lg:p-6">
         {/* Top: Process Sequence Track */}
-        <div className="w-full max-w-[1360px] mx-auto pointer-events-auto bg-white/95 border border-slate-200/80 backdrop-blur-xl rounded-2xl p-1.5 lg:p-2 shadow-xl shadow-slate-900/10">
+        <div className="w-full max-w-[1360px] mx-auto pointer-events-auto bg-white/96 border border-[#DCE5F2] backdrop-blur-xl rounded-2xl p-1 lg:p-1.5 shadow-[0_12px_32px_rgba(21,65,112,0.12)]">
           <ProcessJourneyTrack
             activeStepId={activeStepId}
             completedStepIds={completedStepIds}
@@ -35,9 +37,9 @@ export const FabHUD: React.FC<FabHUDProps> = ({
         </div>
 
         {/* Middle row: Hero on left, positioned above machinery */}
-        <div className="w-full flex justify-between items-start mt-6 lg:mt-10 pl-2 lg:pl-6">
+        <div className="w-full flex justify-between items-start mt-4 lg:mt-7">
           <div className="pointer-events-auto max-w-[480px]">
-            <FabOverviewHero onStartTour={onStartTour} />
+            <FabOverviewHero onStartTour={onStartTour} onOpenBasics={onOpenBasics} />
           </div>
         </div>
 
@@ -52,14 +54,14 @@ export const FabHUD: React.FC<FabHUDProps> = ({
       {/* ── MOBILE HUD LAYOUT (<768px, matches mobile mockup) ── */}
       <div className="md:hidden flex flex-col justify-between w-full h-full p-4 pointer-events-auto overflow-y-auto">
         {/* Mobile Header Title Card */}
-        <div className="bg-[#0c1f33]/90 border border-white/10 backdrop-blur-md rounded-xl p-4 shadow-lg mb-4">
-          <span className="font-mono text-[10px] uppercase tracking-widest text-[#00a6a6] font-bold">
+        <div className="bg-white/95 border border-[#DCE5F2] backdrop-blur-md rounded-xl p-4 shadow-lg mb-4">
+          <span className="font-mono text-[10px] uppercase tracking-widest text-[#166FE5] font-bold">
             VIRTUAL FAB
           </span>
-          <h1 className="font-display font-bold text-2xl text-white mt-0.5">
+          <h1 className="font-display font-bold text-2xl text-[#102A43] mt-0.5">
             Virtual Fab
           </h1>
-          <p className="font-body text-xs text-slate-300 mt-1 leading-relaxed">
+          <p className="font-body text-xs text-[#476176] mt-1 leading-relaxed">
             Explore the semiconductor manufacturing process
           </p>
         </div>
@@ -70,7 +72,7 @@ export const FabHUD: React.FC<FabHUDProps> = ({
             tabIndex={0}
             role="region"
             aria-label="Process steps list"
-            className="space-y-2 max-h-[46vh] overflow-y-auto pr-1.5 focus:outline-none focus:ring-1 focus:ring-[#00a6a6]/50 rounded-xl"
+            className="space-y-2 max-h-[46vh] overflow-y-auto pr-1.5 focus:outline-none focus:ring-1 focus:ring-[#166FE5]/50 rounded-xl"
           >
             {CANONICAL_PROCESS_STEPS.map((step) => {
               const isActive = step.id === activeStepId;
@@ -90,11 +92,11 @@ export const FabHUD: React.FC<FabHUDProps> = ({
                   type="button"
                   onClick={() => onSelectStep?.(step.id)}
                   aria-label={`Go to ${step.name}`}
-                  className={`w-full text-left rounded-2xl p-2.5 shadow-md flex items-center justify-between gap-3 cursor-pointer transition-all duration-200 focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-[#00a6a6] ${
+                  className={`w-full text-left rounded-2xl p-2.5 shadow-md flex items-center justify-between gap-3 cursor-pointer transition-all duration-200 focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-[#166FE5] ${
                     isActive
-                      ? 'bg-white/95 border-2 border-[#00a6a6] shadow-[#00a6a6]/20'
+                      ? 'bg-white/95 border-2 border-[#166FE5] shadow-[#166FE5]/20'
                       : isCompleted
-                        ? 'bg-white/90 border border-[#00a6a6]/40 hover:border-[#00a6a6]'
+                        ? 'bg-white/90 border border-[#166FE5]/40 hover:border-[#166FE5]'
                         : 'bg-white/85 border border-slate-200/90 hover:border-slate-300'
                   }`}
                 >
@@ -102,9 +104,9 @@ export const FabHUD: React.FC<FabHUDProps> = ({
                     <span
                       className={`w-7 h-7 rounded-full font-bold text-xs flex items-center justify-center shrink-0 ${
                         isActive
-                          ? 'bg-[#00a6a6] text-white shadow-sm'
+                          ? 'bg-[#166FE5] text-white shadow-sm'
                           : isCompleted
-                            ? 'bg-[#00a6a6]/15 text-[#007f7f] border border-[#00a6a6]/40'
+                            ? 'bg-[#EAF2FF] text-[#145DB4] border border-[#A7CBFA]'
                             : 'bg-slate-100 text-slate-700 border border-slate-200'
                       }`}
                     >
@@ -122,7 +124,7 @@ export const FabHUD: React.FC<FabHUDProps> = ({
                   </div>
 
                   <svg
-                    className={`w-4 h-4 shrink-0 ${isActive ? 'text-[#00a6a6]' : 'text-slate-400'}`}
+                    className={`w-4 h-4 shrink-0 ${isActive ? 'text-[#166FE5]' : 'text-slate-400'}`}
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -137,10 +139,10 @@ export const FabHUD: React.FC<FabHUDProps> = ({
           </div>
 
           {/* More steps scroll discovery indicator */}
-          <div className="flex items-center justify-center gap-1.5 pt-2 text-[10px] font-mono uppercase tracking-wider text-[#00a6a6]/90 select-none">
+          <div className="flex items-center justify-center gap-1.5 pt-2 text-[10px] font-mono uppercase tracking-wider text-[#DCEBFF] select-none">
             <span>More steps</span>
             <svg
-              className="w-3.5 h-3.5 animate-bounce text-[#00a6a6]"
+              className="w-3.5 h-3.5 animate-bounce text-[#DCEBFF]"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -157,14 +159,14 @@ export const FabHUD: React.FC<FabHUDProps> = ({
             <p className="font-display font-bold text-sm text-white tracking-tight">
               Small Structures. Big Possibilities.
             </p>
-            <p className="font-mono text-[9px] uppercase tracking-widest text-[#00a6a6] font-semibold">
+            <p className="font-mono text-[9px] uppercase tracking-widest text-[#BBD8FF] font-semibold">
               SILICON JOURNEY
             </p>
           </div>
           <button
             type="button"
             onClick={onStartTour}
-            className="w-full h-12 rounded-full bg-[#00a6a6] text-[#102a43] font-body font-bold text-sm flex items-center justify-center gap-2 shadow-lg shadow-[#00a6a6]/30 cursor-pointer active:brightness-95 focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-[#00a6a6]"
+            className="w-full h-12 rounded-xl bg-[#166FE5] text-white font-body font-bold text-sm flex items-center justify-center gap-2 shadow-lg shadow-[#166FE5]/30 cursor-pointer hover:bg-[#145DB4] focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-[#166FE5]"
           >
             <span>Start the Tour</span>
             <svg

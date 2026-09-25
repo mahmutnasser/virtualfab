@@ -178,7 +178,7 @@ export const FabViewport: React.FC<FabViewportProps> = ({
         />
 
         {/* Subtle lightening gradient (15% lighter for cleanroom brightness) */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0c1e33]/50 via-transparent to-[#081524]/40 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#F6F9FE]/10 via-transparent to-[#0C1E33]/20 pointer-events-none" />
 
         {/* SVG Guided Route & Wafer Marker Overlay */}
         <svg

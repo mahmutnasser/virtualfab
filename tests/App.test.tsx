@@ -97,4 +97,13 @@ describe('App Root', () => {
     expect(window.location.hash).toBe('#home');
     expect(screen.getByRole('heading', { name: /See how a chip takes shape/i })).toBeDefined();
   });
+
+  it('opens Fab Basics from the Virtual Fab introduction', () => {
+    window.history.replaceState(null, '', '/#fab');
+    render(<App />);
+
+    fireEvent.click(screen.getByRole('button', { name: 'Start with Fab Basics' }));
+    expect(window.location.hash).toBe('#basics');
+    expect(screen.getByRole('heading', { name: /A clearer view of how chips are made/i })).toBeDefined();
+  });
 });
