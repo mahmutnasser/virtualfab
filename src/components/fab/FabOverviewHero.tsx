@@ -30,6 +30,9 @@ export const FabOverviewHero: React.FC<FabOverviewHeroProps> = ({
         Step inside a modern semiconductor fab and explore how atomic-scale
         materials become the chips that power our world.
       </p>
+      <p className="mb-6 border-l-2 border-[#166FE5] pl-3 text-sm font-semibold leading-6 text-[#314B63]">
+        Follow one wafer through a simplified patterning cycle.
+      </p>
 
       {/* CTA Button Group */}
       <div className="flex flex-wrap items-center gap-4">

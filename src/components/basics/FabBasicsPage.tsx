@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { FabBasicsTopNav } from './FabBasicsTopNav';
+import SiteHeader from '../app/SiteHeader';
 import { FabBasicsHero } from './FabBasicsHero';
 import { ScaleZoomViewer } from './scale/ScaleZoomViewer';
 import { PatterningMiniLesson } from './patterning/PatterningMiniLesson';
@@ -60,7 +60,7 @@ export const FabBasicsPage: React.FC<FabBasicsPageProps> = ({
   return (
     <div className="min-h-screen bg-[#F6F9FE] text-[#173348] flex flex-col font-sans selection:bg-blue-100 selection:text-blue-900">
       {/* 1. Global White Top Navigation */}
-      <FabBasicsTopNav onNavigateToHome={onOpenHome ?? (() => {})} onNavigateToFab={onOpenFab ?? (() => {})} />
+      <SiteHeader activeSection="basics" onOpenHome={onOpenHome ?? (() => {})} onOpenBasics={() => document.getElementById('main-content')?.scrollIntoView?.()} onOpenFab={onOpenFab ?? (() => {})} />
 
       {/* Main Editorial Content Container */}
       <main id="main-content" tabIndex={-1} className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 sm:py-10 space-y-12 sm:space-y-20 focus:outline-none">
@@ -71,47 +71,17 @@ export const FabBasicsPage: React.FC<FabBasicsPageProps> = ({
           onBrowseAllTerms={() => handleScrollToSection('all-terms')}
         />
 
-        {/* Quick route through the learning sequence */}
-        <nav aria-label="Jump to Fab Basics section" className="rounded-2xl bg-[#EEF5FF] px-5 py-5 sm:px-7 sm:py-6">
-          <p className="text-lg sm:text-xl font-bold text-[#173348]">Start with something you can hold.</p>
-          <p className="mt-1 text-sm text-slate-600">Then move inward: wafer → exposure field → die → layer → feature.</p>
-          <div className="mt-4 flex items-center gap-2 overflow-x-auto pb-1 text-xs">
-            <button
-              type="button"
-              onClick={() => handleScrollToSection('scale-viewer')}
-              className="min-h-[44px] px-3.5 py-1.5 rounded-lg bg-white border border-[#DCE5F2] hover:border-[#166FE5] hover:text-[#145DB4] transition-colors whitespace-nowrap cursor-pointer shadow-2xs font-medium text-slate-700"
-            >
-              01 Scale Hierarchy
-            </button>
-            <button
-              type="button"
-              onClick={() => handleScrollToSection('patterning-lesson')}
-              className="min-h-[44px] px-3.5 py-1.5 rounded-lg bg-white border border-[#DCE5F2] hover:border-[#166FE5] hover:text-[#145DB4] transition-colors whitespace-nowrap cursor-pointer shadow-2xs font-medium text-slate-700"
-            >
-              02 Patterning Visual Story
-            </button>
-            <button
-              type="button"
-              onClick={() => handleScrollToSection('duv-vs-euv')}
-              className="min-h-[44px] px-3.5 py-1.5 rounded-lg bg-white border border-[#DCE5F2] hover:border-[#166FE5] hover:text-[#145DB4] transition-colors whitespace-nowrap cursor-pointer shadow-2xs font-medium text-slate-700"
-            >
-              03 DUV vs EUV
-            </button>
-            <button
-              type="button"
-              onClick={() => handleScrollToSection('process-verbs')}
-              className="min-h-[44px] px-3.5 py-1.5 rounded-lg bg-white border border-[#DCE5F2] hover:border-[#166FE5] hover:text-[#145DB4] transition-colors whitespace-nowrap cursor-pointer shadow-2xs font-medium text-slate-700"
-            >
-              04 The 4 Verbs
-            </button>
-            <button
-              type="button"
-              onClick={() => handleScrollToSection('all-terms')}
-              className="min-h-[44px] px-3.5 py-1.5 rounded-lg bg-white border border-[#DCE5F2] hover:border-[#166FE5] hover:text-[#145DB4] transition-colors whitespace-nowrap cursor-pointer shadow-2xs font-medium text-slate-700"
-            >
-              05 Vocabulary Registry ({CANONICAL_TERMS.length})
-            </button>
-          </div>
+        <nav aria-label="On this page" className="flex flex-wrap items-center gap-x-5 gap-y-2 border-y border-[#DCE5F2] py-4 text-sm">
+          <span className="mr-2 font-semibold text-[#173348]">On this page</span>
+          {[
+            ['scale-viewer', 'Scale'],
+            ['patterning-lesson', 'Patterning'],
+            ['duv-vs-euv', 'Optics'],
+            ['process-verbs', 'Process'],
+            ['all-terms', 'Vocabulary'],
+          ].map(([id, label]) => (
+            <a key={id} href={`#${id}`} className="inline-flex min-h-[44px] items-center font-semibold text-[#145DB4] hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#166FE5]">{label}</a>
+          ))}
         </nav>
 
         {/* 3. Section 01: Scale Hierarchy (Wafer -> Field -> Die -> Layer -> Feature) */}

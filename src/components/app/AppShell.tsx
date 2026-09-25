@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import TopBar from './TopBar';
-import BottomNav from './BottomNav';
+import SiteHeader from './SiteHeader';
 import FabViewport from '../fab/FabViewport';
 import FabHUD from '../fab/FabHUD';
-import ProcessJourneyTrack from '../fab/ProcessJourneyTrack';
+import ProcessMapDisclosure from '../fab/ProcessMapDisclosure';
 import StationPanel from '../process/StationPanel';
 import { CANONICAL_PROCESS_STEPS, type ProcessStep } from '../../types/process';
 import { useLiveAnnouncer } from '../a11y/LiveAnnouncerContext';
@@ -30,8 +29,6 @@ export const AppShell: React.FC<AppShellProps> = ({
   const selectedStepId = useVirtualFabStore((s) => s.selectedStepId);
   const selectedNodeId = useVirtualFabStore((s) => s.selectedNodeId);
   const completedStepIds = useVirtualFabStore((s) => s.completedStepIds);
-  const currentLessons = useVirtualFabStore((s) => s.currentLessons);
-  const totalLessons = useVirtualFabStore((s) => s.totalLessons);
 
   const openStation = useVirtualFabStore((s) => s.openStation);
   const openWaferLab = useVirtualFabStore((s) => s.openWaferLab);
@@ -172,17 +169,7 @@ export const AppShell: React.FC<AppShellProps> = ({
       data-selected-step={selectedStepId}
       className="h-screen w-screen flex flex-col bg-[#F6F9FE] overflow-hidden font-body select-none"
     >
-      {/* Top Header with Contextual Back button (Shown during Fab World modes) */}
-      {activeView !== 'wafer-lab' && (
-        <TopBar
-          activeView={activeView}
-          onBackToFab={handleBackToFab}
-          onOpenBasics={() => onOpenBasics?.()}
-          onOpenHome={onOpenHome}
-          currentLessons={currentLessons}
-          totalLessons={totalLessons}
-        />
-      )}
+      <SiteHeader activeSection="fab" onOpenHome={onOpenHome ?? (() => {})} onOpenBasics={() => onOpenBasics?.()} onOpenFab={handleBackToFab} />
 
       {/* Main Content Area */}
       <main
@@ -216,13 +203,14 @@ export const AppShell: React.FC<AppShellProps> = ({
         {/* VIEW 2: STATION FOCUS (State B) */}
         {activeView === 'station-focus' && (
           <div className="relative flex-1 w-full h-full flex flex-col overflow-hidden pointer-events-none z-10">
-            {/* Persistent Top Process Sequence Track (constrained to clear the right StationPanel on desktop) */}
+            {/* Local process controls stay separate from the global site navigation. */}
             <div className="absolute top-0 left-0 right-0 md:right-[400px] lg:right-[440px] p-2 sm:p-3 lg:p-4 z-40 pointer-events-none">
-              <div className="pointer-events-auto bg-white/95 border border-slate-200/80 backdrop-blur-xl rounded-xl md:rounded-2xl p-1 sm:p-1.5 lg:p-2 shadow-xl shadow-slate-900/10">
-                <ProcessJourneyTrack
+              <div className="pointer-events-auto">
+                <ProcessMapDisclosure
                   activeStepId={selectedStepId}
                   completedStepIds={completedStepIds}
                   onSelectStep={handleSelectStep}
+                  onBackToFab={handleBackToFab}
                 />
               </div>
             </div>
@@ -248,18 +236,6 @@ export const AppShell: React.FC<AppShellProps> = ({
               isExitingLab ? 'opacity-0' : 'opacity-100'
             }`}
           >
-            <nav aria-label="Explore sections" className="sticky top-0 z-40 flex justify-end gap-2 border-b border-[#DCE5F2] bg-white/95 px-4 py-2 backdrop-blur">
-              <button type="button" onClick={onOpenHome} className="min-h-[44px] rounded-lg px-4 text-sm font-semibold text-[#145DB4] hover:bg-[#EAF2FF] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#166FE5]">
-                Home
-              </button>
-              <button
-                type="button"
-                onClick={() => onOpenBasics?.()}
-                className="min-h-[44px] rounded-lg bg-[#166FE5] px-4 text-sm font-semibold text-white hover:bg-[#145DB4] transition-colors cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#145DB4] focus-visible:outline-offset-2"
-              >
-                Fab Basics →
-              </button>
-            </nav>
             <WaferLab
               onReturnToStation={handleReturnFromWaferLab}
               onReturnToFab={handleBackToFab}
@@ -269,8 +245,6 @@ export const AppShell: React.FC<AppShellProps> = ({
         )}
       </main>
 
-      {/* Mobile Bottom Navigation Bar (Visible on mobile only during overview) */}
-      {activeView === 'fab-overview' && <BottomNav onOpenHome={onOpenHome} onOpenBasics={() => onOpenBasics?.()} />}
     </div>
   );
 };

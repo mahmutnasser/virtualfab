@@ -10,12 +10,11 @@ describe('AppShell Component', () => {
     expect(main?.getAttribute('tabIndex')).toBe('-1');
   });
 
-  it('renders the TopBar header with navigation and progress', () => {
+  it('renders the shared site navigation and compact process map', () => {
     render(<AppShell />);
-    expect(
-      screen.getAllByText('Virtual Fab')[0],
-    ).toBeDefined();
-    expect(screen.getByText('2 / 12 lessons')).toBeDefined();
+    expect(screen.getByRole('navigation', { name: 'Main navigation' })).toBeDefined();
+    expect(screen.getAllByRole('button', { name: 'View process map' })[0]).toBeDefined();
+    expect(screen.queryByText('2 / 12 lessons')).toBeNull();
   });
 
   it('renders the FabOverviewHero heading and Start the Tour CTA', () => {
@@ -28,7 +27,7 @@ describe('AppShell Component', () => {
     ).toBeDefined();
   });
 
-  it('renders the FabNarration contextual card', () => {
+  it('explains the wafer journey in the overview introduction', () => {
     render(<AppShell />);
     expect(
       screen.getByText(
@@ -55,6 +54,7 @@ describe('AppShell Component', () => {
     fireEvent.click(inspectButton);
 
     expect(screen.getByText(/What will deposition change on the wafer/i)).toBeDefined();
+    expect(screen.getByRole('navigation', { name: 'Main navigation' })).toBeDefined();
 
     // 1. Returning from Wafer Lab returns to the physical station
     const returnToStationBtn = screen.getByRole('button', { name: /Return to Deposition Station/i });

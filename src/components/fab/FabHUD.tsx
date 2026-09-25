@@ -1,8 +1,6 @@
 import React from 'react';
-import ProcessJourneyTrack from './ProcessJourneyTrack';
+import ProcessMapDisclosure from './ProcessMapDisclosure';
 import FabOverviewHero from './FabOverviewHero';
-import FabNarration from './FabNarration';
-import { CANONICAL_PROCESS_STEPS } from '../../types/process';
 
 export interface FabHUDProps {
   activeStepId?: string;
@@ -27,13 +25,8 @@ export const FabHUD: React.FC<FabHUDProps> = ({
     >
       {/* ── DESKTOP HUD LAYOUT (hidden on mobile) ── */}
       <div className="hidden md:flex flex-col w-full h-full p-4 lg:p-6">
-        {/* Top: Process Sequence Track */}
-        <div className="w-full max-w-[1360px] mx-auto pointer-events-auto bg-white/96 border border-[#DCE5F2] backdrop-blur-xl rounded-2xl p-1 lg:p-1.5 shadow-[0_12px_32px_rgba(21,65,112,0.12)]">
-          <ProcessJourneyTrack
-            activeStepId={activeStepId}
-            completedStepIds={completedStepIds}
-            onSelectStep={onSelectStep}
-          />
+        <div className="w-full max-w-[1360px] mx-auto pointer-events-auto">
+          <ProcessMapDisclosure activeStepId={activeStepId} completedStepIds={completedStepIds} onSelectStep={(stepId) => onSelectStep?.(stepId)} />
         </div>
 
         {/* Middle row: Hero on left, positioned above machinery */}
@@ -43,12 +36,6 @@ export const FabHUD: React.FC<FabHUDProps> = ({
           </div>
         </div>
 
-        {/* Bottom row: Information card anchored bottom-right */}
-        <div className="w-full flex justify-end items-end mt-auto">
-          <div className="pointer-events-auto pb-2 pr-2">
-            <FabNarration onExploreProcess={onStartTour} />
-          </div>
-        </div>
       </div>
 
       {/* ── MOBILE HUD LAYOUT (<768px, matches mobile mockup) ── */}
@@ -66,91 +53,8 @@ export const FabHUD: React.FC<FabHUDProps> = ({
           </p>
         </div>
 
-        {/* Mobile Floating Process Step Nodes (Overlaying Cleanroom - Full Canonical Flow) */}
-        <div className="relative my-auto max-w-[270px]">
-          <div
-            tabIndex={0}
-            role="region"
-            aria-label="Process steps list"
-            className="space-y-2 max-h-[46vh] overflow-y-auto pr-1.5 focus:outline-none focus:ring-1 focus:ring-[#166FE5]/50 rounded-xl"
-          >
-            {CANONICAL_PROCESS_STEPS.map((step) => {
-              const isActive = step.id === activeStepId;
-              const isCompleted = completedStepIds.includes(step.id);
-              const badgeLabel =
-                typeof step.stepNumber === 'number'
-                  ? `${step.stepNumber}`
-                  : step.checkpointKind
-                    ? step.checkpointKind
-                    : step.order === 'start'
-                      ? 'In'
-                      : 'Loop';
-
-              return (
-                <button
-                  key={step.id}
-                  type="button"
-                  onClick={() => onSelectStep?.(step.id)}
-                  aria-label={`Go to ${step.name}`}
-                  className={`w-full text-left rounded-2xl p-2.5 shadow-md flex items-center justify-between gap-3 cursor-pointer transition-all duration-200 focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-[#166FE5] ${
-                    isActive
-                      ? 'bg-white/95 border-2 border-[#166FE5] shadow-[#166FE5]/20'
-                      : isCompleted
-                        ? 'bg-white/90 border border-[#166FE5]/40 hover:border-[#166FE5]'
-                        : 'bg-white/85 border border-slate-200/90 hover:border-slate-300'
-                  }`}
-                >
-                  <div className="flex items-center gap-3 min-w-0">
-                    <span
-                      className={`w-7 h-7 rounded-full font-bold text-xs flex items-center justify-center shrink-0 ${
-                        isActive
-                          ? 'bg-[#166FE5] text-white shadow-sm'
-                          : isCompleted
-                            ? 'bg-[#EAF2FF] text-[#145DB4] border border-[#A7CBFA]'
-                            : 'bg-slate-100 text-slate-700 border border-slate-200'
-                      }`}
-                    >
-                      {step.isCheckpoint ? (
-                        <span className="text-[10px] font-bold tracking-tight">
-                          {step.checkpointKind ?? 'QC'}
-                        </span>
-                      ) : (
-                        badgeLabel
-                      )}
-                    </span>
-                    <span className="font-display font-bold text-sm text-[#102a43] truncate">
-                      {step.name}
-                    </span>
-                  </div>
-
-                  <svg
-                    className={`w-4 h-4 shrink-0 ${isActive ? 'text-[#166FE5]' : 'text-slate-400'}`}
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth="2.5"
-                    aria-hidden="true"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
-                  </svg>
-                </button>
-              );
-            })}
-          </div>
-
-          {/* More steps scroll discovery indicator */}
-          <div className="flex items-center justify-center gap-1.5 pt-2 text-[10px] font-mono uppercase tracking-wider text-[#DCEBFF] select-none">
-            <span>More steps</span>
-            <svg
-              className="w-3.5 h-3.5 animate-bounce text-[#DCEBFF]"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth="2.5"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-            </svg>
-          </div>
+        <div className="relative z-30 my-4">
+          <ProcessMapDisclosure activeStepId={activeStepId} completedStepIds={completedStepIds} onSelectStep={(stepId) => onSelectStep?.(stepId)} />
         </div>
 
         {/* Mobile Bottom Tagline & Primary CTA */}

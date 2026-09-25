@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, within } from '@testing-library/react';
 import App from '@/App';
 
 describe('App Root', () => {
@@ -47,7 +47,7 @@ describe('App Root', () => {
     expect(
       screen.getAllByText('Virtual Fab')[0],
     ).toBeDefined();
-    expect(screen.getByText('2 / 12 lessons')).toBeDefined();
+    expect(screen.getByRole('navigation', { name: 'Main navigation' })).toBeDefined();
     expect(
       screen.getByRole('heading', { name: 'Fab Overview' }),
     ).toBeDefined();
@@ -73,7 +73,7 @@ describe('App Root', () => {
     fireEvent(window, new Event('hashchange'));
     expect(screen.getByRole('heading', { name: /A clearer view of how chips are made/i })).toBeDefined();
 
-    fireEvent.click(screen.getByRole('button', { name: 'Return to Virtual Fab' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Virtual Fab' }));
     expect(screen.getByRole('heading', { name: 'Fab Overview' })).toBeDefined();
     expect(window.location.hash).toBe('#fab');
   });
@@ -82,7 +82,7 @@ describe('App Root', () => {
     window.history.replaceState(null, '', '/basics');
     render(<App />);
 
-    fireEvent.click(screen.getByRole('button', { name: 'Return to Virtual Fab' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Virtual Fab' }));
     expect(window.location.pathname).toBe('/');
     expect(window.location.hash).toBe('#fab');
     expect(screen.getByRole('heading', { name: 'Fab Overview' })).toBeDefined();
@@ -105,5 +105,16 @@ describe('App Root', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Start with Fab Basics' }));
     expect(window.location.hash).toBe('#basics');
     expect(screen.getByRole('heading', { name: /A clearer view of how chips are made/i })).toBeDefined();
+  });
+
+  it('navigates through the mobile menu without a second bottom bar', () => {
+    window.history.replaceState(null, '', '/#fab');
+    render(<App />);
+
+    fireEvent.click(screen.getByRole('button', { name: 'Open navigation menu' }));
+    const mobileNav = screen.getByRole('navigation', { name: 'Mobile main navigation' });
+    fireEvent.click(within(mobileNav).getByRole('button', { name: 'Fab Basics' }));
+    expect(window.location.hash).toBe('#basics');
+    expect(screen.queryByRole('navigation', { name: 'Mobile Navigation' })).toBeNull();
   });
 });

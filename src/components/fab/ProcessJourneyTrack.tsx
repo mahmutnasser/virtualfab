@@ -124,7 +124,7 @@ export const ProcessJourneyTrack: React.FC<ProcessJourneyTrackProps> = ({
 
               {/* Connecting line between steps */}
               {idx < steps.length - 1 && (
-                <div
+                <li
                   className={`flex-1 min-w-[4px] sm:min-w-[6px] md:min-w-[8px] lg:min-w-[10px] xl:min-w-[12px] h-[1.5px] -mt-5 lg:-mt-6 transition-colors duration-300 ${
                     isCompleted
                       ? 'bg-[#166FE5]'

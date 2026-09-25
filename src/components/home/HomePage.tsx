@@ -1,4 +1,5 @@
 import React from 'react';
+import SiteHeader from '../app/SiteHeader';
 
 interface HomePageProps {
   onOpenBasics: () => void;
@@ -13,19 +14,7 @@ const Arrow = () => (
 
 export const HomePage: React.FC<HomePageProps> = ({ onOpenBasics, onOpenFab }) => (
   <div className="min-h-screen bg-[#F6F9FE] font-body text-[#173348] selection:bg-[#D9E9FF]">
-    <header className="sticky top-0 z-30 border-b border-[#DFE8F4] bg-white/95 backdrop-blur-xl">
-      <div className="mx-auto flex min-h-[72px] max-w-7xl items-center justify-between gap-3 px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center gap-2.5" aria-label="Silicon Journey">
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#166FE5] font-display text-xs font-bold tracking-wide text-white shadow-sm">SJ</span>
-          <span className="hidden font-display text-lg font-bold tracking-tight text-[#173348] sm:inline">Silicon Journey</span>
-        </div>
-        <nav aria-label="Explore sections" className="flex items-center gap-1 sm:gap-2">
-          <span aria-current="page" className="inline-flex min-h-[44px] items-center rounded-lg bg-[#EAF2FF] px-2 text-xs font-semibold text-[#145DB4] sm:px-3 sm:text-sm">Home</span>
-          <button type="button" onClick={onOpenBasics} className="min-h-[44px] rounded-lg px-2 text-xs font-semibold text-[#314B63] hover:bg-[#EAF2FF] hover:text-[#145DB4] sm:px-3 sm:text-sm">Fab Basics</button>
-          <button type="button" onClick={onOpenFab} className="min-h-[44px] rounded-lg bg-[#166FE5] px-2.5 text-xs font-semibold text-white shadow-sm transition-colors hover:bg-[#145DB4] sm:px-4 sm:text-sm">Virtual Fab</button>
-        </nav>
-      </div>
-    </header>
+    <SiteHeader activeSection="home" onOpenHome={() => document.getElementById('main-content')?.scrollIntoView?.()} onOpenBasics={onOpenBasics} onOpenFab={onOpenFab} />
 
     <main id="main-content" tabIndex={-1} className="focus:outline-none">
       <section aria-labelledby="home-heading" className="relative isolate overflow-hidden bg-white">
