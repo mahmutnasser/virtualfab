@@ -11,6 +11,7 @@ import {
   OXIDE_DEPOSITED_LAYER,
   PHOTORESIST_LAYER,
   validateLayerInvariants,
+  createMultiLayerWaferState,
 } from './types';
 
 /**
@@ -136,6 +137,17 @@ export function validateProcessAction(
       return { allowed: true };
     }
 
+    case 'build-multilayer': {
+      const hasOxide = wafer.layers.some((l) => l.material === 'oxide');
+      if (!hasOxide) {
+        return {
+          allowed: false,
+          reason: 'Multi-layer interconnect stack requires an underlying patterned dielectric/device layer.',
+        };
+      }
+      return { allowed: true };
+    }
+
     default:
       return { allowed: false, reason: 'Unsupported process action.' };
   }
@@ -237,6 +249,18 @@ export function canExecuteScenarioStep(
         return {
           allowed: false,
           reason: 'Wafer has not undergone fabrication processing to inspect.',
+        };
+      }
+      return { allowed: true };
+    }
+
+    case 'build-multilayer': {
+      // In educational cycle, multi-layer buildup demonstrates BEOL metallization on a patterned substrate
+      const hasOxide = wafer.layers.some((l) => l.material === 'oxide');
+      if (!hasOxide) {
+        return {
+          allowed: false,
+          reason: 'Patterning of the initial dielectric layer must be completed before building multilevel metallization.',
         };
       }
       return { allowed: true };
@@ -653,6 +677,43 @@ export function applyProcess(
         changes: [],
         feedback: [inspectionData.conceptualFeedback],
         inspection: inspectionData,
+      };
+    }
+
+    case 'build-multilayer': {
+      const metalMaterial = action.metalMaterial ?? 'copper';
+      const nextState = createMultiLayerWaferState(currentState, metalMaterial);
+      nextState.layers.forEach(validateLayerInvariants);
+
+      const changes: ProcessChange[] = [
+        {
+          layerId: 'metal-m1',
+          changeType: 'added',
+          description:
+            'Copper/tungsten metallization deposited into etched contact windows and planarized flush using Chemical-Mechanical Planarization (CMP).',
+        },
+        {
+          layerId: 'oxide-ild',
+          changeType: 'added',
+          description:
+            'Inter-Layer Dielectric (ILD) deposited to electrically insulate Metal 1 from upper routing levels.',
+        },
+        {
+          layerId: 'metal-m2',
+          changeType: 'added',
+          description:
+            'Via 1 vertical connections and Metal 2 horizontal interconnect lines patterned and integrated into the 3D stack.',
+        },
+      ];
+
+      return {
+        valid: true,
+        previousState: currentState,
+        nextState,
+        changes,
+        feedback: [
+          'Multi-layer interconnect cycle executed: 3D metallization stack formed with copper damascene and CMP planarization.',
+        ],
       };
     }
 

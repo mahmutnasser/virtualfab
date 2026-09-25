@@ -15,6 +15,7 @@ export const CrossSectionPanel: React.FC<CrossSectionPanelProps> = ({
   className = '',
 }) => {
   const [inspectionMode, setInspectionMode] = useState<boolean>(false);
+  const [stackLevel, setStackLevel] = useState<'all' | 'level1' | 'level2' | 'level3' | 'level4'>('all');
 
   // Derive layer presence
   const hasOxide = waferState.layers.some(
@@ -22,6 +23,9 @@ export const CrossSectionPanel: React.FC<CrossSectionPanelProps> = ({
   );
   const hasResist = waferState.layers.some(
     (l) => ('material' in l ? l.material === 'photoresist' : l.type === 'photoresist') || l.id === 'photoresist-film',
+  );
+  const hasMetal = waferState.layers.some(
+    (l) => ('material' in l ? l.material === 'metal' : l.type === 'metal') || l.id.startsWith('metal-'),
   );
 
   // Step-specific primary inspection target label
@@ -34,6 +38,7 @@ export const CrossSectionPanel: React.FC<CrossSectionPanelProps> = ({
     etch: 'Trench Depth & Profile Angle (Cross-Sectional SEM)',
     aei: 'Trench Depth & Profile Angle (Cross-Sectional SEM)',
     strip: 'Resist Residue & Surface Particle Metrology',
+    repeat: 'Multilevel Interconnect Stack & CMP Planarity Metrology',
   };
   const activeInspectionLabel = stepTargetMap[stepId.toLowerCase()] || 'Inline Layer Metrology';
 
@@ -84,11 +89,80 @@ export const CrossSectionPanel: React.FC<CrossSectionPanelProps> = ({
         </div>
       </div>
 
+      {/* Multi-Layer Stack Inspector Tabs */}
+      {hasMetal && (
+        <div className="mt-3 p-2 bg-slate-50 border border-slate-200/80 rounded-xl space-y-1.5 animate-in fade-in duration-300">
+          <div className="flex items-center justify-between px-1">
+            <span className="font-mono text-[10px] uppercase tracking-wider text-slate-500 font-bold">
+              3D Layer Stack Inspector
+            </span>
+            <span className="font-mono text-[10px] text-amber-600 font-semibold">
+              Copper Damascene & CMP Stack
+            </span>
+          </div>
+          <div role="tablist" aria-label="3D Layer Stack Levels" className="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
+            <button
+              type="button"
+              role="tab"
+              aria-selected={stackLevel === 'all'}
+              onClick={() => setStackLevel('all')}
+              className={`px-2 py-1 rounded-lg text-[11px] font-mono font-semibold transition-all cursor-pointer ${
+                stackLevel === 'all'
+                  ? 'bg-slate-900 text-white shadow-xs'
+                  : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-100'
+              }`}
+            >
+              Full 3D Stack
+            </button>
+            <button
+              type="button"
+              role="tab"
+              aria-selected={stackLevel === 'level2'}
+              onClick={() => setStackLevel('level2')}
+              className={`px-2 py-1 rounded-lg text-[11px] font-mono font-semibold transition-all cursor-pointer ${
+                stackLevel === 'level2'
+                  ? 'bg-[#B45309] text-white shadow-xs'
+                  : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-100'
+              }`}
+            >
+              M1 & CMP
+            </button>
+            <button
+              type="button"
+              role="tab"
+              aria-selected={stackLevel === 'level3'}
+              onClick={() => setStackLevel('level3')}
+              className={`px-2 py-1 rounded-lg text-[11px] font-mono font-semibold transition-all cursor-pointer ${
+                stackLevel === 'level3'
+                  ? 'bg-[#0284C7] text-white shadow-xs'
+                  : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-100'
+              }`}
+            >
+              ILD & Vias
+            </button>
+            <button
+              type="button"
+              role="tab"
+              aria-selected={stackLevel === 'level4'}
+              onClick={() => setStackLevel('level4')}
+              className={`px-2 py-1 rounded-lg text-[11px] font-mono font-semibold transition-all cursor-pointer ${
+                stackLevel === 'level4'
+                  ? 'bg-[#D97706] text-white shadow-xs'
+                  : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-100'
+              }`}
+            >
+              M2 Routing
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Main SVG Cross-Section Renderer */}
       <div className="my-4 flex items-center justify-center relative">
         <WaferCrossSectionSVG
           waferState={waferState}
           showMetrologyCalipers={inspectionMode}
+          highlightLevel={stackLevel}
         />
       </div>
 
@@ -112,25 +186,39 @@ export const CrossSectionPanel: React.FC<CrossSectionPanelProps> = ({
             </div>
 
             <div>
-              <span className="text-[10px] text-slate-400 block uppercase">Dielectric (SiO₂)</span>
-              <span className={`font-bold ${hasOxide ? 'text-teal-600' : 'text-slate-400'}`}>
-                {hasOxide ? '100.0 nm' : '0.0 nm'}
+              <span className="text-[10px] text-slate-400 block uppercase">
+                {hasMetal ? 'Inter-Layer ILD' : 'Dielectric (SiO₂)'}
               </span>
-              <span className="text-[10px] text-slate-500 block">n = 1.46 (PECVD)</span>
+              <span className={`font-bold ${hasOxide || hasMetal ? 'text-teal-600' : 'text-slate-400'}`}>
+                {hasMetal ? '100.0 nm' : hasOxide ? '100.0 nm' : '0.0 nm'}
+              </span>
+              <span className="text-[10px] text-slate-500 block">
+                {hasMetal ? 'k = 2.7 (Low-k)' : 'n = 1.46 (PECVD)'}
+              </span>
             </div>
 
             <div>
-              <span className="text-[10px] text-slate-400 block uppercase">Photoresist (PR)</span>
-              <span className={`font-bold ${hasResist ? 'text-indigo-600' : 'text-slate-400'}`}>
-                {hasResist ? '300.0 nm' : '0.0 nm'}
+              <span className="text-[10px] text-slate-400 block uppercase">
+                {hasMetal ? 'Metal 1 (Cu)' : 'Photoresist (PR)'}
               </span>
-              <span className="text-[10px] text-slate-500 block">n = 1.68 (193nm)</span>
+              <span className={`font-bold ${hasMetal ? 'text-amber-600' : hasResist ? 'text-indigo-600' : 'text-slate-400'}`}>
+                {hasMetal ? '150.0 nm' : hasResist ? '300.0 nm' : '0.0 nm'}
+              </span>
+              <span className="text-[10px] text-slate-500 block">
+                {hasMetal ? 'CMP Δz < 2nm' : 'n = 1.68 (193nm)'}
+              </span>
             </div>
 
             <div>
-              <span className="text-[10px] text-slate-400 block uppercase">Profile & Uniformity</span>
-              <span className="font-bold text-slate-800">θ = 89.4°</span>
-              <span className="text-[10px] text-slate-500 block">3σ = 1.1 nm</span>
+              <span className="text-[10px] text-slate-400 block uppercase">
+                {hasMetal ? 'Metal 2 Routing' : 'Profile & Uniformity'}
+              </span>
+              <span className={`font-bold ${hasMetal ? 'text-amber-600' : 'text-slate-800'}`}>
+                {hasMetal ? '200.0 nm' : 'θ = 89.4°'}
+              </span>
+              <span className="text-[10px] text-slate-500 block">
+                {hasMetal ? 'Via AR = 3.5:1' : '3σ = 1.1 nm'}
+              </span>
             </div>
           </div>
         </div>

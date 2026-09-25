@@ -8,6 +8,7 @@ import PhotoresistLayer from './svg/PhotoresistLayer';
 import ExposureOverlay from './svg/ExposureOverlay';
 import InspectionOverlay from './svg/InspectionOverlay';
 import CrossSectionLegend from './svg/CrossSectionLegend';
+import MetalLayer from './svg/MetalLayer';
 
 export type SupportedWaferState = EngineWaferState | LegacyWaferState;
 
@@ -15,6 +16,7 @@ export interface WaferCrossSectionSVGProps {
   waferState: SupportedWaferState;
   activeCheckpoint?: 'ADI' | 'AEI' | null;
   showMetrologyCalipers?: boolean;
+  highlightLevel?: 'all' | 'level1' | 'level2' | 'level3' | 'level4';
   className?: string;
 }
 
@@ -22,6 +24,7 @@ export const WaferCrossSectionSVG: React.FC<WaferCrossSectionSVGProps> = ({
   waferState,
   activeCheckpoint = null,
   showMetrologyCalipers = false,
+  highlightLevel = 'all',
   className = '',
 }) => {
   const prefersReducedMotion = useReducedMotion();
@@ -65,7 +68,12 @@ export const WaferCrossSectionSVG: React.FC<WaferCrossSectionSVGProps> = ({
       : undefined;
   const hasExposure = Boolean(exposureMask && exposureMask.some(Boolean));
 
-  // 4. Resolve Active Metrology Checkpoint
+  // 4. Resolve Multi-Layer Metallization (M1, ILD, M2)
+  const hasMetal = waferState.layers.some(
+    (l) => ('material' in l ? l.material === 'metal' : l.type === 'metal') || l.id.startsWith('metal-'),
+  );
+
+  // 5. Resolve Active Metrology Checkpoint
   const legacyStepId = 'currentStepId' in waferState ? waferState.currentStepId : undefined;
   const inferredCheckpoint =
     activeCheckpoint ||
@@ -80,7 +88,11 @@ export const WaferCrossSectionSVG: React.FC<WaferCrossSectionSVGProps> = ({
   let accessibleDesc =
     'Silicon substrate present; 0 added process layers. Polished monocrystalline silicon substrate wafer with exposed upper surface before thin film deposition.';
 
-  if (hasResist && hasExposure && !resistPresenceMask.some((p, i) => !p && exposureMask?.[i])) {
+  if (hasMetal) {
+    accessibleTitle = 'Wafer Cross-Section: 3D Multilevel Metallization Stack (M1, ILD, Vias, M2)';
+    accessibleDesc =
+      'A multi-layer semiconductor cross-section showing silicon substrate, patterned dielectric with copper/tungsten Metal 1 contact plugs planarized by CMP, inter-layer dielectric (ILD) with vertical via connections, and Metal 2 horizontal interconnect lines.';
+  } else if (hasResist && hasExposure && !resistPresenceMask.some((p, i) => !p && exposureMask?.[i])) {
     accessibleTitle = 'Wafer Cross-Section: Photoresist Layer with UV Latent Image Pattern';
     accessibleDesc =
       'A multi-layer semiconductor cross-section showing silicon substrate, continuous silicon dioxide dielectric film, and purple photoresist with an optical latent image pattern exposed by ultraviolet light.';
@@ -326,6 +338,18 @@ export const WaferCrossSectionSVG: React.FC<WaferCrossSectionSVGProps> = ({
           </g>
         )}
 
+        {/* ── LAYER 4: MULTI-LAYER INTERCONNECTS (M1, ILD, Vias, M2) ── */}
+        {hasMetal && (
+          <MetalLayer
+            x={waferLeft}
+            oxideY={oxideY}
+            oxideHeight={oxideHeight}
+            width={waferWidth}
+            highlightLevel={highlightLevel}
+            showLabels={true}
+          />
+        )}
+
         {/* ── METROLOGY CHECKPOINT INSPECTION OVERLAY ── */}
         {inferredCheckpoint && (
           <InspectionOverlay
@@ -349,6 +373,29 @@ export const WaferCrossSectionSVG: React.FC<WaferCrossSectionSVGProps> = ({
                 <rect x={10} y={resistY + resistHeight / 2 - 7} width={32} height={14} rx="3" fill="#1E1B4B" stroke="#7B61FF" strokeWidth="0.8" />
                 <text x={26} y={resistY + resistHeight / 2 + 3} textAnchor="middle" fill="#C7D2FE" fontWeight="bold">
                   300nm
+                </text>
+              </g>
+            )}
+
+            {/* Multi-Layer Interconnect Calipers */}
+            {hasMetal && (
+              <g id="caliper-metal-stack">
+                {/* M1 Caliper */}
+                <line x1={18} y1={oxideY - 26} x2={34} y2={oxideY - 26} stroke="#D97706" strokeWidth="1" />
+                <line x1={18} y1={oxideY} x2={34} y2={oxideY} stroke="#D97706" strokeWidth="1" />
+                <line x1={26} y1={oxideY - 26} x2={26} y2={oxideY} stroke="#D97706" strokeWidth="1" strokeDasharray="2 2" />
+                <rect x={10} y={oxideY - 20} width={32} height={14} rx="3" fill="#451A03" stroke="#D97706" strokeWidth="0.8" />
+                <text x={26} y={oxideY - 10} textAnchor="middle" fill="#FDE68A" fontWeight="bold">
+                  150nm
+                </text>
+
+                {/* M2 Caliper */}
+                <line x1={18} y1={oxideY - 26 - 28 - 26} x2={34} y2={oxideY - 26 - 28 - 26} stroke="#F59E0B" strokeWidth="1" />
+                <line x1={18} y1={oxideY - 26 - 28} x2={34} y2={oxideY - 26 - 28} stroke="#F59E0B" strokeWidth="1" />
+                <line x1={26} y1={oxideY - 26 - 28 - 26} x2={26} y2={oxideY - 26 - 28} stroke="#F59E0B" strokeWidth="1" strokeDasharray="2 2" />
+                <rect x={10} y={oxideY - 73} width={32} height={14} rx="3" fill="#451A03" stroke="#F59E0B" strokeWidth="0.8" />
+                <text x={26} y={oxideY - 63} textAnchor="middle" fill="#FDE68A" fontWeight="bold">
+                  200nm
                 </text>
               </g>
             )}
@@ -401,7 +448,7 @@ export const WaferCrossSectionSVG: React.FC<WaferCrossSectionSVGProps> = ({
         )}
 
         {/* ── BARE SURFACE INDICATOR (When no layers deposited) ── */}
-        {!hasOxide && !hasResist && (
+        {!hasOxide && !hasResist && !hasMetal && (
           <g id="surface-indicator">
             <line
               x1={waferLeft}
@@ -453,6 +500,7 @@ export const WaferCrossSectionSVG: React.FC<WaferCrossSectionSVGProps> = ({
           hasOxide={hasOxide}
           hasResist={hasResist}
           hasExposure={hasExposure}
+          hasMetal={hasMetal}
         />
 
         {/* Orientation & Scale Watermark */}

@@ -222,6 +222,39 @@ export const ENGINEERING_STEP_DATA: Record<string, EngineeringStepData> = {
       { parameter: 'Resist Residue Defect Spec', targetValue: '< 0.02 defects/cm²', tolerance: 'Pass standard' },
     ],
   },
+  repeat: {
+    title: 'Engineering View • Multi-Layer Interconnects & CMP Planarization',
+    category: 'BEOL & Metallization',
+    summary:
+      'Back-End of Line (BEOL) builds multilevel metallization networks connecting billions of discrete transistors into coherent logic circuits, requiring repeated cycles of dual-damascene copper electroplating, dielectric deposition, and Chemical-Mechanical Planarization (CMP).',
+    sourceBadge: '[SRC-FAB-PROCESS-01]',
+    columns: [
+      {
+        title: 'Dual-Damascene Copper Metallization',
+        sourceBadge: '[SRC-FAB-PROCESS-01]',
+        description:
+          'Trench and via patterns are etched into low-k inter-layer dielectric (ILD). A thin barrier/seed layer (TaN/Ta) prevents copper diffusion before electrochemical copper plating fills the features void-free.',
+      },
+      {
+        title: 'Chemical-Mechanical Planarization (CMP)',
+        sourceBadge: '[SRC-PROCESS-CONTROL-01]',
+        description:
+          'Rotating polishing platens with silica/alumina slurries chemically oxidize and mechanically abrade excess overburden copper, creating a planar surface flush with the dielectric for subsequent lithography.',
+      },
+    ],
+    physicsFormula: {
+      label: "Preston's Law of Polishing Material Removal",
+      formula: 'MRR = k_p · P · v',
+      explanation:
+        'Material removal rate MRR is directly proportional to the downward polishing pressure P and relative platen velocity v, scaled by Preston coefficient k_p representing chemical slurry activity.',
+    },
+    processWindow: [
+      { parameter: 'CMP Down-Force Pressure', targetValue: '2.8 psi', tolerance: '±0.1 psi' },
+      { parameter: 'Slurry pH Chemistry', targetValue: '2.5 (Acidic Cu)', tolerance: '±0.1 pH' },
+      { parameter: 'M1 Sheet Resistance', targetValue: '< 0.08 Ω/sq', tolerance: 'Conductive spec' },
+      { parameter: 'ILD Dielectric Constant', targetValue: 'k = 2.7 (SiCOH)', tolerance: '±0.05' },
+    ],
+  },
 };
 
 export interface EngineeringViewProps {

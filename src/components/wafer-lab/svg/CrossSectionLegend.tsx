@@ -4,12 +4,14 @@ export interface CrossSectionLegendProps {
   hasOxide: boolean;
   hasResist: boolean;
   hasExposure: boolean;
+  hasMetal?: boolean;
 }
 
 export const CrossSectionLegend: React.FC<CrossSectionLegendProps> = ({
   hasOxide,
   hasResist,
   hasExposure,
+  hasMetal = false,
 }) => {
   return (
     <g id="cross-section-legend" transform="translate(20, 292)">
@@ -112,6 +114,32 @@ export const CrossSectionLegend: React.FC<CrossSectionLegendProps> = ({
             fontWeight="600"
           >
             Latent UV Image
+          </text>
+        </g>
+      )}
+
+      {/* Metal / Interconnect Chip */}
+      {hasMetal && (
+        <g transform={`translate(${hasOxide ? 215 : 95}, 0)`}>
+          <rect
+            x="0"
+            y="0"
+            width="11"
+            height="11"
+            rx="2"
+            fill="#D97706"
+            stroke="#78350F"
+            strokeWidth="1"
+          />
+          <text
+            x="16"
+            y="9"
+            fill="#475569"
+            fontSize="9.5"
+            fontFamily="'Space Grotesk', sans-serif"
+            fontWeight="600"
+          >
+            Interconnect (Cu)
           </text>
         </g>
       )}

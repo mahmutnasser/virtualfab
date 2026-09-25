@@ -236,4 +236,67 @@ describe('VF-013 Complete Wafer Lab Journey Integration', () => {
 
     expect(handleNext).toHaveBeenCalledTimes(1);
   });
+
+  it('VF-013F: WaferLab Repeat step executes multi-layer BEOL build, renders layer stack inspector, and completes CMP interpretation', () => {
+    // 1. Prepare wafer at strip step with patterned oxide
+    let wafer = createBareWafer();
+    wafer = applyProcess(wafer, { type: 'deposit', material: 'oxide' }).nextState;
+    wafer = applyProcess(wafer, { type: 'coat-resist', tone: 'positive' }).nextState;
+    const mask = Array(16).fill(false);
+    for (let i = 4; i <= 11; i++) mask[i] = true;
+    wafer = applyProcess(wafer, { type: 'expose', exposureMask: mask }).nextState;
+    wafer = applyProcess(wafer, { type: 'develop' }).nextState;
+    wafer = applyProcess(wafer, { type: 'etch' }).nextState;
+    wafer = applyProcess(wafer, { type: 'strip' }).nextState;
+
+    useVirtualFabStore.setState({
+      wafer,
+      completedStepIds: ['deposition', 'coat', 'lithography', 'develop', 'etch', 'strip'],
+      fabProgress: {
+        setupCompleted: true,
+        completedOperationIds: ['deposition', 'coat', 'lithography', 'develop', 'etch', 'strip'],
+        completedCheckpointIds: ['adi', 'aei'],
+        selectedNodeId: 'repeat',
+      },
+    });
+
+    useVirtualFabStore.getState().openStation('repeat');
+    useVirtualFabStore.getState().openWaferLab();
+
+    const handleNext = vi.fn();
+    render(<WaferLab onNextStep={handleNext} />);
+
+    expect(screen.getByRole('heading', { name: 'Multi-Layer Interconnects & Repeat' })).toBeDefined();
+
+    // 1. Prediction question
+    const predOption = screen.getByRole('radio', {
+      name: /A single layer cannot route overlapping electrical signals without short-circuiting/i,
+    });
+    fireEvent.click(predOption);
+
+    // 2. Execute process button
+    const runBtn = screen.getByRole('button', { name: /Build Multi-Layer Interconnect Stack/i });
+    expect(runBtn.hasAttribute('disabled')).toBe(false);
+    fireEvent.click(runBtn);
+
+    // 3. Check 3D Layer Stack Inspector tabs are rendered
+    expect(screen.getByText(/3D Layer Stack Inspector/i)).toBeDefined();
+    expect(screen.getByRole('tab', { name: /M1 & CMP/i })).toBeDefined();
+    expect(screen.getByRole('tab', { name: /ILD & Vias/i })).toBeDefined();
+    expect(screen.getByRole('tab', { name: /M2 Routing/i })).toBeDefined();
+
+    // 4. Answer CMP interpretation question
+    const interpOption = screen.getByRole('radio', {
+      name: /CMP creates an atomically flat optical surface so scanner lenses can maintain depth of focus/i,
+    });
+    fireEvent.click(interpOption);
+
+    // 5. Complete repeat step
+    const finishBtn = screen.getByRole('button', { name: /Begin New Patterning Cycle/i });
+    expect(finishBtn.hasAttribute('disabled')).toBe(false);
+    fireEvent.click(finishBtn);
+
+    expect(handleNext).toHaveBeenCalledTimes(1);
+  });
 });
+

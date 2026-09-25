@@ -387,7 +387,7 @@ export function machineReducer(
             ctx.fabProgress.completedOperationIds.includes(ctx.selectedNodeId) ||
             ctx.fabProgress.completedCheckpointIds.includes(ctx.selectedNodeId);
 
-          const targetState: FabMachineState = isTargetCompleted || ctx.selectedNodeId === 'repeat'
+          const targetState: FabMachineState = isTargetCompleted
             ? 'WAFER_LAB_STEP_COMPLETE'
             : ctx.isProcessExecuted
               ? 'WAFER_LAB_OBSERVING'

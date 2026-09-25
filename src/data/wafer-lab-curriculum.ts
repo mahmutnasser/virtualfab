@@ -831,25 +831,114 @@ export const STRIP_CURRICULUM: StepCurriculumItem = {
 };
 
 // ─────────────────────────────────────────────────────────────
-// ↺ REPEAT / CYCLE COMPLETE SUMMARY
+// ↺ REPEAT / MULTI-LAYER INTERCONNECT CYCLE
 // ─────────────────────────────────────────────────────────────
 export const REPEAT_CURRICULUM: StepCurriculumItem = {
   id: 'repeat',
-  title: 'Patterning Cycle Complete',
+  title: 'Multi-Layer Interconnects & Repeat',
   subtitle:
-    'One simplified patterned dielectric layer is complete. Many repeated patterning and layer-building cycles create more complex device structures.',
+    'Building 3D metallization stacks, vias, and CMP planarization',
   stationName: 'Cleanroom Interconnect Loop',
   keyIdea:
-    'One simplified patterned dielectric layer is complete. Many repeated patterning and layer-building cycles create more complex device structures.',
-  runButtonLabel: 'Restart Demonstration Cycle',
-  runningAnnouncement: 'Restarting demonstration wafer journey...',
-  finishedAnnouncement: 'Demonstration cycle reset to baseline bare silicon wafer.',
+    'Transistors alone cannot compute; they must be wired together. Microprocessors contain up to 15–20 stacked metallization layers. Each metallization level repeats deposition, lithography, etch, metal fill (copper damascene / electroplating), and chemical-mechanical planarization (CMP).',
+  runButtonLabel: 'Build Multi-Layer Interconnect Stack',
+  runningAnnouncement: 'Executing copper electroplating, CMP planarization, and multi-layer metallization cycle...',
+  finishedAnnouncement: 'Multi-layer interconnect stack completed: 3D metallization and inter-layer dielectrics integrated.',
   nextStepId: 'deposition',
   nextStepLabel: 'Begin New Patterning Cycle',
   defaultAction: {
-    type: 'deposit',
-    material: 'oxide',
-    thicknessNm: 100,
+    type: 'build-multilayer',
+  },
+  predictionQuestion: {
+    id: 'q_repeat_prediction',
+    prompt: "Why can't a modern microchip function with only a single patterned layer?",
+    subtext: 'Consider how billions of transistors must communicate without signal short-circuits.',
+    correctOptionId: 'opt_multi_3d_routing',
+    options: [
+      {
+        id: 'opt_multi_3d_routing',
+        label:
+          'A single layer cannot route overlapping electrical signals without short-circuiting; multi-layer interconnects provide 3D wiring.',
+      },
+      {
+        id: 'opt_multi_air_pressure',
+        label:
+          'A single layer is too thin to withstand atmospheric air pressure inside computers.',
+      },
+      {
+        id: 'opt_multi_heatsink_weight',
+        label:
+          'Additional layers are added only to give the chip physical weight for heatsink mounting.',
+      },
+      {
+        id: 'opt_multi_electron_exhaust',
+        label:
+          'Single-layer chips run out of available valence electrons after one hour of operation.',
+      },
+    ],
+    feedbackByOptionId: {
+      opt_multi_3d_routing:
+        'Correct! Transistors alone cannot compute without complex interconnection networks. 10 to 20+ layers of copper wiring provide 3D routing to connect billions of transistors without electrical short-circuits.',
+      opt_multi_air_pressure:
+        'Not quite. Silicon wafers and microchips are structurally solid and operate in vacuum or standard atmosphere without collapsing.',
+      opt_multi_heatsink_weight:
+        'Not quite. Nanometer-thin layers add virtually zero physical mass; heatsinks are clamped via mechanical package brackets.',
+      opt_multi_electron_exhaust:
+        'Not quite. Circuits operate via continuous electron flow driven by an external power supply.',
+    },
+  },
+  predictionComparisons: {
+    opt_multi_3d_routing: {
+      predicted: 'A single layer cannot route overlapping electrical signals without short-circuiting',
+      comparison:
+        'Your prediction matched physical reality: the multi-layer cycle constructed 3D copper interconnects (M1, Vias, and M2) separated by low-k inter-layer dielectric (ILD) to route signals without shorts.',
+    },
+    opt_multi_air_pressure: {
+      predicted: 'A single layer is too thin to withstand atmospheric air pressure',
+      comparison:
+        'You predicted atmospheric pressure protection. In reality, multiple layers are added strictly for electrical circuit routing; structural stability is provided by the 775 µm bulk silicon substrate.',
+    },
+    opt_multi_heatsink_weight: {
+      predicted: 'Additional layers are added only to give the chip physical weight',
+      comparison:
+        'You predicted physical weight addition. Multi-layer interconnect stacks are only a few micrometers thick total; they provide 3D signal routing.',
+    },
+    opt_multi_electron_exhaust: {
+      predicted: 'Single-layer chips run out of available valence electrons',
+      comparison:
+        'You predicted electron exhaustion. Circuits do not consume electrons; multiple layers provide 3D wiring pathways for high-speed signal flow.',
+    },
+  },
+  interpretationQuestion: {
+    id: 'interp_repeat_cmp',
+    prompt: 'Why is Chemical-Mechanical Planarization (CMP) essential between multi-layer interconnect cycles?',
+    subtext: 'Consider optical lithography depth of focus and topography buildup across multiple layers.',
+    correctOptionId: 'interp_cmp_dof',
+    options: [
+      {
+        id: 'interp_cmp_dof',
+        label:
+          'CMP creates an atomically flat optical surface so scanner lenses can maintain depth of focus (DoF) for subsequent lithography layers.',
+      },
+      {
+        id: 'interp_cmp_socket_glue',
+        label:
+          'CMP permanently bonds the silicon substrate to the motherboard chip socket.',
+      },
+      {
+        id: 'interp_cmp_resistance',
+        label:
+          'CMP increases electrical resistance in the copper wires to generate thermal heat.',
+      },
+    ],
+    feedbackByOptionId: {
+      interp_cmp_dof:
+        'Correct! Without CMP polishing, uneven layer topography compounds with each step, quickly exceeding the scanner\'s narrow depth of focus (DoF ~50–100 nm) and causing severe lithographic defocus defects.',
+      interp_cmp_socket_glue:
+        'Not quite. CMP is an internal wafer polishing process before dicing and packaging.',
+      interp_cmp_resistance:
+        'Not quite. Interconnect engineering strives to minimize electrical resistance (R) and capacitance (C) to reduce signal delay.',
+    },
   },
 };
 

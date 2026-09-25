@@ -40,6 +40,9 @@ export const LayerLegend: React.FC<LayerLegendProps> = ({
             {layer.patternType === 'dots' && (
               <div className="absolute inset-0 opacity-40 bg-[radial-gradient(#00a6a6_1.5px,transparent_1.5px)] [background-size:4px_4px]" />
             )}
+            {layer.patternType === 'stripes' && (
+              <div className="absolute inset-0 opacity-30 bg-[repeating-linear-gradient(45deg,#000,#000_1px,transparent_1px,transparent_3px)]" />
+            )}
           </div>
 
           <div className="flex items-baseline gap-1.5">

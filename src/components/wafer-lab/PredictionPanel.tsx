@@ -102,53 +102,7 @@ export const PredictionPanel: React.FC<PredictionPanelProps> = ({
     onReturnToFab?.();
   };
 
-  // ─────────────────────────────────────────────────────────────
-  // REPEAT NODE SUMMARY VIEW
-  // ─────────────────────────────────────────────────────────────
-  if (isRepeat) {
-    return (
-      <div
-        className={`bg-white rounded-2xl border border-slate-200/80 p-5 lg:p-6 shadow-sm flex flex-col justify-between select-none ${className}`.trim()}
-      >
-        <div className="space-y-4">
-          <div className="p-4 rounded-xl bg-cyan-50 border border-cyan-200 text-cyan-950">
-            <span className="font-mono text-[11px] uppercase tracking-wider text-cyan-700 font-bold block mb-1">
-              PATTERNING CYCLE 1 COMPLETE
-            </span>
-            <h3 className="font-display font-bold text-base text-cyan-950">
-              1 Patterned Dielectric Layer on Silicon
-            </h3>
-            <p className="font-body text-xs text-cyan-900 mt-1 leading-relaxed">
-              You have completed the entire canonical sequence: Deposition → Coat Resist →
-              Lithography → Develop → ADI Inspection → Etch → AEI Inspection → Strip.
-            </p>
-          </div>
-
-          <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-2 text-xs">
-            <span className="font-mono text-[11px] uppercase tracking-wider text-slate-500 font-bold block">
-              THE MULTI-LAYER REPETITION CONCEPT
-            </span>
-            <p className="font-body text-slate-700 leading-relaxed">
-              One simplified patterned dielectric layer is complete. Many repeated patterning and layer-building cycles create more complex device structures.
-            </p>
-          </div>
-
-          <div className="pt-2">
-            <button
-              type="button"
-              onClick={handleProceed}
-              className="w-full h-12 rounded-full font-body font-bold text-sm sm:text-base inline-flex items-center justify-center gap-2 transition-all bg-[#00a6a6] text-[#102a43] shadow-md shadow-[#00a6a6]/30 hover:brightness-105 active:brightness-95 cursor-pointer"
-            >
-              <span>{curriculum.nextStepLabel}</span>
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-              </svg>
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  // Checkpoints (ADI / AEI) and Standard Operations (including Multi-Layer Repeat) follow their respective interactive flows below.
 
   // ─────────────────────────────────────────────────────────────
   // CHECKPOINT INSPECTION VIEW (ADI / AEI)
@@ -285,6 +239,17 @@ export const PredictionPanel: React.FC<PredictionPanelProps> = ({
       {/* ── BEFORE PROCESS EXECUTION: PREDICTION FLOW ── */}
       {!isProcessExecuted ? (
         <div className="space-y-4">
+          {isRepeat && (
+            <div className="p-3.5 rounded-xl bg-cyan-50 border border-cyan-200 text-cyan-950">
+              <span className="font-mono text-[10px] uppercase tracking-wider text-cyan-700 font-bold block mb-1">
+                PATTERNING CYCLE 1 COMPLETE &bull; ADVANCING TO MULTI-LAYER BEOL
+              </span>
+              <p className="font-body text-xs text-cyan-900 leading-relaxed">
+                You patterned the base dielectric layer. Microchips require 3D interconnects to wire billions of transistors together without short circuits.
+              </p>
+            </div>
+          )}
+
           <PredictionQuestion
             prompt={predictionQuestion.prompt}
             subtext={predictionQuestion.subtext}
@@ -350,7 +315,12 @@ export const PredictionPanel: React.FC<PredictionPanelProps> = ({
             </span>
             <div>
               <h4 className="font-display font-bold text-sm">
-                Process Complete: {stepId === 'deposition' ? 'Thin Film Deposited' : `${curriculum.title} Finished`}
+                Process Complete:{' '}
+                {isRepeat
+                  ? 'Multi-Layer Interconnects Integrated'
+                  : stepId === 'deposition'
+                    ? 'Thin Film Deposited'
+                    : `${curriculum.title} Finished`}
               </h4>
               <p className="font-body text-xs text-emerald-800 mt-0.5">
                 {curriculum.subtitle}

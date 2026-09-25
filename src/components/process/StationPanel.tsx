@@ -258,11 +258,11 @@ export const StationPanel: React.FC<StationPanelProps> = ({
         <button
           ref={inspectButtonRef}
           type="button"
-          onClick={step.id === 'repeat' ? onBack : onInspect}
-          aria-label={step.id === 'repeat' ? 'Start Another Layer Cycle' : 'Open Wafer Lab'}
+          onClick={onInspect}
+          aria-label={step.id === 'repeat' ? 'Launch Multi-Layer Wafer Lab' : 'Open Wafer Lab'}
           className="w-full h-12 rounded-full bg-[#00a6a6] text-[#102a43] font-body font-bold text-sm sm:text-base inline-flex items-center justify-center gap-2 transition-all hover:bg-[#009595] hover:brightness-105 active:brightness-95 shadow-md shadow-[#00a6a6]/25 cursor-pointer focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-[#00a6a6] focus-visible:outline-offset-2"
         >
-          <span>{step.id === 'repeat' ? 'Start Another Layer Cycle' : 'Open Wafer Lab'}</span>
+          <span>{step.id === 'repeat' ? 'Launch Multi-Layer Wafer Lab' : 'Open Wafer Lab'}</span>
           <svg
             className="w-4 h-4"
             fill="none"
