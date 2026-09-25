@@ -5,6 +5,7 @@ export interface TopBarProps {
   totalLessons?: number;
   activeView?: 'fab-overview' | 'station-focus' | 'wafer-lab';
   onBackToFab?: () => void;
+  onOpenBasics?: () => void;
   onOpenSettings?: () => void;
   className?: string;
 }
@@ -14,6 +15,7 @@ export const TopBar: React.FC<TopBarProps> = ({
   totalLessons = 12,
   activeView = 'fab-overview',
   onBackToFab,
+  onOpenBasics,
   onOpenSettings,
   className = '',
 }) => {
@@ -25,16 +27,16 @@ export const TopBar: React.FC<TopBarProps> = ({
 
   return (
     <header
-      className={`h-16 bg-[#0c1e33] border-b border-white/10 px-4 md:px-8 flex items-center justify-between text-text-on-dark shrink-0 select-none z-30 ${className}`.trim()}
+      className={`min-h-16 bg-[#0c1e33] border-b border-white/10 px-3 sm:px-4 md:px-8 flex items-center justify-between gap-2 text-text-on-dark shrink-0 select-none z-30 ${className}`.trim()}
     >
       {/* LEFT: Brand mark, tagline & Back button */}
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-2 sm:gap-4 min-w-0">
         {activeView !== 'fab-overview' && (
           <button
             type="button"
             onClick={onBackToFab}
             aria-label="Return to Fab Overview"
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/15 text-white font-body text-xs sm:text-sm font-medium transition-colors cursor-pointer focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-brand-cyan focus-visible:outline-offset-2"
+            className="flex min-h-[44px] items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/15 text-white font-body text-xs sm:text-sm font-medium transition-colors cursor-pointer focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-brand-cyan focus-visible:outline-offset-2"
           >
             <svg
               className="w-4 h-4"
@@ -56,79 +58,33 @@ export const TopBar: React.FC<TopBarProps> = ({
 
         <a href="#main-content" className="flex flex-col group">
           <span className="font-display font-bold text-lg md:text-xl tracking-tight text-white leading-none">
-            SILICON <span className="text-brand-cyan">JOURNEY</span>
+            <span className="sm:hidden">SJ</span>
+            <span className="hidden sm:inline">SILICON <span className="text-brand-cyan">JOURNEY</span></span>
           </span>
-          <span className="font-sans text-[8px] md:text-[9px] uppercase tracking-[0.2em] text-slate-300 font-medium mt-1 leading-none">
+          <span className="hidden sm:block font-sans text-[8px] md:text-[9px] uppercase tracking-[0.2em] text-slate-300 font-medium mt-1 leading-none">
             EXPLORE &bull; LEARN &bull; BUILD &bull; WHAT&apos;S NEXT
           </span>
         </a>
       </div>
 
-      {/* CENTER: Main Navigation (Desktop) */}
-      <nav
-        aria-label="Main Navigation"
-        className="hidden lg:flex items-center gap-1 xl:gap-2 text-sm font-body"
-      >
-        <button
-          type="button"
-          className="px-3.5 py-1.5 rounded-lg text-slate-300 hover:text-white transition-colors cursor-pointer"
-        >
-          Home
-        </button>
-        <button
-          type="button"
-          className="px-3.5 py-1.5 rounded-lg text-slate-300 hover:text-white transition-colors cursor-pointer"
-        >
-          Learning Map
-        </button>
-        <button
-          type="button"
-          aria-current="page"
-          className="px-4 py-1.5 rounded-lg bg-[#14375a] text-white border border-brand-cyan shadow-sm shadow-brand-cyan/20 font-semibold cursor-pointer"
-        >
-          Virtual Fab
-        </button>
-        <button
-          type="button"
-          className="px-3.5 py-1.5 rounded-lg text-slate-300 hover:text-white transition-colors cursor-pointer"
-        >
-          Chips
-        </button>
-        <button
-          type="button"
-          className="px-3.5 py-1.5 rounded-lg text-slate-300 hover:text-white transition-colors cursor-pointer"
-        >
-          Careers
-        </button>
-      </nav>
-
-      {/* RIGHT: Search, Progress ring & Profile */}
-      <div className="flex items-center gap-3 md:gap-5">
-        {/* Search button */}
-        <button
-          type="button"
-          aria-label="Search curriculum"
-          className="p-2 text-slate-300 hover:text-white hover:bg-white/5 rounded-full transition-colors cursor-pointer"
-        >
-          <svg
-            className="w-4 h-4 md:w-5 md:h-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth="2"
-            aria-hidden="true"
+      {/* Visible switch between the two working sections. */}
+      <div className="flex items-center gap-2 md:gap-4 shrink-0">
+        <nav aria-label="Explore sections" className="flex items-center gap-1 rounded-xl border border-white/15 bg-white/5 p-1">
+          <span aria-current="page" className="hidden sm:inline-flex min-h-[40px] items-center rounded-lg bg-white/15 px-3 text-xs font-semibold text-white">
+            Virtual Fab
+          </span>
+          <button
+            type="button"
+            onClick={onOpenBasics}
+            className="inline-flex min-h-[44px] items-center gap-1.5 rounded-lg bg-[#166FE5] px-3 sm:px-4 text-xs sm:text-sm font-bold text-white hover:bg-[#145DB4] transition-colors cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-white focus-visible:outline-offset-2"
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-            />
-          </svg>
-        </button>
+            Fab Basics <span aria-hidden="true">→</span>
+          </button>
+        </nav>
 
         {/* Circular Progress Indicator */}
         <div
-          className="flex items-center gap-2.5"
+          className="hidden lg:flex items-center gap-2.5"
           aria-label={`My Progress: ${currentLessons} of ${totalLessons} lessons completed`}
         >
           <div className="relative w-8 h-8 md:w-9 md:h-9 flex items-center justify-center shrink-0">
@@ -175,7 +131,7 @@ export const TopBar: React.FC<TopBarProps> = ({
           type="button"
           onClick={onOpenSettings}
           aria-label="User profile and accessibility settings"
-          className="p-1.5 md:p-2 text-slate-300 hover:text-white hover:bg-white/10 rounded-full transition-colors focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-brand-cyan focus-visible:outline-offset-2 cursor-pointer"
+          className="hidden xl:inline-flex p-1.5 md:p-2 text-slate-300 hover:text-white hover:bg-white/10 rounded-full transition-colors focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-brand-cyan focus-visible:outline-offset-2 cursor-pointer"
         >
           <svg
             className="w-6 h-6 md:w-7 md:h-7"

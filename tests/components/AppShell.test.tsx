@@ -13,7 +13,7 @@ describe('AppShell Component', () => {
   it('renders the TopBar header with navigation and progress', () => {
     render(<AppShell />);
     expect(
-      screen.getAllByRole('button', { name: 'Virtual Fab' })[0],
+      screen.getAllByText('Virtual Fab')[0],
     ).toBeDefined();
     expect(screen.getByText('2 / 12 lessons')).toBeDefined();
   });

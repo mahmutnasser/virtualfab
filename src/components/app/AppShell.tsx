@@ -175,6 +175,7 @@ export const AppShell: React.FC<AppShellProps> = ({
         <TopBar
           activeView={activeView}
           onBackToFab={handleBackToFab}
+          onOpenBasics={() => onOpenBasics?.()}
           currentLessons={currentLessons}
           totalLessons={totalLessons}
         />
@@ -243,6 +244,15 @@ export const AppShell: React.FC<AppShellProps> = ({
               isExitingLab ? 'opacity-0' : 'opacity-100'
             }`}
           >
+            <nav aria-label="Explore sections" className="sticky top-0 z-40 flex justify-end border-b border-[#DCE5F2] bg-white/95 px-4 py-2 backdrop-blur">
+              <button
+                type="button"
+                onClick={() => onOpenBasics?.()}
+                className="min-h-[44px] rounded-lg bg-[#166FE5] px-4 text-sm font-semibold text-white hover:bg-[#145DB4] transition-colors cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#145DB4] focus-visible:outline-offset-2"
+              >
+                Fab Basics →
+              </button>
+            </nav>
             <WaferLab
               onReturnToStation={handleReturnFromWaferLab}
               onReturnToFab={handleBackToFab}
@@ -253,7 +263,7 @@ export const AppShell: React.FC<AppShellProps> = ({
       </main>
 
       {/* Mobile Bottom Navigation Bar (Visible on mobile only during overview) */}
-      {activeView === 'fab-overview' && <BottomNav />}
+      {activeView === 'fab-overview' && <BottomNav onOpenBasics={() => onOpenBasics?.()} />}
     </div>
   );
 };
