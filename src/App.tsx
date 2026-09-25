@@ -4,8 +4,9 @@ import SkipLink from './components/a11y/SkipLink';
 import { LiveAnnouncerProvider } from './components/a11y/LiveAnnouncer';
 import { FabBasicsPage } from './components/basics/FabBasicsPage';
 import { HomePage } from './components/home/HomePage';
+import WaferJourney from './components/prototype/WaferJourney';
 
-export type AppDestination = 'home' | 'fab' | 'basics';
+export type AppDestination = 'home' | 'fab' | 'basics' | 'prototype';
 
 const BASICS_HASHES = new Set([
   'basics',
@@ -20,6 +21,7 @@ const BASICS_HASHES = new Set([
 const getDestination = (): AppDestination => {
   const path = window.location.pathname.toLowerCase();
   const hashTarget = window.location.hash.slice(1).split('?')[0].toLowerCase();
+  if (/\/simulation\/prototype(?:\/|$)/.test(path)) return 'prototype';
   if (/\/basics(?:\/|$)/.test(path) || BASICS_HASHES.has(hashTarget)) return 'basics';
   if (/\/fab(?:\/|$)/.test(path) || hashTarget === 'fab') return 'fab';
   return 'home';
@@ -93,7 +95,7 @@ export default function App() {
   return (
     <LiveAnnouncerProvider>
       <SkipLink targetId="main-content" />
-      {destination === 'home' ? (
+      {destination === 'prototype' ? <WaferJourney /> : destination === 'home' ? (
         <HomePage onOpenBasics={() => handleOpenBasics()} onOpenFab={handleOpenFab} />
       ) : destination === 'basics' ? (
         <FabBasicsPage onOpenHome={handleOpenHome} onOpenFab={handleOpenFab} initialTermId={initialTermId} />
