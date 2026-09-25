@@ -2,6 +2,9 @@ import React, { useEffect, useRef, useState } from 'react';
 import type { ProcessStep } from '../../types/process';
 import ExpandableSection from '../ui/ExpandableSection';
 import { ContextualGlossaryDrawer } from './ContextualGlossaryDrawer';
+import { STATION_TELEMETRY_MAP } from '../../data/station-telemetry';
+import StationMiniWaferCrossSection from './StationMiniWaferCrossSection';
+import { FAB_EQUIPMENT_STATIONS } from '../../data/equipment';
 
 export interface StationPanelProps {
   step: ProcessStep;
@@ -23,6 +26,11 @@ export const StationPanel: React.FC<StationPanelProps> = ({
   const previousActiveElement = useRef<HTMLElement | null>(null);
   const [isMobile, setIsMobile] = React.useState(false);
   const [isGlossaryOpen, setIsGlossaryOpen] = useState(false);
+
+  const telemetry = STATION_TELEMETRY_MAP[step.id];
+  const equipmentStation = Object.values(FAB_EQUIPMENT_STATIONS).find((eq) =>
+    eq.stepIds.includes(step.id)
+  );
 
   useEffect(() => {
     previousActiveElement.current = document.activeElement as HTMLElement;
@@ -128,15 +136,63 @@ export const StationPanel: React.FC<StationPanelProps> = ({
             <span className="w-2 h-2 rounded-full bg-[#00a6a6]" aria-hidden="true" />
             <span>{step.stationName}</span>
           </div>
+
+          {/* Cleanroom Bay & Hardware Reference Badges */}
+          {equipmentStation && (
+            <div className="mt-2.5 flex flex-wrap items-center gap-1.5 text-[11px] font-mono">
+              <span className="px-2 py-0.5 rounded bg-slate-100 text-slate-600 font-medium border border-slate-200/80">
+                {equipmentStation.cleanroomBay}
+              </span>
+              {equipmentStation.realEquipmentReference && (
+                <span className="px-2 py-0.5 rounded bg-teal-50 text-teal-800 font-medium border border-teal-200/70" title="Industry benchmark tool reference">
+                  Ref: {equipmentStation.realEquipmentReference}
+                </span>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Step Description */}
         <p
           id="station-panel-desc"
-          className="font-body text-sm sm:text-base text-slate-600 mt-4 leading-relaxed"
+          className="font-body text-sm sm:text-base text-slate-600 mt-3.5 leading-relaxed"
         >
           {step.description}
         </p>
+
+        {/* Mini Wafer Cross-Section Preview */}
+        {telemetry && (
+          <div className="mt-4">
+            <StationMiniWaferCrossSection telemetry={telemetry} />
+          </div>
+        )}
+
+        {/* Chamber Recipe & Telemetry Card */}
+        {telemetry && telemetry.metrics.length > 0 && (
+          <div className="mt-4 p-3.5 rounded-xl bg-slate-50 border border-slate-200/90 space-y-2.5 shadow-xs">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                <span className="font-mono text-[10px] uppercase tracking-wider text-slate-700 font-bold">
+                  Chamber Recipe & Telemetry
+                </span>
+              </div>
+              <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-semibold bg-emerald-100 text-emerald-800 border border-emerald-300">
+                {telemetry.chamberState}
+              </span>
+            </div>
+            <div className="grid grid-cols-2 gap-2 pt-1 border-t border-slate-200/70">
+              {telemetry.metrics.map((metric, idx) => (
+                <div key={idx} className="flex flex-col bg-white p-2 rounded-lg border border-slate-200/60 shadow-xs">
+                  <span className="text-[10px] text-slate-500 font-mono">{metric.label}</span>
+                  <span className="text-xs font-mono font-semibold text-[#102a43] truncate" title={metric.value}>
+                    {metric.value}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Learning Example / Key Process Facts */}
         {step.typedFacts && step.typedFacts.length > 0 ? (
