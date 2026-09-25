@@ -19,7 +19,7 @@ describe('App Root', () => {
 
     fireEvent.click(screen.getByRole('button', { name: 'Explore Virtual Fab' }));
     expect(window.location.hash).toBe('#fab');
-    expect(screen.getByRole('heading', { name: 'Fab Overview' })).toBeDefined();
+    expect(screen.getByRole('heading', { name: 'Virtual Fab cleanroom overview' })).toBeDefined();
     fireEvent.click(screen.getAllByRole('button', { name: 'Home' })[0]);
     expect(window.location.hash).toBe('#home');
     expect(screen.getByRole('heading', { name: /See how a chip takes shape/i })).toBeDefined();
@@ -30,7 +30,7 @@ describe('App Root', () => {
     render(<App />);
     window.history.pushState(null, '', '#fab');
     fireEvent(window, new Event('popstate'));
-    expect(screen.getByRole('heading', { name: 'Fab Overview' })).toBeDefined();
+    expect(screen.getByRole('heading', { name: 'Virtual Fab cleanroom overview' })).toBeDefined();
 
     fireEvent.click(screen.getByText('Skip to main content'));
     expect(window.location.hash).toBe('#fab');
@@ -49,11 +49,11 @@ describe('App Root', () => {
     ).toBeDefined();
     expect(screen.getByRole('navigation', { name: 'Main navigation' })).toBeDefined();
     expect(
-      screen.getByRole('heading', { name: 'Fab Overview' }),
+      screen.getByRole('heading', { name: 'Virtual Fab cleanroom overview' }),
     ).toBeDefined();
     expect(
       screen.getByText(
-        'Follow one wafer through a simplified patterning cycle.',
+        'See how deposition, lithography, and etch change the wafer layer by layer.',
       ),
     ).toBeDefined();
 
@@ -74,7 +74,7 @@ describe('App Root', () => {
     expect(screen.getByRole('heading', { name: /A clearer view of how chips are made/i })).toBeDefined();
 
     fireEvent.click(screen.getByRole('button', { name: 'Virtual Fab' }));
-    expect(screen.getByRole('heading', { name: 'Fab Overview' })).toBeDefined();
+    expect(screen.getByRole('heading', { name: 'Virtual Fab cleanroom overview' })).toBeDefined();
     expect(window.location.hash).toBe('#fab');
   });
 
@@ -85,7 +85,7 @@ describe('App Root', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Virtual Fab' }));
     expect(window.location.pathname).toBe('/');
     expect(window.location.hash).toBe('#fab');
-    expect(screen.getByRole('heading', { name: 'Fab Overview' })).toBeDefined();
+    expect(screen.getByRole('heading', { name: 'Virtual Fab cleanroom overview' })).toBeDefined();
   });
 
   it('returns to the Home page from a direct Basics path', () => {
@@ -102,7 +102,7 @@ describe('App Root', () => {
     window.history.replaceState(null, '', '/#fab');
     render(<App />);
 
-    fireEvent.click(screen.getByRole('button', { name: 'Start with Fab Basics' }));
+    fireEvent.click(screen.getAllByRole('button', { name: /Start with Fab Basics/i })[0]);
     expect(window.location.hash).toBe('#basics');
     expect(screen.getByRole('heading', { name: /A clearer view of how chips are made/i })).toBeDefined();
   });

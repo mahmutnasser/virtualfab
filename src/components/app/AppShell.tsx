@@ -167,7 +167,7 @@ export const AppShell: React.FC<AppShellProps> = ({
       data-transition-state={transitionStatus}
       data-active-view={activeView}
       data-selected-step={selectedStepId}
-      className="h-screen w-screen flex flex-col bg-[#F6F9FE] overflow-hidden font-body select-none"
+      className={`${activeView === 'fab-overview' ? 'min-h-screen' : 'h-screen'} w-full flex flex-col bg-[#F6F9FE] ${activeView === 'fab-overview' ? '' : 'overflow-hidden'} font-body`}
     >
       <SiteHeader activeSection="fab" onOpenHome={onOpenHome ?? (() => {})} onOpenBasics={() => onOpenBasics?.()} onOpenFab={handleBackToFab} />
 
@@ -175,21 +175,16 @@ export const AppShell: React.FC<AppShellProps> = ({
       <main
         id="main-content"
         tabIndex={-1}
-        className="relative flex-1 flex flex-col overflow-hidden focus:outline-none"
+        className={`relative flex-1 flex flex-col focus:outline-none ${activeView === 'fab-overview' ? '' : 'overflow-hidden'}`}
       >
-        {/* Persistent 3D / Fallback Cleanroom Scene (Kept mounted for warm WebGL state & seamless bridge) */}
-        <div
-          className={`absolute inset-0 z-0 transition-[filter] duration-500 ${
-            activeView === 'station-focus' ? 'brightness-90' : ''
-          }`}
-          aria-hidden={activeView === 'wafer-lab'}
-        >
+        {/* The tour uses the interactive scene; the overview uses its approved cleanroom photograph. */}
+        {activeView === 'station-focus' && <div className="absolute inset-0 z-0 brightness-90">
           <FabViewport />
-        </div>
+        </div>}
 
         {/* VIEW 1: FAB OVERVIEW (State A) */}
         {activeView === 'fab-overview' && (
-          <div className="relative flex-1 w-full h-full flex flex-col overflow-hidden pointer-events-none z-10">
+          <div className="relative z-10 w-full">
             <FabHUD
               activeStepId={selectedStepId}
               completedStepIds={completedStepIds}

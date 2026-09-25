@@ -3,6 +3,7 @@ import { CANONICAL_PROCESS_STEPS } from '../../types/process';
 import ProcessJourneyTrack from './ProcessJourneyTrack';
 
 interface ProcessMapDisclosureProps {
+  variant?: 'overview' | 'station';
   activeStepId: string;
   completedStepIds: string[];
   onSelectStep: (stepId: string) => void;
@@ -10,6 +11,7 @@ interface ProcessMapDisclosureProps {
 }
 
 export const ProcessMapDisclosure: React.FC<ProcessMapDisclosureProps> = ({
+  variant = 'station',
   activeStepId,
   completedStepIds,
   onSelectStep,
@@ -32,9 +34,20 @@ export const ProcessMapDisclosure: React.FC<ProcessMapDisclosureProps> = ({
   };
 
   return (
-    <section aria-label="Fab process map" className="relative w-full rounded-2xl border border-[#DCE5F2] bg-white/96 shadow-[0_12px_32px_rgba(21,65,112,0.12)] backdrop-blur-xl">
+    <section aria-label="Fab process map" className={`relative w-full border border-[#DCE5F2] bg-white ${variant === 'overview' ? 'rounded-md' : 'rounded-2xl shadow-[0_12px_32px_rgba(21,65,112,0.12)] backdrop-blur-xl'}`}>
       <div className="flex min-h-[72px] flex-wrap items-center justify-between gap-2 px-4 py-3 sm:px-5">
-        <div className="flex min-w-0 items-center gap-3">
+        {variant === 'overview' ? (
+          <div className="flex min-w-0 flex-1 flex-col gap-3 py-2 sm:flex-row sm:items-center sm:gap-8">
+            <div className="min-w-0 sm:w-1/3">
+              <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#145DB4]">Current view</p>
+              <p className="mt-1 font-display text-base font-bold text-[#102A43] sm:text-lg">Cleanroom overview</p>
+            </div>
+            <div className="min-w-0 border-t border-[#DCE5F2] pt-3 sm:border-l sm:border-t-0 sm:py-0 sm:pl-8">
+              <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#667F94]">Next station</p>
+              <p className="mt-1 text-sm font-semibold text-[#102A43] sm:text-base">Deposition / build the first film</p>
+            </div>
+          </div>
+        ) : <div className="flex min-w-0 items-center gap-3">
           <span aria-hidden="true" className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#EAF2FF] text-[#166FE5]">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-5 w-5"><path strokeLinecap="round" strokeLinejoin="round" d="M4 18h4V6h5v7h7M17 10l3 3-3 3" /></svg>
           </span>
@@ -42,7 +55,7 @@ export const ProcessMapDisclosure: React.FC<ProcessMapDisclosureProps> = ({
             <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.12em] text-[#667F94]">{stepContext}</p>
             <p className="truncate font-display text-sm font-bold text-[#173348] sm:text-base">{currentStep?.name ?? 'Fab process'}</p>
           </div>
-        </div>
+        </div>}
         <div className="flex items-center gap-2">
           {onBackToFab && <button type="button" onClick={onBackToFab} className="min-h-[44px] rounded-lg px-2 text-xs font-semibold text-[#476176] hover:bg-[#EAF2FF] hover:text-[#145DB4] sm:px-3 sm:text-sm">← Fab Overview</button>}
           <button type="button" aria-expanded={open} aria-controls={panelId} onClick={() => setOpen((wasOpen) => !wasOpen)} className="inline-flex min-h-[44px] items-center gap-2 rounded-lg border border-[#C9D8E9] bg-white px-3 text-xs font-bold text-[#145DB4] hover:border-[#166FE5] hover:bg-[#F4F8FF] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#166FE5] sm:text-sm">
