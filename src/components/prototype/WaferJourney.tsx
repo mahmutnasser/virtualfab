@@ -21,7 +21,6 @@ const motionBackgrounds: Partial<Record<number, string>> = {
   2: '/images/journey/03-dock-empty.webp',
   3: '/images/journey/04-transfer-empty.webp',
   4: '/images/journey/05-chamber-empty.webp',
-  5: '/images/journey/05-chamber-empty.webp',
   7: '/images/journey/08-return-empty.webp',
 };
 const smooth = (value: number) => {
@@ -48,23 +47,20 @@ function MovingEquipment({ scene, progress }: { scene: number; progress: number 
   return null;
 }
 
-function ProcessChamber({ scene, progress }: { scene: number; progress: number }) {
-  const entering = scene === 4;
-  const placement = entering ? smooth((progress - .08) / .7) : 1;
-  const film = entering ? 0 : smooth((progress - .28) / .55);
-  const processActive = !entering && progress > .12 && progress < .9;
-  const zoom = entering ? 1 : 1 + smooth((progress - .84) / .16) * .55;
+function ProcessChamber({ progress }: { progress: number }) {
+  const placement = smooth((progress - .08) / .7);
   const position = `translate3d(${(1 - placement) * 110}%, ${(1 - placement) * -8}%, 0)`;
-  return <div className="journey-chamber-view" style={{ transform: `scale(${zoom})` }} aria-hidden="true">
+  return <div className="journey-chamber-view" aria-hidden="true">
     <div className="journey-chamber-background" />
     <img className="journey-chamber-wafer journey-bare-wafer" src="/images/journey/05-bare-wafer.webp" alt="" style={{ transform: position }} />
-    {!entering && <>
-      <img className="journey-chamber-wafer journey-coated-wafer" src="/images/journey/06-coated-wafer.webp" alt="" style={{ opacity: film }} />
-      {processActive && Array.from({ length: 12 }, (_, index) => {
-        const phase = (progress * 3.7 + index * .19) % 1;
-        return <span key={index} className="journey-gas-particle" style={{ left: `${30 + index * 3.65}%`, top: `${29 + phase * 26}%`, opacity: .15 + (1 - Math.abs(phase - .5) * 2) * .35 }} />;
-      })}
-    </>}
+  </div>;
+}
+
+function DepositionPhoto({ progress }: { progress: number }) {
+  const film = smooth((progress - .28) / .55);
+  return <div className="journey-deposition-view" style={{ transform: `scale(${1 + smooth((progress - .84) / .16) * .18})` }} aria-hidden="true">
+    <div className="journey-deposition-photo journey-deposition-muted" />
+    <div className="journey-deposition-photo" style={{ opacity: film }} />
   </div>;
 }
 
@@ -135,7 +131,7 @@ export default function WaferJourney() {
       const image = new Image(); image.src = motionBackgrounds[index] ?? imageUrl(index);
     });
     if (scene >= 3 && scene <= 5) {
-      ['/images/journey/05-bare-wafer.webp', '/images/journey/06-coated-wafer.webp', imageUrl(5)].forEach(source => {
+      ['/images/journey/05-bare-wafer.webp', imageUrl(5)].forEach(source => {
         const image = new Image(); image.src = source;
       });
     }
@@ -150,7 +146,7 @@ export default function WaferJourney() {
   return <main id="main-content" className="journey">
     <header className="journey-header"><a href="/#fab">← Virtual Fab</a><span>WAFER JOURNEY / DEPOSITION</span><span>EXPERIENCE PROTOTYPE</span></header>
     <div className="journey-stage">
-      {!threeScene && (scene === 7 ? <ReturnToCarrier progress={progress} /> : scene === 4 || scene === 5 ? <ProcessChamber scene={scene} progress={progress} /> :
+      {!threeScene && (scene === 7 ? <ReturnToCarrier progress={progress} /> : scene === 5 ? <DepositionPhoto progress={progress} /> : scene === 4 ? <ProcessChamber progress={progress} /> :
         <div key={scene} className="journey-plate is-current" style={{ backgroundImage: `url(${motionBackgrounds[scene] ?? imageUrl(scene)})`, transform: scene >= 1 && scene <= 3 ? undefined : `scale(${1.025 + progress * .055}) translate3d(${(progress - .5) * (scene % 2 ? -1.2 : 1.2)}%, 0, 0)` }} aria-hidden="true" />)}
       {threeMode && <div className="journey-three-stage" style={{ opacity: threeScene ? 1 : 0, pointerEvents: threeScene ? 'auto' : 'none', transform: scene === 5 ? `scale(${1 + smooth((progress - .84) / .16) * .55})` : undefined }}>
         {scene === 3 && <div className="journey-three-background" style={{ backgroundImage: `url(${motionBackgrounds[3]})` }} />}
@@ -160,7 +156,7 @@ export default function WaferJourney() {
         {scene === 7 && <div className="journey-return-seated" style={{ opacity: smooth((progress - .68) / .16) }} />}
       </div>}
       {!threeScene && <MovingEquipment scene={scene} progress={progress} />}
-      {!threeScene && scene >= 1 && scene <= 5 && <div className="journey-process-reveal" style={{ backgroundImage: `url(${imageUrl(scene)})`, opacity: scene === 5 ? smooth((progress - .42) / .46) : smooth((progress - .88) / .12) }} aria-hidden="true" />}
+      {!threeScene && scene >= 1 && scene <= 4 && <div className="journey-process-reveal" style={{ backgroundImage: `url(${imageUrl(scene)})`, opacity: smooth((progress - .88) / .12) }} aria-hidden="true" />}
       <div className="journey-vignette" />
       <div className="journey-top"><span className="journey-tag">{scenes[scene].location}</span><span className="journey-tag">WAFER 01 · {coated ? 'Si + SiO₂' : 'BARE Si'}</span></div>
       <div className="journey-copy" aria-live="polite"><div className="journey-count">{String(scene + 1).padStart(2, '0')} / 08</div><h1>{scenes[scene].title}</h1><p>{scenes[scene].description}</p></div>

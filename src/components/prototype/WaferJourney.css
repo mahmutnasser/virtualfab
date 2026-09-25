@@ -12,8 +12,10 @@
 .journey-chamber-background{background:url('/images/journey/05-chamber-empty.webp') center/cover no-repeat}
 .journey-chamber-wafer{position:absolute;height:auto;pointer-events:none;filter:drop-shadow(0 8px 5px #151e2780);will-change:transform,opacity}
 .journey-bare-wafer{left:18.5%;top:46%;width:61%}
-.journey-coated-wafer{left:17%;top:28%;width:64%}
-.journey-gas-particle{position:absolute;width:5px;height:12px;border-radius:50%;pointer-events:none;background:#9ed9f5;box-shadow:0 0 14px 5px #8ccef080}
+.journey-deposition-view,.journey-deposition-photo{position:absolute;inset:0}
+.journey-deposition-view{transform-origin:50% 64%;overflow:hidden}
+.journey-deposition-photo{background:url('/images/journey/06-deposition.webp') center/cover no-repeat}
+.journey-deposition-muted{filter:grayscale(1) brightness(.78)}
 @media(prefers-reduced-motion:reduce){.journey-chamber-view{animation:none}}
 .journey-return-view,.journey-return-background,.journey-return-seated{position:absolute;inset:0}
 .journey-return-view{transform-origin:50% 50%;overflow:hidden;animation:journeySceneReveal .7s ease both}
