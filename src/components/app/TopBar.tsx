@@ -6,6 +6,7 @@ export interface TopBarProps {
   activeView?: 'fab-overview' | 'station-focus' | 'wafer-lab';
   onBackToFab?: () => void;
   onOpenBasics?: () => void;
+  onOpenHome?: () => void;
   onOpenSettings?: () => void;
   className?: string;
 }
@@ -16,6 +17,7 @@ export const TopBar: React.FC<TopBarProps> = ({
   activeView = 'fab-overview',
   onBackToFab,
   onOpenBasics,
+  onOpenHome,
   onOpenSettings,
   className = '',
 }) => {
@@ -56,7 +58,7 @@ export const TopBar: React.FC<TopBarProps> = ({
           </button>
         )}
 
-        <a href="#main-content" className="flex flex-col group">
+        <button type="button" onClick={onOpenHome} aria-label="Silicon Journey Home" className="flex flex-col group text-left cursor-pointer rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-white">
           <span className="font-display font-bold text-lg md:text-xl tracking-tight text-white leading-none">
             <span className="sm:hidden">SJ</span>
             <span className="hidden sm:inline">SILICON <span className="text-brand-cyan">JOURNEY</span></span>
@@ -64,12 +66,15 @@ export const TopBar: React.FC<TopBarProps> = ({
           <span className="hidden sm:block font-sans text-[8px] md:text-[9px] uppercase tracking-[0.2em] text-slate-300 font-medium mt-1 leading-none">
             EXPLORE &bull; LEARN &bull; BUILD &bull; WHAT&apos;S NEXT
           </span>
-        </a>
+        </button>
       </div>
 
       {/* Visible switch between the two working sections. */}
       <div className="flex items-center gap-2 md:gap-4 shrink-0">
         <nav aria-label="Explore sections" className="flex items-center gap-1 rounded-xl border border-white/15 bg-white/5 p-1">
+          <button type="button" onClick={onOpenHome} className="inline-flex min-h-[44px] items-center rounded-lg px-2 sm:px-3 text-xs sm:text-sm font-semibold text-slate-200 hover:bg-white/10 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-white">
+            Home
+          </button>
           <span aria-current="page" className="hidden sm:inline-flex min-h-[40px] items-center rounded-lg bg-white/15 px-3 text-xs font-semibold text-white">
             Virtual Fab
           </span>

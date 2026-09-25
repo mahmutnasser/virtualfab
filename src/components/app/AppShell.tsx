@@ -17,12 +17,14 @@ export interface AppShellProps {
   initialView?: ActiveView;
   initialStepId?: string;
   onOpenBasics?: (termId?: string) => void;
+  onOpenHome?: () => void;
 }
 
 export const AppShell: React.FC<AppShellProps> = ({
   initialView,
   initialStepId,
   onOpenBasics,
+  onOpenHome,
 }) => {
   const activeView = useVirtualFabStore((s) => s.activeView);
   const selectedStepId = useVirtualFabStore((s) => s.selectedStepId);
@@ -176,6 +178,7 @@ export const AppShell: React.FC<AppShellProps> = ({
           activeView={activeView}
           onBackToFab={handleBackToFab}
           onOpenBasics={() => onOpenBasics?.()}
+          onOpenHome={onOpenHome}
           currentLessons={currentLessons}
           totalLessons={totalLessons}
         />
@@ -244,7 +247,10 @@ export const AppShell: React.FC<AppShellProps> = ({
               isExitingLab ? 'opacity-0' : 'opacity-100'
             }`}
           >
-            <nav aria-label="Explore sections" className="sticky top-0 z-40 flex justify-end border-b border-[#DCE5F2] bg-white/95 px-4 py-2 backdrop-blur">
+            <nav aria-label="Explore sections" className="sticky top-0 z-40 flex justify-end gap-2 border-b border-[#DCE5F2] bg-white/95 px-4 py-2 backdrop-blur">
+              <button type="button" onClick={onOpenHome} className="min-h-[44px] rounded-lg px-4 text-sm font-semibold text-[#145DB4] hover:bg-[#EAF2FF] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#166FE5]">
+                Home
+              </button>
               <button
                 type="button"
                 onClick={() => onOpenBasics?.()}
@@ -263,7 +269,7 @@ export const AppShell: React.FC<AppShellProps> = ({
       </main>
 
       {/* Mobile Bottom Navigation Bar (Visible on mobile only during overview) */}
-      {activeView === 'fab-overview' && <BottomNav onOpenBasics={() => onOpenBasics?.()} />}
+      {activeView === 'fab-overview' && <BottomNav onOpenHome={onOpenHome} onOpenBasics={() => onOpenBasics?.()} />}
     </div>
   );
 };

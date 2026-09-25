@@ -3,6 +3,43 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import App from '@/App';
 
 describe('App Root', () => {
+  it('opens Home at the root and navigates through both learning sections', () => {
+    window.history.replaceState(null, '', '/');
+    render(<App />);
+
+    expect(screen.getByRole('heading', { name: /See how a chip takes shape/i })).toBeDefined();
+    expect(screen.getByRole('main')).toBeDefined();
+    fireEvent.click(screen.getByRole('button', { name: 'Start with Fab Basics' }));
+    expect(window.location.hash).toBe('#basics');
+    expect(screen.getByRole('heading', { name: /A clearer view of how chips are made/i })).toBeDefined();
+
+    fireEvent.click(screen.getByRole('button', { name: 'Home' }));
+    expect(window.location.hash).toBe('#home');
+    expect(screen.getByRole('heading', { name: /See how a chip takes shape/i })).toBeDefined();
+
+    fireEvent.click(screen.getByRole('button', { name: 'Explore Virtual Fab' }));
+    expect(window.location.hash).toBe('#fab');
+    expect(screen.getByRole('heading', { name: 'Fab Overview' })).toBeDefined();
+    fireEvent.click(screen.getAllByRole('button', { name: 'Home' })[0]);
+    expect(window.location.hash).toBe('#home');
+    expect(screen.getByRole('heading', { name: /See how a chip takes shape/i })).toBeDefined();
+  });
+
+  it('restores Home and Fab from URL history and keeps the skip link in place', () => {
+    window.history.replaceState(null, '', '/#home');
+    render(<App />);
+    window.history.pushState(null, '', '#fab');
+    fireEvent(window, new Event('popstate'));
+    expect(screen.getByRole('heading', { name: 'Fab Overview' })).toBeDefined();
+
+    fireEvent.click(screen.getByText('Skip to main content'));
+    expect(window.location.hash).toBe('#fab');
+
+    window.history.pushState(null, '', '#home');
+    fireEvent(window, new Event('popstate'));
+    expect(screen.getByRole('heading', { name: /See how a chip takes shape/i })).toBeDefined();
+  });
+
   it('renders the complete Fab Overview shell with SkipLink and accessible landmark', () => {
     window.history.replaceState(null, '', '/#fab');
     render(<App />);
@@ -49,5 +86,15 @@ describe('App Root', () => {
     expect(window.location.pathname).toBe('/');
     expect(window.location.hash).toBe('#fab');
     expect(screen.getByRole('heading', { name: 'Fab Overview' })).toBeDefined();
+  });
+
+  it('returns to the Home page from a direct Basics path', () => {
+    window.history.replaceState(null, '', '/basics');
+    render(<App />);
+
+    fireEvent.click(screen.getByRole('button', { name: 'Home' }));
+    expect(window.location.pathname).toBe('/');
+    expect(window.location.hash).toBe('#home');
+    expect(screen.getByRole('heading', { name: /See how a chip takes shape/i })).toBeDefined();
   });
 });

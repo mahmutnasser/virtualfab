@@ -3,8 +3,9 @@ import AppShell from './components/app/AppShell';
 import SkipLink from './components/a11y/SkipLink';
 import { LiveAnnouncerProvider } from './components/a11y/LiveAnnouncer';
 import { FabBasicsPage } from './components/basics/FabBasicsPage';
+import { HomePage } from './components/home/HomePage';
 
-export type AppDestination = 'fab' | 'basics';
+export type AppDestination = 'home' | 'fab' | 'basics';
 
 const BASICS_HASHES = new Set([
   'basics',
@@ -16,20 +17,17 @@ const BASICS_HASHES = new Set([
   'all-terms',
 ]);
 
-const isBasicsLocation = () => {
+const getDestination = (): AppDestination => {
   const path = window.location.pathname.toLowerCase();
   const hashTarget = window.location.hash.slice(1).split('?')[0].toLowerCase();
-  return /\/basics(?:\/|$)/.test(path) || BASICS_HASHES.has(hashTarget);
+  if (/\/basics(?:\/|$)/.test(path) || BASICS_HASHES.has(hashTarget)) return 'basics';
+  if (/\/fab(?:\/|$)/.test(path) || hashTarget === 'fab') return 'fab';
+  return 'home';
 };
 
 export default function App() {
   const [destination, setDestination] = useState<AppDestination>(() => {
-    if (typeof window !== 'undefined') {
-      if (isBasicsLocation()) {
-        return 'basics';
-      }
-    }
-    return 'fab';
+    return typeof window === 'undefined' ? 'home' : getDestination();
   });
 
   const [initialTermId, setInitialTermId] = useState<string | undefined>(() => {
@@ -45,15 +43,14 @@ export default function App() {
   // Handle browser back/forward and hash changes
   useEffect(() => {
     const handleLocationChange = () => {
-      if (isBasicsLocation()) {
-        setDestination('basics');
+      const nextDestination = getDestination();
+      setDestination(nextDestination);
+      if (nextDestination === 'basics') {
         const searchParams = new URLSearchParams(
           window.location.search || (window.location.hash.includes('?') ? window.location.hash.split('?')[1] : '')
         );
         const term = searchParams.get('term');
         if (term) setInitialTermId(term);
-      } else {
-        setDestination('fab');
       }
     };
 
@@ -84,13 +81,24 @@ export default function App() {
     }
   }, []);
 
+  const handleOpenHome = useCallback(() => {
+    setDestination('home');
+    const homePath = window.location.pathname.replace(/\/(?:basics|fab)(?:\/.*)?$/i, '/') || '/';
+    const newLocation = `${homePath}#home`;
+    if (`${window.location.pathname}${window.location.hash}` !== newLocation) {
+      window.history.pushState(null, '', newLocation);
+    }
+  }, []);
+
   return (
     <LiveAnnouncerProvider>
       <SkipLink targetId="main-content" />
-      {destination === 'basics' ? (
-        <FabBasicsPage onOpenFab={handleOpenFab} initialTermId={initialTermId} />
+      {destination === 'home' ? (
+        <HomePage onOpenBasics={() => handleOpenBasics()} onOpenFab={handleOpenFab} />
+      ) : destination === 'basics' ? (
+        <FabBasicsPage onOpenHome={handleOpenHome} onOpenFab={handleOpenFab} initialTermId={initialTermId} />
       ) : (
-        <AppShell onOpenBasics={handleOpenBasics} />
+        <AppShell onOpenHome={handleOpenHome} onOpenBasics={handleOpenBasics} />
       )}
     </LiveAnnouncerProvider>
   );

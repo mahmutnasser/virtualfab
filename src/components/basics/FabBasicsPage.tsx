@@ -14,11 +14,13 @@ import {
 
 interface FabBasicsPageProps {
   onOpenFab?: () => void;
+  onOpenHome?: () => void;
   initialTermId?: string;
 }
 
 export const FabBasicsPage: React.FC<FabBasicsPageProps> = ({
   onOpenFab,
+  onOpenHome,
   initialTermId,
 }) => {
   const [selectedCategory, setSelectedCategory] = useState<TermCategory | 'all'>('all');
@@ -58,10 +60,10 @@ export const FabBasicsPage: React.FC<FabBasicsPageProps> = ({
   return (
     <div className="min-h-screen bg-[#F6F9FE] text-[#173348] flex flex-col font-sans selection:bg-blue-100 selection:text-blue-900">
       {/* 1. Global White Top Navigation */}
-      <FabBasicsTopNav onNavigateToFab={onOpenFab ?? (() => {})} />
+      <FabBasicsTopNav onNavigateToHome={onOpenHome ?? (() => {})} onNavigateToFab={onOpenFab ?? (() => {})} />
 
       {/* Main Editorial Content Container */}
-      <main className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 sm:py-10 space-y-12 sm:space-y-20">
+      <main id="main-content" tabIndex={-1} className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 sm:py-10 space-y-12 sm:space-y-20 focus:outline-none">
         
         {/* 2. Hero Section: Left Editorial + Right Large 300 mm Wafer */}
         <FabBasicsHero
