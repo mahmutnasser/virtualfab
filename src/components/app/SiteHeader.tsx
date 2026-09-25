@@ -26,15 +26,15 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ activeSection, onOpenHom
 
   return (
     <header onKeyDown={(event) => { if (event.key === 'Escape') setMenuOpen(false); }} className="sticky top-0 z-50 shrink-0 border-b border-[#DCE5F2] bg-white">
-      <div className="mx-auto flex min-h-[72px] max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
-        <button type="button" onClick={() => openSection('home')} aria-label="Silicon Journey Home" className="inline-flex min-h-[44px] items-center gap-2.5 rounded-lg text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#166FE5]">
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#166FE5] font-display text-xs font-bold tracking-wide text-white">SJ</span>
-          <span className="font-display text-[11px] font-bold uppercase tracking-tight text-[#173348] min-[360px]:text-[13px] sm:text-lg">Silicon Journey</span>
+      <div className="mx-auto flex h-14 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
+        <button type="button" onClick={() => openSection('home')} aria-label="Silicon Journey Home" className="inline-flex min-h-[44px] items-center gap-2 rounded-lg text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#166FE5]">
+          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#166FE5] font-display text-[11px] font-bold tracking-wide text-white">SJ</span>
+          <span className="font-display text-[11px] font-bold uppercase tracking-tight text-[#173348] min-[360px]:text-[13px] sm:text-base">Silicon Journey</span>
         </button>
 
-        <nav aria-label="Main navigation" className="hidden h-[72px] items-center gap-8 md:flex">
+        <nav aria-label="Main navigation" className="hidden h-full items-center gap-6 md:flex">
           {sections.map((section) => section.id === activeSection ? (
-            <span key={section.id} aria-current="page" className="inline-flex h-full items-center border-b-[3px] border-[#166FE5] pt-[3px] text-sm font-bold text-[#145DB4]">
+            <span key={section.id} aria-current="page" className="inline-flex h-full items-center border-b-2 border-[#166FE5] pt-0.5 text-sm font-bold text-[#145DB4]">
               {section.label}
             </span>
           ) : (
