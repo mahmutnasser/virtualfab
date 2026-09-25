@@ -23,16 +23,16 @@ describe('VF-014 ScaleZoomViewer', () => {
     fireEvent.click(nextBtn);
     expect(screen.getByRole('tab', { name: /Exposure Field/i })).toHaveAttribute('aria-selected', 'true');
     expect(screen.getAllByText(/Exposure area varies by scanner/i).length).toBeGreaterThanOrEqual(1);
-    expect(screen.getByRole('img', { name: /four-die exposure field/i }))
-      .toHaveAttribute('src', '/images/basics/wafer-field-zoom.jpg');
-    expect(screen.getByText(/2 columns × 2 rows/i)).toBeInTheDocument();
+    expect(screen.getByRole('img', { name: /six individual dies arranged in two columns and three rows/i }))
+      .toHaveAttribute('src', '/images/basics/scale/02_field_2x3.jpg');
+    expect(screen.getByText(/2 columns × 3 rows/i)).toBeInTheDocument();
 
     // Advance to Stage 3: Die
     fireEvent.click(nextBtn);
     expect(screen.getByRole('tab', { name: /Die/i })).toHaveAttribute('aria-selected', 'true');
     expect(screen.getAllByText(/Product-dependent size/i).length).toBeGreaterThanOrEqual(1);
-    expect(screen.getByRole('img', { name: /highlighted individual die in successive insets/i }))
-      .toHaveAttribute('src', '/images/basics/wafer-field-die-hierarchy.jpg');
+    expect(screen.getByRole('img', { name: /Magnified view of Die #4/i }))
+      .toHaveAttribute('src', '/images/basics/scale/03_die_4.jpg');
 
     // Advance to Stage 4: Layer cutaway
     fireEvent.click(nextBtn);
@@ -58,7 +58,7 @@ describe('VF-014 ScaleZoomViewer', () => {
     expect(screen.getByText(/The Independent Functional Integrated Circuit/i)).toBeInTheDocument();
   });
 
-  it('moves from the four-die field to the die hierarchy and lets the End key reach Feature', () => {
+  it('moves from the six-die field to the die hierarchy and lets the End key reach Feature', () => {
     render(<ScaleZoomViewer initialStage="field" />);
     fireEvent.click(screen.getByRole('button', { name: /Next scale level/i }));
     expect(screen.getByRole('tab', { name: /Die/i })).toHaveAttribute('aria-selected', 'true');

@@ -38,8 +38,8 @@ export const SCALE_STAGES: ScaleStageInfo[] = [
       'An exposure field is the rectangular area of the wafer patterned during one lithography exposure pass.',
     callout: 'Lithography scanners step across the wafer, printing one exposure field per exposure shot.',
     details:
-      'Scanners expose one field at a time. This image illustrates a field containing four dies in two columns and two rows; field size and die count vary with the product and process.',
-    dimensions: 'Illustrative layout: 2 columns × 2 rows · Dimensions vary by product',
+      'Scanners expose one field at a time. This image illustrates an exposure field containing six dies in two columns and three rows; field size and die count vary with the product and process.',
+    dimensions: 'Illustrative layout: 2 columns × 3 rows · Dimensions vary by product',
   },
   {
     id: 'die',
@@ -49,9 +49,9 @@ export const SCALE_STAGES: ScaleStageInfo[] = [
     headline: 'The Independent Functional Integrated Circuit',
     definition:
       'A die is one individual integrated-circuit area on the wafer. Its function depends on the product being manufactured.',
-    callout: 'The upper-right die in the four-die field is highlighted as one individual chip area.',
+    callout: 'Die #4 (row 2, column 2) in the six-die field is magnified as one individual chip area.',
     details:
-      'The successive insets show the wafer, a four-die field, and one highlighted die. This is an illustrative hierarchy, rather than a pixel-exact optical crop. After wafer-level processing and testing, dies are separated along scribe lanes before packaging.',
+      'The successive views show the wafer, a six-die field, and Die #4 magnified. This is an illustrative hierarchy rather than a pixel-exact optical crop. After wafer-level manufacturing and probe testing, individual dies are separated along scribe lanes for packaging.',
     dimensions: 'Die size varies by design · Separated along scribe lanes',
   },
   {
@@ -88,20 +88,20 @@ const SCALE_IMAGES: Record<ScaleStage, { src: string; alt: string }> = {
     alt: 'Patterned silicon wafer held by gloved hands inside a cleanroom',
   },
   field: {
-    src: '/images/basics/wafer-field-zoom.jpg',
-    alt: 'Patterned wafer with a magnified inset illustrating a four-die exposure field',
+    src: '/images/basics/scale/02_field_2x3.jpg',
+    alt: 'Patterned exposure field showing six individual dies arranged in two columns and three rows',
   },
   die: {
-    src: '/images/basics/wafer-field-die-hierarchy.jpg',
-    alt: 'Patterned wafer, four-die field, and highlighted individual die in successive insets',
-  },
-  feature: {
-    src: '/images/basics/scale/04_feature_finfet.jpg',
-    alt: 'Microscopy-inspired rendering of three silicon fins crossed by a transverse FinFET gate',
+    src: '/images/basics/scale/03_die_4.jpg',
+    alt: 'Magnified view of Die #4 showing top-down circuitry, interconnect buses, and bonding pads',
   },
   layer: {
     src: '/images/basics/scale/05_layer_gate_cutaway.jpg',
     alt: 'Conceptual cross section of the same three-fin transistor, showing fin and gate material interfaces',
+  },
+  feature: {
+    src: '/images/basics/scale/04_feature_finfet.jpg',
+    alt: 'Microscopy-inspired rendering of three silicon fins crossed by a transverse FinFET gate',
   },
 };
 
@@ -197,41 +197,43 @@ export const ScaleZoomViewer: React.FC<ScaleZoomViewerProps> = ({
           </p>
         </div>
 
-        {/* Stepper Tabs */}
-        <div
-          role="tablist"
-          aria-label="Scale stages"
-          className="flex items-center gap-2 max-w-full overflow-x-auto pb-1 self-start"
-        >
-          {SCALE_STAGES.map((stage) => {
-            const isSelected = stage.id === currentStage;
-            return (
-              <button
-                key={stage.id}
-                role="tab"
-                id={`tab-${stage.id}`}
-                aria-selected={isSelected}
-                aria-controls={`panel-${stage.id}`}
-                tabIndex={isSelected ? 0 : -1}
-                onClick={() => setCurrentStage(stage.id)}
-                className={`min-h-[44px] shrink-0 px-3.5 py-1.5 rounded-xl border font-body font-semibold text-xs sm:text-sm transition-all cursor-pointer flex items-center gap-2 ${
-                  isSelected
-                    ? 'bg-[#F2F7FF] border-[#166FE5] text-[#173348]'
-                    : 'bg-white border-[#DCE5F2] text-slate-600 hover:text-[#145DB4] hover:border-[#B8D1F7]'
-                }`}
-                type="button"
-              >
-                <span
-                  className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-mono font-bold ${
-                    isSelected ? 'bg-[#166FE5] text-white' : 'bg-[#EAF2FF] text-[#145DB4]'
+        {/* Stepper Tabs with Scroll Mask Container */}
+        <div className="relative max-w-full">
+          <div
+            role="tablist"
+            aria-label="Scale stages"
+            className="flex items-center gap-2 max-w-full overflow-x-auto pb-2 scroll-smooth [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+          >
+            {SCALE_STAGES.map((stage) => {
+              const isSelected = stage.id === currentStage;
+              return (
+                <button
+                  key={stage.id}
+                  role="tab"
+                  id={`tab-${stage.id}`}
+                  aria-selected={isSelected}
+                  aria-controls={`panel-${stage.id}`}
+                  tabIndex={isSelected ? 0 : -1}
+                  onClick={() => setCurrentStage(stage.id)}
+                  className={`min-h-[44px] shrink-0 px-3.5 py-1.5 rounded-xl border font-body font-semibold text-xs sm:text-sm transition-all cursor-pointer flex items-center gap-2 ${
+                    isSelected
+                      ? 'bg-[#F2F7FF] border-[#166FE5] text-[#173348]'
+                      : 'bg-white border-[#DCE5F2] text-slate-600 hover:text-[#145DB4] hover:border-[#B8D1F7]'
                   }`}
+                  type="button"
                 >
-                  {stage.levelNumber}
-                </span>
-                <span>{stage.label}</span>
-              </button>
-            );
-          })}
+                  <span
+                    className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-mono font-bold ${
+                      isSelected ? 'bg-[#166FE5] text-white' : 'bg-[#EAF2FF] text-[#145DB4]'
+                    }`}
+                  >
+                    {stage.levelNumber}
+                  </span>
+                  <span>{stage.label}</span>
+                </button>
+              );
+            })}
+          </div>
         </div>
       </div>
 
@@ -240,36 +242,86 @@ export const ScaleZoomViewer: React.FC<ScaleZoomViewerProps> = ({
         role="tabpanel"
         id={`panel-${currentStage}`}
         aria-labelledby={`tab-${currentStage}`}
-        className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center my-1"
+        className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start lg:items-stretch my-1"
       >
-        
-        {/* All five images remain mounted for a 300 ms crossfade between stages. */}
-        <div className="lg:col-span-7 relative min-h-[320px] sm:min-h-[460px] rounded-2xl overflow-hidden border border-[#DCE5F2] bg-[#EDF3FA]">
+        {/* Left Column: Visual Container */}
+        <div className="lg:col-span-7 relative h-[340px] sm:h-[460px] lg:h-[500px] rounded-2xl overflow-hidden border border-[#DCE5F2] bg-[#EDF3FA] flex items-center justify-center p-3 sm:p-5">
           {SCALE_STAGES.map((stage) => (
             <div
               key={stage.id}
               aria-hidden={stage.id !== currentStage}
-              className={`absolute inset-0 flex items-center justify-center p-3 sm:p-5 transition-opacity duration-300 motion-reduce:duration-0 ${
+              className={`absolute inset-0 flex items-center justify-center p-3 sm:p-6 pb-12 sm:pb-14 transition-opacity duration-300 motion-reduce:duration-0 ${
                 stage.id === currentStage ? 'opacity-100 z-10' : 'opacity-0 pointer-events-none'
               }`}
             >
-              <div className="relative w-full max-w-[740px] aspect-video max-h-[420px]">
+              <div className="relative w-full h-full flex items-center justify-center">
                 <img
                   src={SCALE_IMAGES[stage.id].src}
                   alt={stage.id === currentStage ? SCALE_IMAGES[stage.id].alt : ''}
-                  className="absolute inset-0 w-full h-full object-contain rounded-2xl"
+                  className="max-w-full max-h-full object-contain rounded-xl shadow-xs"
                   decoding="async"
                 />
 
+                {/* Stage 2 (Exposure Field): 2x3 Grid Scribe Lanes & Die #4 Target Highlight */}
+                {stage.id === 'field' && currentStage === 'field' && (
+                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                    <div className="relative w-full h-full max-h-[380px] sm:max-h-[420px] aspect-[1084/1451]">
+                      {/* Scribe lane indicators */}
+                      <svg viewBox="0 0 1084 1451" className="w-full h-full" aria-hidden="true">
+                        <line x1="542" y1="20" x2="542" y2="1431" stroke="#38BDF8" strokeWidth="4" strokeDasharray="8 6" opacity="0.6" />
+                        <line x1="20" y1="483" x2="1064" y2="483" stroke="#38BDF8" strokeWidth="4" strokeDasharray="8 6" opacity="0.6" />
+                        <line x1="20" y1="967" x2="1064" y2="967" stroke="#38BDF8" strokeWidth="4" strokeDasharray="8 6" opacity="0.6" />
+
+                        {/* Die #4 Highlight Box (Row 2, Column 2) */}
+                        <rect
+                          x="548"
+                          y="490"
+                          width="510"
+                          height="470"
+                          fill="#166FE5"
+                          fillOpacity="0.14"
+                          stroke="#166FE5"
+                          strokeWidth="6"
+                          rx="14"
+                        />
+                      </svg>
+                      {/* Responsive Die #4 Target Badge */}
+                      <div className="absolute top-[36%] right-[5%] z-20 flex items-center gap-1.5 rounded-lg border border-[#166FE5] bg-white/95 px-2.5 py-1 text-xs font-mono font-bold text-[#145DB4] shadow-md backdrop-blur-md">
+                        <span className="h-2 w-2 rounded-full bg-[#166FE5] animate-pulse" />
+                        <span>Die #4 (Target)</span>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Stage 3 (Die): Clean Functional Block Callout Overlay */}
+                {stage.id === 'die' && currentStage === 'die' && (
+                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                    <div className="relative w-full h-full max-h-[380px] sm:max-h-[420px] aspect-[1448/1086]">
+                      <div className="hidden sm:block absolute top-[6%] left-[6%] z-20 rounded-md border border-[#DCE5F2] bg-white/95 px-2 py-0.5 text-xs font-mono font-semibold text-[#173348] shadow-xs backdrop-blur-xs">
+                        Execution & Cache Arrays
+                      </div>
+                      <div className="absolute bottom-[5%] left-[6%] z-20 rounded-md border border-[#DCE5F2] bg-white/95 px-2 py-0.5 text-[10px] sm:text-xs font-mono font-semibold text-[#173348] shadow-xs backdrop-blur-xs">
+                        Logic & Memory Core
+                      </div>
+                      <div className="hidden sm:block absolute top-[6%] right-[6%] z-20 rounded-md border border-[#166FE5]/40 bg-[#EAF2FF]/95 px-2.5 py-0.5 text-xs font-mono font-bold text-[#145DB4] shadow-xs backdrop-blur-xs">
+                        Die #4 · Magnified
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           ))}
 
-          <div className="absolute z-20 top-3 left-3 max-w-[calc(100%-7rem)] rounded-lg border border-[#DCE5F2] bg-white/95 px-3 py-2 text-xs font-mono text-[#173348] backdrop-blur-md pointer-events-none shadow-sm">
+          {/* Top Left Badge */}
+          <div className="absolute z-20 top-3 left-3 max-w-[calc(100%-7rem)] rounded-lg border border-[#DCE5F2] bg-white/95 px-3 py-1.5 text-xs font-mono text-[#173348] backdrop-blur-md pointer-events-none shadow-sm">
             <span className="font-bold text-[#145DB4]">{currentIndex + 1}/5</span> {currentInfo.label}
-            {currentStage === 'field' && <span> · 2×2 dies</span>}
+            {currentStage === 'field' && <span> · 2×3 dies</span>}
+            {currentStage === 'die' && <span> · Die #4</span>}
           </div>
 
+          {/* Stage 5 Show/Hide Details Button */}
           {currentStage === 'feature' && (
             <button
               type="button"
@@ -282,22 +334,24 @@ export const ScaleZoomViewer: React.FC<ScaleZoomViewerProps> = ({
           )}
 
           {currentStage === 'feature' && showFeatureEngineering && (
-            <div className="absolute z-20 bottom-12 left-3 right-3 sm:right-auto rounded-lg border border-[#DCE5F2] bg-white/95 px-3 py-2 text-xs text-[#173348] backdrop-blur-md shadow-sm">
+            <div className="absolute z-20 bottom-14 left-3 right-3 sm:right-auto rounded-lg border border-[#DCE5F2] bg-white/95 px-3 py-2 text-xs text-[#173348] backdrop-blur-md shadow-sm">
               Three silicon fin channels pass beneath one transverse gate. Geometry is illustrative.
             </div>
           )}
 
+          {/* Device Scale Disclaimer Note */}
           {(currentStage === 'feature' || currentStage === 'layer') && (
-            <p className="absolute z-20 bottom-3 left-3 right-3 text-center text-[11px] text-[#173348] font-mono bg-white/90 rounded-md py-1 mx-auto max-w-md">
-              Microscopy-inspired conceptual 3D rendering — not raw instrument data.
-            </p>
+            <div className="absolute z-20 bottom-2.5 inset-x-3 flex justify-center pointer-events-none">
+              <p className="text-center text-[11px] text-[#173348] font-mono bg-white/95 border border-[#DCE5F2] shadow-xs rounded-md px-3 py-1 max-w-md">
+                Microscopy-inspired conceptual 3D rendering — not raw instrument data.
+              </p>
+            </div>
           )}
         </div>
 
-        {/* EXPLANATORY CONTENT (Col 5 / 12) */}
+        {/* Right Column: Explanatory Content & Navigation */}
         <div className="lg:col-span-5 flex flex-col justify-between space-y-6">
           <div className="space-y-4 text-left">
-            
             <div className="inline-flex items-center gap-2 text-xs font-semibold text-[#145DB4] uppercase tracking-wider">
               <span>Level 0{currentInfo.levelNumber}</span>
               <span>·</span>
@@ -347,7 +401,7 @@ export const ScaleZoomViewer: React.FC<ScaleZoomViewerProps> = ({
               onClick={handlePrev}
               disabled={currentIndex === 0}
               aria-label="Previous scale level"
-              className="min-h-[44px] px-4 py-2 rounded-xl text-xs font-semibold border border-slate-200 text-slate-600 hover:bg-slate-50 disabled:opacity-30 disabled:pointer-events-none transition-all cursor-pointer"
+              className="min-h-[44px] px-4 py-2 rounded-xl text-xs font-semibold border transition-all cursor-pointer disabled:cursor-not-allowed disabled:bg-slate-100/70 disabled:text-slate-400 disabled:border-slate-200 enabled:border-[#DCE5F2] enabled:text-slate-700 enabled:hover:bg-[#F2F7FF] enabled:hover:text-[#145DB4] enabled:hover:border-[#B8D1F7]"
             >
               ← Previous Level
             </button>
@@ -377,7 +431,6 @@ export const ScaleZoomViewer: React.FC<ScaleZoomViewerProps> = ({
             )}
           </div>
         </div>
-
       </div>
     </section>
   );
