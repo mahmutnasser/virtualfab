@@ -270,13 +270,13 @@ async function run() {
 
   // 13: DUV Default
   console.log('Capturing 13_duv_default.png...');
-  await desktopPage.getByRole('button', { name: /DUV \(193 nm Refractive\)/i }).click();
+  await duvEuvSection.getByRole('button', { name: /DUV \(193 nm Refractive\)/i }).click();
   await desktopPage.waitForTimeout(500);
   await desktopPage.screenshot({ path: path.join(artifactDir, '13_duv_default.png') });
 
   // 14: DUV Engineering
   console.log('Capturing 14_duv_engineering.png...');
-  const engViewBtn = desktopPage.getByRole('button', { name: /Engineering View/i });
+  const engViewBtn = duvEuvSection.getByRole('button', { name: /Engineering View/i });
   if (await engViewBtn.isVisible()) {
     await engViewBtn.click();
     await desktopPage.waitForTimeout(500);
@@ -286,18 +286,18 @@ async function run() {
   // 15: EUV Default
   console.log('Capturing 15_euv_default.png...');
   // Toggle back to intuitive view
-  const intuitiveBtn = desktopPage.getByRole('button', { name: /Intuitive View/i });
+  const intuitiveBtn = duvEuvSection.getByRole('button', { name: /Intuitive View/i });
   if (await intuitiveBtn.isVisible()) {
     await intuitiveBtn.click();
     await desktopPage.waitForTimeout(300);
   }
-  await desktopPage.getByRole('button', { name: /EUV \(13.5 nm Reflective\)/i }).click();
+  await duvEuvSection.getByRole('button', { name: /EUV \(13.5 nm Reflective\)/i }).click();
   await desktopPage.waitForTimeout(500);
   await desktopPage.screenshot({ path: path.join(artifactDir, '15_euv_default.png') });
 
   // 16: EUV Engineering
   console.log('Capturing 16_euv_engineering.png...');
-  const engViewBtnEuv = desktopPage.getByRole('button', { name: /Engineering View/i });
+  const engViewBtnEuv = duvEuvSection.getByRole('button', { name: /Engineering View/i });
   if (await engViewBtnEuv.isVisible()) {
     await engViewBtnEuv.click();
     await desktopPage.waitForTimeout(500);

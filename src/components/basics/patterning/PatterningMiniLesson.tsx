@@ -99,6 +99,52 @@ export const PATTERNING_STEPS: PatterningStep[] = [
   },
 ];
 
+export interface PatterningAsset {
+  after: string;
+  before: string | null;
+  altAfter: string;
+  altBefore: string;
+}
+
+export const PATTERNING_ASSETS: PatterningAsset[] = [
+  {
+    after: '/images/basics/patterning-01-resist-coat.png',
+    before: null,
+    altAfter: 'After Coating: Continuous photoresist film over dielectric and silicon substrate',
+    altBefore: 'Before Coating: Bare dielectric film over silicon substrate',
+  },
+  {
+    after: '/images/basics/patterning-02-optical-exposure.png',
+    before: '/images/basics/patterning-01-resist-coat.png',
+    altAfter: 'Optical Exposure: UV light projecting reticle pattern into photoresist',
+    altBefore: 'Before Exposure: Uniform photoresist film ready for patterning',
+  },
+  {
+    after: '/images/basics/patterning-03-chemical-change.png',
+    before: '/images/basics/patterning-02-optical-exposure.png',
+    altAfter: 'Chemical Change: Exposed resist chemically altered and soluble',
+    altBefore: 'Before Chemical Change: Latent optical exposure',
+  },
+  {
+    after: '/images/basics/patterning-04-aqueous-development.png',
+    before: '/images/basics/patterning-03-chemical-change.png',
+    altAfter: 'Aqueous Development: Soluble resist dissolved away, revealing 3D stencil mask',
+    altBefore: 'Before Development: Continuous resist with soluble regions',
+  },
+  {
+    after: '/images/basics/patterning-05-etch-transfer.png',
+    before: '/images/basics/patterning-04-aqueous-development.png',
+    altAfter: 'Etch Transfer: Reactive plasma directionally etching dielectric down to substrate',
+    altBefore: 'Before Etch: Unetched dielectric beneath photoresist stencil',
+  },
+  {
+    after: '/images/basics/patterning-06-resist-strip.png',
+    before: '/images/basics/patterning-05-etch-transfer.png',
+    altAfter: 'Resist Strip: Sacrificial photoresist removed, permanent dielectric microstructure remains',
+    altBefore: 'Before Strip: Sacrificial photoresist still covering etched dielectric',
+  },
+];
+
 // Unified Isometric Material Block Component with identical geometry & perspective
 const IsometricPatternBlock: React.FC<{
   stepIndex: number;
@@ -106,6 +152,20 @@ const IsometricPatternBlock: React.FC<{
   className?: string;
   isThumbnail?: boolean;
 }> = ({ stepIndex, showAfter, className = '', isThumbnail = false }) => {
+  const asset = PATTERNING_ASSETS[stepIndex];
+  const imgSrc = showAfter ? asset?.after : asset?.before;
+  const imgAlt = showAfter ? asset?.altAfter : asset?.altBefore;
+
+  if (imgSrc) {
+    return (
+      <img
+        src={imgSrc}
+        alt={imgAlt || `Step ${stepIndex + 1} Visual`}
+        className={`w-full h-full object-contain rounded-xl ${className}`.trim()}
+      />
+    );
+  }
+
   return (
     <svg
       viewBox="0 0 520 380"
@@ -351,13 +411,13 @@ export const PatterningMiniLesson: React.FC<PatterningMiniLessonProps> = ({ onOp
     <section
       id="patterning-lesson"
       aria-labelledby="patterning-heading"
-      className="rounded-3xl border border-slate-200/80 bg-white p-6 sm:p-10 shadow-sm"
+      className="scroll-mt-24 rounded-3xl border border-[#DCE5F2] bg-white p-5 sm:p-9 shadow-sm"
     >
       {/* SECTION HEADER */}
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-slate-100 pb-6 mb-8">
         <div>
           <div className="flex items-center gap-2 mb-2">
-            <span className="text-xs font-semibold text-[#00A6A6] tracking-wider uppercase bg-cyan-50 px-2.5 py-0.5 rounded-full border border-cyan-200/60">
+            <span className="text-xs font-semibold text-[#145DB4] tracking-wider uppercase bg-[#EAF2FF] px-3 py-1 rounded-full border border-[#DCE5F2]">
               02 · Patterning Visual Story
             </span>
             <span className="text-xs text-slate-500 font-medium">Physical material transformation</span>
@@ -375,13 +435,14 @@ export const PatterningMiniLesson: React.FC<PatterningMiniLessonProps> = ({ onOp
         </div>
 
         {/* View Mode Toggle: Single Step vs Full 6-Block Sequence */}
-        <div className="flex items-center gap-1 bg-slate-100 p-1.5 rounded-2xl border border-slate-200 self-start lg:self-center">
+        <div className="flex items-center gap-1 bg-[#F2F7FF] p-1.5 rounded-2xl border border-[#DCE5F2] self-start lg:self-center">
           <button
             type="button"
             onClick={() => setViewMode('interactive')}
-            className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
+            aria-pressed={viewMode === 'interactive'}
+            className={`min-h-[44px] px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
               viewMode === 'interactive'
-                ? 'bg-white text-[#102A43] shadow-sm'
+                ? 'bg-white text-[#145DB4] shadow-sm'
                 : 'text-slate-600 hover:text-slate-900'
             }`}
           >
@@ -390,9 +451,10 @@ export const PatterningMiniLesson: React.FC<PatterningMiniLessonProps> = ({ onOp
           <button
             type="button"
             onClick={() => setViewMode('sequence')}
-            className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
+            aria-pressed={viewMode === 'sequence'}
+            className={`min-h-[44px] px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
               viewMode === 'sequence'
-                ? 'bg-white text-[#102A43] shadow-sm'
+                ? 'bg-white text-[#145DB4] shadow-sm'
                 : 'text-slate-600 hover:text-slate-900'
             }`}
           >
@@ -416,17 +478,17 @@ export const PatterningMiniLesson: React.FC<PatterningMiniLessonProps> = ({ onOp
                   setShowAfter(true);
                 }}
                 aria-current={isActive && viewMode === 'interactive' ? 'step' : undefined}
-                className={`flex items-center gap-2.5 px-4 py-2.5 rounded-xl text-xs transition-all cursor-pointer ${
+                className={`flex min-h-[44px] items-center gap-2.5 px-4 py-2.5 rounded-xl text-xs transition-all cursor-pointer ${
                   isActive && viewMode === 'interactive'
-                    ? 'bg-[#102A43] text-white shadow-sm font-semibold'
-                    : 'bg-slate-50 text-slate-600 hover:bg-slate-100 hover:text-slate-900 border border-slate-200/60'
+                    ? 'bg-[#EAF2FF] text-[#145DB4] border border-[#166FE5] font-semibold'
+                    : 'bg-white text-slate-600 hover:bg-[#F2F7FF] hover:text-[#145DB4] border border-[#DCE5F2]'
                 }`}
               >
                 <span
                   className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-mono font-bold ${
                     isActive && viewMode === 'interactive'
-                      ? 'bg-[#00A6A6] text-white'
-                      : 'bg-slate-200 text-slate-700'
+                      ? 'bg-[#166FE5] text-white'
+                      : 'bg-[#EAF2FF] text-[#145DB4]'
                   }`}
                 >
                   {idx + 1}
@@ -442,22 +504,23 @@ export const PatterningMiniLesson: React.FC<PatterningMiniLessonProps> = ({ onOp
       {viewMode === 'interactive' && (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
           
-          {/* Left Canvas: Clean 2.5D Isometric Material Block (65–80% of Pane) */}
-          <div className="lg:col-span-7 bg-slate-900 rounded-3xl p-6 sm:p-8 flex flex-col items-center justify-center border border-slate-800 shadow-md relative overflow-hidden min-h-[380px] sm:min-h-[440px]">
+          {/* Light image frame lets the material colors remain the focus. */}
+          <div className="lg:col-span-7 bg-[#EDF3FA] rounded-2xl p-4 sm:p-6 flex flex-col items-center justify-center border border-[#DCE5F2] relative overflow-hidden min-h-[360px] sm:min-h-[440px]">
             
             {/* Top Bar: Step Label & Before/After Toggle */}
-            <div className="w-full flex items-center justify-between mb-4 border-b border-slate-800 pb-3 text-xs">
-              <div className="flex items-center gap-2 font-mono text-cyan-300 font-semibold">
-                <span>Phase {step.stepNumber}: {step.name}</span>
+            <div className="w-full flex flex-wrap items-center justify-between gap-3 mb-4 border-b border-[#DCE5F2] pb-3 text-xs">
+              <div className="flex items-center gap-2 font-mono text-[#145DB4] font-semibold">
+                <span>Step {step.stepNumber} of {PATTERNING_STEPS.length}</span>
               </div>
 
               {/* Before / After Toggle */}
-              <div className="flex items-center gap-1 bg-slate-950 border border-slate-700 rounded-lg p-0.5">
+              <div className="flex items-center gap-1 bg-white border border-[#DCE5F2] rounded-xl p-1" role="group" aria-label="View material before or after this step">
                 <button
                   type="button"
                   onClick={() => setShowAfter(false)}
-                  className={`px-2.5 py-1 rounded text-[11px] font-mono transition-colors cursor-pointer ${
-                    !showAfter ? 'bg-slate-700 text-white font-bold' : 'text-slate-400 hover:text-slate-200'
+                  aria-pressed={!showAfter}
+                  className={`min-h-[44px] px-4 py-2 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
+                    !showAfter ? 'bg-[#166FE5] text-white' : 'text-slate-600 hover:bg-[#EAF2FF]'
                   }`}
                 >
                   Before
@@ -465,8 +528,9 @@ export const PatterningMiniLesson: React.FC<PatterningMiniLessonProps> = ({ onOp
                 <button
                   type="button"
                   onClick={() => setShowAfter(true)}
-                  className={`px-2.5 py-1 rounded text-[11px] font-mono transition-colors cursor-pointer ${
-                    showAfter ? 'bg-[#00A6A6] text-white font-bold' : 'text-slate-400 hover:text-slate-200'
+                  aria-pressed={showAfter}
+                  className={`min-h-[44px] px-4 py-2 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
+                    showAfter ? 'bg-[#166FE5] text-white' : 'text-slate-600 hover:bg-[#EAF2FF]'
                   }`}
                 >
                   After
@@ -479,13 +543,13 @@ export const PatterningMiniLesson: React.FC<PatterningMiniLessonProps> = ({ onOp
               <IsometricPatternBlock stepIndex={activeStepIndex} showAfter={showAfter} />
 
               {/* Dynamic Status Pill */}
-              <div className="absolute bottom-2 left-2 bg-slate-950/85 backdrop-blur-md px-3 py-1 rounded-lg border border-slate-700 text-xs font-mono text-slate-300">
+              <div className="absolute bottom-2 left-2 right-2 sm:right-auto bg-white/95 backdrop-blur-md px-3 py-2 rounded-lg border border-[#DCE5F2] text-xs font-mono text-[#173348] shadow-sm">
                 {showAfter ? step.afterLabel : step.beforeLabel}
               </div>
             </div>
 
             {/* Material Legend & Color Convention Note */}
-            <div className="w-full mt-3 pt-3 border-t border-slate-800/80 flex flex-wrap items-center justify-between gap-2 text-[11px] font-mono text-slate-400">
+            <div className="w-full mt-3 pt-3 border-t border-[#DCE5F2] flex flex-wrap items-center justify-between gap-2 text-[11px] font-mono text-slate-600">
               <div className="flex items-center gap-2">
                 <span className="w-2.5 h-2.5 rounded-xs bg-[#A855F7]" />
                 <span>Photoresist (Purple convention)</span>
@@ -504,7 +568,7 @@ export const PatterningMiniLesson: React.FC<PatterningMiniLessonProps> = ({ onOp
           {/* Right Explanation Column */}
           <div className="lg:col-span-5 space-y-6 text-left">
             <div>
-              <span className="text-xs font-semibold text-[#00A6A6] uppercase tracking-wider block mb-1">
+              <span className="text-xs font-semibold text-[#145DB4] uppercase tracking-wider block mb-1">
                 Operation {step.stepNumber} of {PATTERNING_STEPS.length}
               </span>
               <h3
@@ -522,7 +586,7 @@ export const PatterningMiniLesson: React.FC<PatterningMiniLessonProps> = ({ onOp
               {/* Question 1: What is happening? */}
               <div className="p-4 rounded-xl bg-slate-50 border border-slate-200/80">
                 <div className="flex items-center gap-2 font-semibold text-xs text-[#102A43] mb-1.5">
-                  <span className="w-2 h-2 rounded-full bg-[#00A6A6]" />
+                  <span className="w-2 h-2 rounded-full bg-[#166FE5]" />
                   <h4>What is Happening?</h4>
                 </div>
                 <p className="text-xs text-slate-600 leading-relaxed font-body">
@@ -531,9 +595,9 @@ export const PatterningMiniLesson: React.FC<PatterningMiniLessonProps> = ({ onOp
               </div>
 
               {/* Question 2: Why does it exist? */}
-              <div className="p-4 rounded-xl bg-cyan-50/60 border border-cyan-100">
+              <div className="p-4 rounded-xl bg-[#EAF2FF] border border-[#DCE5F2]">
                 <div className="flex items-center gap-2 font-semibold text-xs text-[#102A43] mb-1.5">
-                  <span className="w-2 h-2 rounded-full bg-[#00A6A6]" />
+                  <span className="w-2 h-2 rounded-full bg-[#166FE5]" />
                   <h4>Why Does This Step Exist?</h4>
                 </div>
                 <p className="text-xs text-slate-700 leading-relaxed font-body">
@@ -558,7 +622,7 @@ export const PatterningMiniLesson: React.FC<PatterningMiniLessonProps> = ({ onOp
                 <button
                   type="button"
                   onClick={onOpenFab}
-                  className="w-full py-3 rounded-xl bg-[#102A43] hover:bg-[#1B3D5E] text-white font-body font-semibold text-xs transition-all shadow-xs flex items-center justify-center gap-2 cursor-pointer"
+                  className="w-full min-h-[44px] py-3 rounded-xl bg-[#166FE5] hover:bg-[#145DB4] text-white font-body font-semibold text-xs transition-all shadow-xs flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <span>See This Sequence in Virtual Fab</span>
                   <span className="font-mono text-sm">→</span>
@@ -569,66 +633,42 @@ export const PatterningMiniLesson: React.FC<PatterningMiniLessonProps> = ({ onOp
         </div>
       )}
 
-      {/* VIEW B: FULL 6-STEP PANORAMA OVERVIEW (CLEAN PROGRAMMATIC SVG BLOCKS) */}
+      {/* VIEW B: ALL SIX PHYSICAL STAGES */}
       {viewMode === 'sequence' && (
         <div className="space-y-6">
-          <div className="bg-slate-900 rounded-3xl p-6 sm:p-8 border border-slate-800 shadow-md">
-            <div className="w-full flex items-center justify-between mb-6 text-xs font-mono text-slate-300 border-b border-slate-800 pb-3">
-              <span className="text-cyan-300 font-semibold">Authoritative 6-Step Patterning Sequence</span>
-              <span className="text-slate-400">Identical camera perspective & scale across all material phases</span>
+          <div className="bg-[#EDF3FA] rounded-2xl p-4 sm:p-6 border border-[#DCE5F2]">
+            <div className="w-full flex flex-wrap items-center justify-between gap-2 mb-6 text-xs text-slate-600 border-b border-[#DCE5F2] pb-3">
+              <span className="text-[#145DB4] font-semibold">Six stages, one material stack</span>
+              <span>Conceptual sequence · select a stage for details</span>
             </div>
             
             {/* 6 Clean Isometric Blocks in a Unified Strip */}
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
               {PATTERNING_STEPS.map((s, idx) => (
-                <div
+                <button
                   key={s.id}
+                  type="button"
                   onClick={() => {
                     setActiveStepIndex(idx);
                     setViewMode('interactive');
                     setShowAfter(true);
                   }}
-                  className="bg-slate-950 rounded-2xl border border-slate-800 hover:border-cyan-400 p-2.5 flex flex-col justify-between cursor-pointer transition-all hover:scale-[1.02] shadow-sm group"
+                  className="bg-white rounded-xl border border-[#DCE5F2] hover:border-[#166FE5] p-2.5 flex flex-col justify-between cursor-pointer transition-colors shadow-sm group focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#166FE5]"
                 >
                   <div className="w-full aspect-[4/3] flex items-center justify-center">
                     <IsometricPatternBlock stepIndex={idx} showAfter={true} isThumbnail={true} />
                   </div>
-                  <div className="pt-2 border-t border-slate-800/80 text-left">
-                    <span className="text-[10px] font-mono text-cyan-400 font-bold block">
+                  <div className="pt-2 border-t border-[#DCE5F2] text-left">
+                    <span className="text-[10px] font-mono text-[#145DB4] font-bold block">
                       0{idx + 1}
                     </span>
-                    <span className="text-xs font-bold text-slate-200 group-hover:text-white block truncate">
+                    <span className="text-xs font-bold text-[#173348] group-hover:text-[#145DB4] block">
                       {s.name.replace(/^\d+\.\s*/, '')}
                     </span>
                   </div>
-                </div>
+                </button>
               ))}
             </div>
-          </div>
-
-          <div className="grid grid-cols-2 md:grid-cols-6 gap-3">
-            {PATTERNING_STEPS.map((s, idx) => (
-              <button
-                key={s.id}
-                type="button"
-                onClick={() => {
-                  setActiveStepIndex(idx);
-                  setViewMode('interactive');
-                  setShowAfter(true);
-                }}
-                className="p-3 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-left transition-all cursor-pointer"
-              >
-                <span className="text-[10px] font-mono text-[#00A6A6] font-bold block mb-1">
-                  0{idx + 1}
-                </span>
-                <span className="text-xs font-bold text-[#102A43] block">
-                  {s.name.replace(/^\d+\.\s*/, '')}
-                </span>
-                <span className="text-[11px] text-slate-500 line-clamp-2 mt-0.5">
-                  {s.shortSummary}
-                </span>
-              </button>
-            ))}
           </div>
         </div>
       )}
