@@ -82,6 +82,13 @@ export const FabHUD: React.FC<FabHUDProps> = ({
             </li>
           ))}
         </ol>
+        <div className="mt-14 border-t border-[#DCE5F2] pt-6 text-sm text-[#476176]">
+          <p className="text-xs font-bold uppercase tracking-[0.14em] text-[#145DB4]">Real fab reference</p>
+          <a href="https://www.youtube.com/watch?v=5a8xjH2tOkM" target="_blank" rel="noopener noreferrer" className="mt-2 inline-flex min-h-[44px] items-center font-semibold text-[#145DB4] underline-offset-4 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#166FE5]">
+            Watch Texas Instruments’ 300mm wafer fab virtual tour <span aria-hidden="true" className="ml-2">↗</span>
+          </a>
+          <p className="text-xs text-[#667F94]">4 min 31 sec · Opens on YouTube</p>
+        </div>
       </section>
     </div>
   </div>

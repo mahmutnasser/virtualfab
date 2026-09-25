@@ -17,6 +17,7 @@ describe('StationPanel Component', () => {
 
     const dialog = screen.getByRole('dialog', { name: /Deposition/i });
     expect(dialog).toBeDefined();
+    expect(document.activeElement).toBe(screen.getByRole('heading', { name: 'Deposition' }));
     expect(screen.getByText('STEP 1 OF 6')).toBeDefined();
     expect(screen.getByText('Deposition tool · CVD example')).toBeDefined();
     expect(
@@ -94,6 +95,12 @@ describe('StationPanel Component', () => {
         onBack={vi.fn()}
       />,
     );
+
+    // Recipe details are available on demand, leaving the wafer change visible first.
+    const recipe = screen.getByText('Equipment and recipe').closest('details');
+    expect(recipe?.open).toBe(false);
+    fireEvent.click(screen.getByText('Equipment and recipe'));
+    expect(recipe?.open).toBe(true);
 
     // Cleanroom Bay & Hardware Reference
     expect(screen.getByText('Bay 1 — Dielectric & Thin Film Deposition')).toBeDefined();

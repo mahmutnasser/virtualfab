@@ -178,7 +178,7 @@ export const AppShell: React.FC<AppShellProps> = ({
         className={`relative flex-1 flex flex-col focus:outline-none ${activeView === 'fab-overview' ? '' : 'overflow-hidden'}`}
       >
         {/* The tour uses the interactive scene; the overview uses its approved cleanroom photograph. */}
-        {activeView === 'station-focus' && <div className="absolute inset-0 z-0 brightness-90">
+        {activeView === 'station-focus' && <div className="absolute inset-0 z-0">
           <FabViewport />
         </div>}
 

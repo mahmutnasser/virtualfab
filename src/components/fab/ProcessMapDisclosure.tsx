@@ -1,6 +1,5 @@
 import React, { useId, useState } from 'react';
 import { CANONICAL_PROCESS_STEPS } from '../../types/process';
-import ProcessJourneyTrack from './ProcessJourneyTrack';
 
 interface ProcessMapDisclosureProps {
   variant?: 'overview' | 'station';
@@ -66,12 +65,9 @@ export const ProcessMapDisclosure: React.FC<ProcessMapDisclosureProps> = ({
       </div>
 
       {open && (
-        <div id={panelId} className="absolute left-0 right-0 top-full z-50 mt-2 max-h-[55vh] overflow-y-auto rounded-2xl border border-[#DCE5F2] bg-white p-3 shadow-[0_20px_50px_rgba(21,65,112,0.18)] sm:p-4">
+        <div id={panelId} className="absolute left-0 right-0 top-full z-50 mt-2 max-h-[min(55vh,360px)] overflow-y-auto rounded-xl border border-[#DCE5F2] bg-white p-3 shadow-[0_20px_50px_rgba(21,65,112,0.18)] sm:p-4">
           <p className="mb-3 text-xs text-[#667F94]">Select a station to inspect the wafer at that point in the cycle.</p>
-          <div className="hidden md:block">
-            <ProcessJourneyTrack activeStepId={activeStepId} completedStepIds={completedStepIds} onSelectStep={selectStep} />
-          </div>
-          <ol aria-label="Process stations" className="grid grid-cols-2 gap-2 md:hidden">
+          <ol aria-label="Process stations" className="grid grid-cols-2 gap-2 lg:grid-cols-3 2xl:grid-cols-5">
             {CANONICAL_PROCESS_STEPS.map((step) => {
               const active = step.id === activeStepId;
               const completed = completedStepIds.includes(step.id);
