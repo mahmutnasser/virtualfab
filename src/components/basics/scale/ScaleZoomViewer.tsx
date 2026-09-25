@@ -175,14 +175,14 @@ export const ScaleZoomViewer: React.FC<ScaleZoomViewerProps> = ({
       onKeyDown={handleKeyDown}
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
-      className={`rounded-3xl border border-slate-200/80 bg-white p-6 sm:p-10 shadow-sm flex flex-col focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#00a6a6] select-none ${className}`.trim()}
+      className={`scroll-mt-24 rounded-3xl border border-[#DCE5F2] bg-white p-5 sm:p-9 shadow-sm flex flex-col focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#166FE5] select-none ${className}`.trim()}
     >
       {/* SECTION HEADER & STEPPER */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-slate-100 pb-6 mb-8">
+      <div className="flex flex-col gap-5 border-b border-[#DCE5F2] pb-6 mb-6">
         <div>
           <div className="flex items-center gap-2 mb-2">
-            <span className="text-xs font-semibold text-[#00A6A6] tracking-wider uppercase bg-cyan-50 px-2.5 py-0.5 rounded-full border border-cyan-200/60">
-              01 · Understanding Scale
+            <span className="text-xs font-semibold text-[#145DB4] tracking-wider uppercase bg-[#EAF2FF] px-3 py-1 rounded-full border border-[#DCE5F2]">
+              01 · Explore Scale
             </span>
             <span className="text-xs text-slate-500 font-medium">Illustrative semiconductor scale journey</span>
           </div>
@@ -190,10 +190,10 @@ export const ScaleZoomViewer: React.FC<ScaleZoomViewerProps> = ({
             className="text-2xl sm:text-3xl font-bold tracking-tight text-[#102A43]"
             style={{ fontFamily: "'Space Grotesk', sans-serif" }}
           >
-            From a Silicon Wafer to a Nanoscale Feature
+            From wafer to the smallest structures
           </h2>
           <p className="mt-1 text-sm sm:text-base text-slate-600 max-w-2xl font-body">
-            Explore the wafer, an exposure field, a die, the material stack, and a nanoscale feature within it.
+            Choose a stage to see what changes and why it matters.
           </p>
         </div>
 
@@ -201,7 +201,7 @@ export const ScaleZoomViewer: React.FC<ScaleZoomViewerProps> = ({
         <div
           role="tablist"
           aria-label="Scale stages"
-          className="flex items-center max-w-full overflow-x-auto p-1.5 bg-slate-100 rounded-2xl border border-slate-200 self-start lg:self-center"
+          className="flex items-center gap-2 max-w-full overflow-x-auto pb-1 self-start"
         >
           {SCALE_STAGES.map((stage) => {
             const isSelected = stage.id === currentStage;
@@ -214,16 +214,16 @@ export const ScaleZoomViewer: React.FC<ScaleZoomViewerProps> = ({
                 aria-controls={`panel-${stage.id}`}
                 tabIndex={isSelected ? 0 : -1}
                 onClick={() => setCurrentStage(stage.id)}
-                className={`min-h-[44px] shrink-0 px-3.5 py-1.5 rounded-xl font-body font-semibold text-xs sm:text-sm transition-all cursor-pointer flex items-center gap-2 ${
+                className={`min-h-[44px] shrink-0 px-3.5 py-1.5 rounded-xl border font-body font-semibold text-xs sm:text-sm transition-all cursor-pointer flex items-center gap-2 ${
                   isSelected
-                    ? 'bg-white text-[#102A43] shadow-sm'
-                    : 'text-slate-500 hover:text-slate-900 hover:bg-white/60'
+                    ? 'bg-[#F2F7FF] border-[#166FE5] text-[#173348]'
+                    : 'bg-white border-[#DCE5F2] text-slate-600 hover:text-[#145DB4] hover:border-[#B8D1F7]'
                 }`}
                 type="button"
               >
                 <span
                   className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-mono font-bold ${
-                    isSelected ? 'bg-[#102A43] text-white' : 'bg-slate-200 text-slate-600'
+                    isSelected ? 'bg-[#166FE5] text-white' : 'bg-[#EAF2FF] text-[#145DB4]'
                   }`}
                 >
                   {stage.levelNumber}
@@ -240,16 +240,16 @@ export const ScaleZoomViewer: React.FC<ScaleZoomViewerProps> = ({
         role="tabpanel"
         id={`panel-${currentStage}`}
         aria-labelledby={`tab-${currentStage}`}
-        className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center my-2"
+        className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center my-1"
       >
         
         {/* All five images remain mounted for a 300 ms crossfade between stages. */}
-        <div className="lg:col-span-7 relative min-h-[380px] sm:min-h-[460px] rounded-3xl overflow-hidden border border-slate-200/80 shadow-md bg-[#0B0F19]">
+        <div className="lg:col-span-7 relative min-h-[320px] sm:min-h-[460px] rounded-2xl overflow-hidden border border-[#DCE5F2] bg-[#EDF3FA]">
           {SCALE_STAGES.map((stage) => (
             <div
               key={stage.id}
               aria-hidden={stage.id !== currentStage}
-              className={`absolute inset-0 flex items-center justify-center p-4 sm:p-6 transition-opacity duration-300 motion-reduce:duration-0 ${
+              className={`absolute inset-0 flex items-center justify-center p-3 sm:p-5 transition-opacity duration-300 motion-reduce:duration-0 ${
                 stage.id === currentStage ? 'opacity-100 z-10' : 'opacity-0 pointer-events-none'
               }`}
             >
@@ -265,8 +265,8 @@ export const ScaleZoomViewer: React.FC<ScaleZoomViewerProps> = ({
             </div>
           ))}
 
-          <div className="absolute z-20 top-3 left-3 max-w-[calc(100%-7rem)] rounded-lg border border-white/10 bg-slate-900/85 px-3 py-1 text-xs font-mono text-white backdrop-blur-md pointer-events-none">
-            <span className="font-bold text-[#00A6A6]">{currentIndex + 1}/5</span> {currentInfo.label}
+          <div className="absolute z-20 top-3 left-3 max-w-[calc(100%-7rem)] rounded-lg border border-[#DCE5F2] bg-white/95 px-3 py-2 text-xs font-mono text-[#173348] backdrop-blur-md pointer-events-none shadow-sm">
+            <span className="font-bold text-[#145DB4]">{currentIndex + 1}/5</span> {currentInfo.label}
             {currentStage === 'field' && <span> · 2×2 dies</span>}
           </div>
 
@@ -275,20 +275,20 @@ export const ScaleZoomViewer: React.FC<ScaleZoomViewerProps> = ({
               type="button"
               onClick={() => setShowFeatureEngineering((visible) => !visible)}
               aria-pressed={showFeatureEngineering}
-              className="absolute z-20 top-3 right-3 min-h-[44px] px-3 rounded-lg text-xs font-mono bg-slate-900/90 hover:bg-slate-800 text-cyan-200 border border-white/20 cursor-pointer"
+              className="absolute z-20 top-3 right-3 min-h-[44px] px-3 rounded-lg text-xs font-mono bg-white/95 hover:bg-[#EAF2FF] text-[#145DB4] border border-[#DCE5F2] cursor-pointer shadow-sm"
             >
               {showFeatureEngineering ? 'Hide details' : 'Show details'}
             </button>
           )}
 
           {currentStage === 'feature' && showFeatureEngineering && (
-            <div className="absolute z-20 bottom-12 left-3 right-3 sm:right-auto rounded-lg border border-white/20 bg-slate-950/90 px-3 py-2 text-xs text-slate-100 backdrop-blur-md">
+            <div className="absolute z-20 bottom-12 left-3 right-3 sm:right-auto rounded-lg border border-[#DCE5F2] bg-white/95 px-3 py-2 text-xs text-[#173348] backdrop-blur-md shadow-sm">
               Three silicon fin channels pass beneath one transverse gate. Geometry is illustrative.
             </div>
           )}
 
           {(currentStage === 'feature' || currentStage === 'layer') && (
-            <p className="absolute z-20 bottom-3 left-3 right-3 text-center text-[11px] text-slate-100 font-mono drop-shadow-md">
+            <p className="absolute z-20 bottom-3 left-3 right-3 text-center text-[11px] text-[#173348] font-mono bg-white/90 rounded-md py-1 mx-auto max-w-md">
               Microscopy-inspired conceptual 3D rendering — not raw instrument data.
             </p>
           )}
@@ -298,7 +298,7 @@ export const ScaleZoomViewer: React.FC<ScaleZoomViewerProps> = ({
         <div className="lg:col-span-5 flex flex-col justify-between space-y-6">
           <div className="space-y-4 text-left">
             
-            <div className="inline-flex items-center gap-2 text-xs font-semibold text-[#00A6A6] uppercase tracking-wider">
+            <div className="inline-flex items-center gap-2 text-xs font-semibold text-[#145DB4] uppercase tracking-wider">
               <span>Level 0{currentInfo.levelNumber}</span>
               <span>·</span>
               <span>{currentInfo.label}</span>
@@ -316,9 +316,9 @@ export const ScaleZoomViewer: React.FC<ScaleZoomViewerProps> = ({
             </p>
 
             {/* Key Takeaway */}
-            <div className="p-4 rounded-xl bg-cyan-50/60 border border-cyan-100 text-slate-800 text-sm">
-              <span className="text-xs font-bold text-[#00A6A6] uppercase tracking-wider block mb-1">
-                Key Physical Takeaway
+            <div className="p-4 rounded-xl bg-[#EAF2FF] border border-[#DCE5F2] text-slate-800 text-sm">
+              <span className="text-xs font-bold text-[#145DB4] uppercase tracking-wider block mb-1">
+                What to notice
               </span>
               <p className="font-medium text-slate-700 leading-snug">
                 {currentInfo.callout}
@@ -361,7 +361,7 @@ export const ScaleZoomViewer: React.FC<ScaleZoomViewerProps> = ({
                 type="button"
                 onClick={handleNext}
                 aria-label="Next scale level"
-                className="min-h-[44px] px-4 py-2 rounded-xl text-xs font-semibold bg-[#102A43] hover:bg-[#1B3D5E] text-white transition-all shadow-xs cursor-pointer"
+                className="min-h-[44px] px-4 py-2 rounded-xl text-xs font-semibold bg-[#166FE5] hover:bg-[#145DB4] text-white transition-all shadow-xs cursor-pointer"
               >
                 Next Level →
               </button>
@@ -370,7 +370,7 @@ export const ScaleZoomViewer: React.FC<ScaleZoomViewerProps> = ({
                 type="button"
                 onClick={onNavigateToFab}
                 aria-label="Experience scale in Virtual Fab"
-                className="min-h-[44px] px-4 py-2 rounded-xl text-xs font-semibold bg-[#00A6A6] hover:bg-[#008F8F] text-white transition-all shadow-xs cursor-pointer"
+                className="min-h-[44px] px-4 py-2 rounded-xl text-xs font-semibold bg-[#166FE5] hover:bg-[#145DB4] text-white transition-all shadow-xs cursor-pointer"
               >
                 Experience in Virtual Fab →
               </button>
