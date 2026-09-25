@@ -17,6 +17,7 @@ describe('StationPanel Component', () => {
 
     const dialog = screen.getByRole('dialog', { name: /Deposition/i });
     expect(dialog).toBeDefined();
+    expect(document.activeElement).toBe(screen.getByRole('heading', { name: 'Deposition' }));
     expect(screen.getByText('STEP 1 OF 6')).toBeDefined();
     expect(screen.getByText('Deposition tool · CVD example')).toBeDefined();
     expect(
@@ -84,5 +85,37 @@ describe('StationPanel Component', () => {
 
     fireEvent.keyDown(window, { key: 'Escape' });
     expect(handleBack).toHaveBeenCalledTimes(1);
+  });
+
+  it('renders cleanroom bay, real equipment reference, chamber telemetry, and wafer preview', () => {
+    render(
+      <StationPanel
+        step={depositionStep}
+        onInspect={vi.fn()}
+        onBack={vi.fn()}
+      />,
+    );
+
+    // Recipe details are available on demand, leaving the wafer change visible first.
+    const recipe = screen.getByText('Equipment and recipe').closest('details');
+    expect(recipe?.open).toBe(false);
+    fireEvent.click(screen.getByText('Equipment and recipe'));
+    expect(recipe?.open).toBe(true);
+
+    // Cleanroom Bay & Hardware Reference
+    expect(screen.getByText('Bay 1 — Dielectric & Thin Film Deposition')).toBeDefined();
+    expect(screen.getByText(/Ref: Centura \/ Producer Platform CVD Multi-Chamber Tool/i)).toBeDefined();
+
+    // Chamber Telemetry Card & Status
+    expect(screen.getByText(/Chamber Recipe & Telemetry/i)).toBeDefined();
+    expect(screen.getByText('VACUUM READY')).toBeDefined();
+    expect(screen.getByText('400 °C')).toBeDefined();
+    expect(screen.getByText('SiH₄ + N₂O')).toBeDefined();
+    expect(screen.getByText('2.5 Torr')).toBeDefined();
+    expect(screen.getByText('100 nm SiO₂')).toBeDefined();
+
+    // Wafer State Preview
+    expect(screen.getByText(/Wafer State Preview/i)).toBeDefined();
+    expect(screen.getByRole('img', { name: /Continuous dielectric layer deposited uniformly across wafer/i })).toBeDefined();
   });
 });

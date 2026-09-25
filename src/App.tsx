@@ -3,19 +3,33 @@ import AppShell from './components/app/AppShell';
 import SkipLink from './components/a11y/SkipLink';
 import { LiveAnnouncerProvider } from './components/a11y/LiveAnnouncer';
 import { FabBasicsPage } from './components/basics/FabBasicsPage';
+import { HomePage } from './components/home/HomePage';
+import WaferJourney from './components/prototype/WaferJourney';
 
-export type AppDestination = 'fab' | 'basics';
+export type AppDestination = 'home' | 'fab' | 'basics' | 'prototype';
+
+const BASICS_HASHES = new Set([
+  'basics',
+  'basics-top',
+  'scale-viewer',
+  'patterning-lesson',
+  'duv-vs-euv',
+  'process-verbs',
+  'all-terms',
+]);
+
+const getDestination = (): AppDestination => {
+  const path = window.location.pathname.toLowerCase();
+  const hashTarget = window.location.hash.slice(1).split('?')[0].toLowerCase();
+  if (/\/simulation\/prototype(?:\/|$)/.test(path)) return 'prototype';
+  if (/\/basics(?:\/|$)/.test(path) || BASICS_HASHES.has(hashTarget)) return 'basics';
+  if (/\/fab(?:\/|$)/.test(path) || hashTarget === 'fab') return 'fab';
+  return 'home';
+};
 
 export default function App() {
   const [destination, setDestination] = useState<AppDestination>(() => {
-    if (typeof window !== 'undefined') {
-      const path = window.location.pathname.toLowerCase();
-      const hash = window.location.hash.toLowerCase();
-      if (path.includes('/basics') || hash.includes('basics')) {
-        return 'basics';
-      }
-    }
-    return 'fab';
+    return typeof window === 'undefined' ? 'home' : getDestination();
   });
 
   const [initialTermId, setInitialTermId] = useState<string | undefined>(() => {
@@ -31,17 +45,14 @@ export default function App() {
   // Handle browser back/forward and hash changes
   useEffect(() => {
     const handleLocationChange = () => {
-      const path = window.location.pathname.toLowerCase();
-      const hash = window.location.hash.toLowerCase();
-      if (path.includes('/basics') || hash.includes('basics')) {
-        setDestination('basics');
+      const nextDestination = getDestination();
+      setDestination(nextDestination);
+      if (nextDestination === 'basics') {
         const searchParams = new URLSearchParams(
-          window.location.search || (hash.includes('?') ? hash.split('?')[1] : '')
+          window.location.search || (window.location.hash.includes('?') ? window.location.hash.split('?')[1] : '')
         );
         const term = searchParams.get('term');
         if (term) setInitialTermId(term);
-      } else {
-        setDestination('fab');
       }
     };
 
@@ -65,18 +76,31 @@ export default function App() {
 
   const handleOpenFab = useCallback(() => {
     setDestination('fab');
-    if (window.location.hash !== '#fab' && window.location.hash !== '') {
-      window.history.pushState(null, '', '#fab');
+    const fabPath = window.location.pathname.replace(/\/basics(?:\/.*)?$/i, '/') || '/';
+    const newLocation = `${fabPath}#fab`;
+    if (`${window.location.pathname}${window.location.hash}` !== newLocation) {
+      window.history.pushState(null, '', newLocation);
+    }
+  }, []);
+
+  const handleOpenHome = useCallback(() => {
+    setDestination('home');
+    const homePath = window.location.pathname.replace(/\/(?:basics|fab)(?:\/.*)?$/i, '/') || '/';
+    const newLocation = `${homePath}#home`;
+    if (`${window.location.pathname}${window.location.hash}` !== newLocation) {
+      window.history.pushState(null, '', newLocation);
     }
   }, []);
 
   return (
     <LiveAnnouncerProvider>
       <SkipLink targetId="main-content" />
-      {destination === 'basics' ? (
-        <FabBasicsPage onOpenFab={handleOpenFab} initialTermId={initialTermId} />
+      {destination === 'prototype' ? <WaferJourney /> : destination === 'home' ? (
+        <HomePage onOpenBasics={() => handleOpenBasics()} onOpenFab={handleOpenFab} />
+      ) : destination === 'basics' ? (
+        <FabBasicsPage onOpenHome={handleOpenHome} onOpenFab={handleOpenFab} initialTermId={initialTermId} />
       ) : (
-        <AppShell onOpenBasics={handleOpenBasics} />
+        <AppShell onOpenHome={handleOpenHome} onOpenBasics={handleOpenBasics} />
       )}
     </LiveAnnouncerProvider>
   );

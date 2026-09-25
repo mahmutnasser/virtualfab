@@ -63,7 +63,7 @@ export const ProcessStepPill: React.FC<ProcessStepPillProps> = ({
       onClick={onClick}
       aria-label={accessibleLabel}
       aria-current={isActive ? 'step' : undefined}
-      className={`group flex flex-col items-center text-center shrink-0 min-w-[44px] sm:min-w-[50px] md:min-w-[56px] lg:min-w-[60px] xl:min-w-[64px] p-1 sm:p-1.5 rounded-xl transition-all duration-300 cursor-pointer focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-[#00a6a6] focus-visible:outline-offset-2 ${
+      className={`group flex flex-col items-center text-center shrink-0 min-w-[44px] sm:min-w-[50px] md:min-w-[56px] lg:min-w-[60px] xl:min-w-[64px] p-1 sm:p-1.5 rounded-xl transition-all duration-300 cursor-pointer focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-[#166FE5] focus-visible:outline-offset-2 ${
         isActive
           ? 'scale-[1.04]'
           : 'hover:bg-slate-100/80 active:scale-98'
@@ -75,16 +75,16 @@ export const ProcessStepPill: React.FC<ProcessStepPillProps> = ({
           step.isCheckpoint
             ? `rotate-45 rounded-[5px] text-[8px] sm:text-[9px] tracking-tight ${
                 isActive
-                  ? 'bg-[#00a6a6] text-white ring-2 ring-[#00a6a6]/40 shadow-md shadow-[#00a6a6]/25 scale-[1.04]'
+                  ? 'bg-[#166FE5] text-white ring-2 ring-[#166FE5]/40 shadow-md shadow-[#166FE5]/25 scale-[1.04]'
                   : isCompleted
-                    ? 'bg-[#00a6a6]/15 text-[#007f7f] border-2 border-[#00a6a6]'
-                    : 'bg-white text-[#007f7f] border-2 border-[#00a6a6]/50 group-hover:border-[#00a6a6]'
+                    ? 'bg-[#EAF2FF] text-[#145DB4] border-2 border-[#166FE5]'
+                    : 'bg-white text-[#145DB4] border-2 border-[#A7CBFA] group-hover:border-[#166FE5]'
               }`
             : `rounded-full text-[10px] sm:text-xs ${
                 isActive
-                  ? 'bg-[#00a6a6] text-white ring-2 ring-[#00a6a6]/40 shadow-md shadow-[#00a6a6]/25 font-bold scale-[1.04]'
+                  ? 'bg-[#166FE5] text-white ring-2 ring-[#166FE5]/40 shadow-md shadow-[#166FE5]/25 font-bold scale-[1.04]'
                   : isCompleted
-                    ? 'bg-[#00a6a6]/15 text-[#007f7f] border border-[#00a6a6]/60 font-semibold'
+                    ? 'bg-[#EAF2FF] text-[#145DB4] border border-[#A7CBFA] font-semibold'
                     : 'bg-[#f0f4f8] text-[#102a43] border border-slate-300 group-hover:border-slate-400 group-hover:bg-slate-100'
               }`
         }`}
@@ -92,7 +92,7 @@ export const ProcessStepPill: React.FC<ProcessStepPillProps> = ({
         <span className={step.isCheckpoint ? '-rotate-45 block leading-none font-bold' : 'block leading-none'}>
           {isCompleted && step.order !== 'start' ? (
             <svg
-              className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#007f7f]"
+              className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#145DB4]"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"

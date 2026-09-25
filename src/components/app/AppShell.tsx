@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import TopBar from './TopBar';
-import BottomNav from './BottomNav';
+import SiteHeader from './SiteHeader';
 import FabViewport from '../fab/FabViewport';
 import FabHUD from '../fab/FabHUD';
-import ProcessJourneyTrack from '../fab/ProcessJourneyTrack';
+import ProcessMapDisclosure from '../fab/ProcessMapDisclosure';
 import StationPanel from '../process/StationPanel';
 import { CANONICAL_PROCESS_STEPS, type ProcessStep } from '../../types/process';
 import { useLiveAnnouncer } from '../a11y/LiveAnnouncerContext';
@@ -17,19 +16,19 @@ export interface AppShellProps {
   initialView?: ActiveView;
   initialStepId?: string;
   onOpenBasics?: (termId?: string) => void;
+  onOpenHome?: () => void;
 }
 
 export const AppShell: React.FC<AppShellProps> = ({
   initialView,
   initialStepId,
   onOpenBasics,
+  onOpenHome,
 }) => {
   const activeView = useVirtualFabStore((s) => s.activeView);
   const selectedStepId = useVirtualFabStore((s) => s.selectedStepId);
   const selectedNodeId = useVirtualFabStore((s) => s.selectedNodeId);
   const completedStepIds = useVirtualFabStore((s) => s.completedStepIds);
-  const currentLessons = useVirtualFabStore((s) => s.currentLessons);
-  const totalLessons = useVirtualFabStore((s) => s.totalLessons);
 
   const openStation = useVirtualFabStore((s) => s.openStation);
   const openWaferLab = useVirtualFabStore((s) => s.openWaferLab);
@@ -168,42 +167,30 @@ export const AppShell: React.FC<AppShellProps> = ({
       data-transition-state={transitionStatus}
       data-active-view={activeView}
       data-selected-step={selectedStepId}
-      className="h-screen w-screen flex flex-col bg-[#0c1e33] overflow-hidden font-body select-none"
+      className={`${activeView === 'fab-overview' ? 'min-h-screen' : 'h-screen'} relative w-full flex flex-col bg-[#F6F9FE] ${activeView === 'fab-overview' ? '' : 'overflow-hidden'} font-body`}
     >
-      {/* Top Header with Contextual Back button (Shown during Fab World modes) */}
-      {activeView !== 'wafer-lab' && (
-        <TopBar
-          activeView={activeView}
-          onBackToFab={handleBackToFab}
-          currentLessons={currentLessons}
-          totalLessons={totalLessons}
-        />
-      )}
+      <SiteHeader activeSection="fab" floating={activeView === 'station-focus'} onOpenHome={onOpenHome ?? (() => {})} onOpenBasics={() => onOpenBasics?.()} onOpenFab={handleBackToFab} />
 
       {/* Main Content Area */}
       <main
         id="main-content"
         tabIndex={-1}
-        className="relative flex-1 flex flex-col overflow-hidden focus:outline-none"
+        className={`relative flex-1 flex flex-col focus:outline-none ${activeView === 'fab-overview' ? '' : 'overflow-hidden'}`}
       >
-        {/* Persistent 3D / Fallback Cleanroom Scene (Kept mounted for warm WebGL state & seamless bridge) */}
-        <div
-          className={`absolute inset-0 z-0 transition-[filter] duration-500 ${
-            activeView === 'station-focus' ? 'brightness-90' : ''
-          }`}
-          aria-hidden={activeView === 'wafer-lab'}
-        >
+        {/* The tour uses the interactive scene; the overview uses its approved cleanroom photograph. */}
+        {activeView === 'station-focus' && <div className="absolute inset-0 z-0">
           <FabViewport />
-        </div>
+        </div>}
 
         {/* VIEW 1: FAB OVERVIEW (State A) */}
         {activeView === 'fab-overview' && (
-          <div className="relative flex-1 w-full h-full flex flex-col overflow-hidden pointer-events-none z-10">
+          <div className="relative z-10 w-full">
             <FabHUD
               activeStepId={selectedStepId}
               completedStepIds={completedStepIds}
               onSelectStep={handleSelectStep}
               onStartTour={handleStartTour}
+              onOpenBasics={() => onOpenBasics?.()}
             />
           </div>
         )}
@@ -211,19 +198,20 @@ export const AppShell: React.FC<AppShellProps> = ({
         {/* VIEW 2: STATION FOCUS (State B) */}
         {activeView === 'station-focus' && (
           <div className="relative flex-1 w-full h-full flex flex-col overflow-hidden pointer-events-none z-10">
-            {/* Persistent Top Process Sequence Track (constrained to clear the right StationPanel on desktop) */}
-            <div className="absolute top-0 left-0 right-0 md:right-[400px] lg:right-[440px] p-2 sm:p-3 lg:p-4 z-40 pointer-events-none">
-              <div className="pointer-events-auto bg-white/95 border border-slate-200/80 backdrop-blur-xl rounded-xl md:rounded-2xl p-1 sm:p-1.5 lg:p-2 shadow-xl shadow-slate-900/10">
-                <ProcessJourneyTrack
+            {/* Local process controls stay separate from the global site navigation. */}
+            <div className="absolute top-16 left-0 right-0 md:right-[400px] lg:right-[440px] p-2 sm:p-3 lg:p-4 z-40 pointer-events-none">
+              <div className="pointer-events-auto">
+                <ProcessMapDisclosure
                   activeStepId={selectedStepId}
                   completedStepIds={completedStepIds}
                   onSelectStep={handleSelectStep}
+                  onBackToFab={handleBackToFab}
                 />
               </div>
             </div>
 
             {/* Station Focus Side Panel (Desktop right sidebar / Mobile bottom sheet) */}
-            <div className="absolute inset-0 pointer-events-none flex items-center justify-end z-30">
+            <div className="absolute inset-x-0 bottom-0 top-16 pointer-events-none flex items-center justify-end z-30">
               <div className="pointer-events-auto w-full md:w-auto h-full flex items-center">
                 <StationPanel
                   step={selectedStep}
@@ -252,8 +240,6 @@ export const AppShell: React.FC<AppShellProps> = ({
         )}
       </main>
 
-      {/* Mobile Bottom Navigation Bar (Visible on mobile only during overview) */}
-      {activeView === 'fab-overview' && <BottomNav />}
     </div>
   );
 };

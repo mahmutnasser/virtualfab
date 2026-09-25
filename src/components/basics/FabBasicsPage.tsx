@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { FabBasicsTopNav } from './FabBasicsTopNav';
+import SiteHeader from '../app/SiteHeader';
 import { FabBasicsHero } from './FabBasicsHero';
 import { ScaleZoomViewer } from './scale/ScaleZoomViewer';
 import { PatterningMiniLesson } from './patterning/PatterningMiniLesson';
@@ -14,11 +14,13 @@ import {
 
 interface FabBasicsPageProps {
   onOpenFab?: () => void;
+  onOpenHome?: () => void;
   initialTermId?: string;
 }
 
 export const FabBasicsPage: React.FC<FabBasicsPageProps> = ({
   onOpenFab,
+  onOpenHome,
   initialTermId,
 }) => {
   const [selectedCategory, setSelectedCategory] = useState<TermCategory | 'all'>('all');
@@ -56,12 +58,12 @@ export const FabBasicsPage: React.FC<FabBasicsPageProps> = ({
   };
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] text-[#172B3A] flex flex-col font-sans selection:bg-teal-100 selection:text-teal-900">
+    <div className="min-h-screen bg-[#F6F9FE] text-[#173348] flex flex-col font-sans selection:bg-blue-100 selection:text-blue-900">
       {/* 1. Global White Top Navigation */}
-      <FabBasicsTopNav onNavigateToFab={onOpenFab ?? (() => {})} />
+      <SiteHeader activeSection="basics" onOpenHome={onOpenHome ?? (() => {})} onOpenBasics={() => document.getElementById('main-content')?.scrollIntoView?.()} onOpenFab={onOpenFab ?? (() => {})} />
 
       {/* Main Editorial Content Container */}
-      <main className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 sm:py-10 space-y-16 sm:space-y-24">
+      <main id="main-content" tabIndex={-1} className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 sm:py-10 space-y-12 sm:space-y-20 focus:outline-none">
         
         {/* 2. Hero Section: Left Editorial + Right Large 300 mm Wafer */}
         <FabBasicsHero
@@ -69,47 +71,20 @@ export const FabBasicsPage: React.FC<FabBasicsPageProps> = ({
           onBrowseAllTerms={() => handleScrollToSection('all-terms')}
         />
 
-        {/* Section Jump Anchors (Museum Guide Style) */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-2 border-b border-slate-200/80 text-xs">
-          <span className="text-slate-400 font-semibold uppercase tracking-wider pl-1 shrink-0 text-[11px]">Jump To:</span>
-          <button
-            type="button"
-            onClick={() => handleScrollToSection('scale-viewer')}
-            className="px-3.5 py-1.5 rounded-lg bg-white border border-slate-200 hover:border-[#00A6A6] hover:text-[#00A6A6] transition-colors whitespace-nowrap cursor-pointer shadow-2xs font-medium text-slate-700"
-          >
-            01 Scale Hierarchy
-          </button>
-          <button
-            type="button"
-            onClick={() => handleScrollToSection('patterning-lesson')}
-            className="px-3.5 py-1.5 rounded-lg bg-white border border-slate-200 hover:border-[#00A6A6] hover:text-[#00A6A6] transition-colors whitespace-nowrap cursor-pointer shadow-2xs font-medium text-slate-700"
-          >
-            02 Patterning Visual Story
-          </button>
-          <button
-            type="button"
-            onClick={() => handleScrollToSection('duv-vs-euv')}
-            className="px-3.5 py-1.5 rounded-lg bg-white border border-slate-200 hover:border-[#00A6A6] hover:text-[#00A6A6] transition-colors whitespace-nowrap cursor-pointer shadow-2xs font-medium text-slate-700"
-          >
-            03 DUV vs EUV
-          </button>
-          <button
-            type="button"
-            onClick={() => handleScrollToSection('process-verbs')}
-            className="px-3.5 py-1.5 rounded-lg bg-white border border-slate-200 hover:border-[#00A6A6] hover:text-[#00A6A6] transition-colors whitespace-nowrap cursor-pointer shadow-2xs font-medium text-slate-700"
-          >
-            04 The 4 Verbs
-          </button>
-          <button
-            type="button"
-            onClick={() => handleScrollToSection('all-terms')}
-            className="px-3.5 py-1.5 rounded-lg bg-white border border-slate-200 hover:border-[#00A6A6] hover:text-[#00A6A6] transition-colors whitespace-nowrap cursor-pointer shadow-2xs font-medium text-slate-700"
-          >
-            05 Vocabulary Registry ({CANONICAL_TERMS.length})
-          </button>
-        </div>
+        <nav aria-label="On this page" className="flex flex-wrap items-center gap-x-5 gap-y-2 border-y border-[#DCE5F2] py-4 text-sm">
+          <span className="mr-2 font-semibold text-[#173348]">On this page</span>
+          {[
+            ['scale-viewer', 'Scale'],
+            ['patterning-lesson', 'Patterning'],
+            ['duv-vs-euv', 'Optics'],
+            ['process-verbs', 'Process'],
+            ['all-terms', 'Vocabulary'],
+          ].map(([id, label]) => (
+            <a key={id} href={`#${id}`} className="inline-flex min-h-[44px] items-center font-semibold text-[#145DB4] hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#166FE5]">{label}</a>
+          ))}
+        </nav>
 
-        {/* 3. Section 01: Signature Scale Hierarchy (Wafer -> Field -> Die -> Feature) */}
+        {/* 3. Section 01: Scale Hierarchy (Wafer -> Field -> Die -> Layer -> Feature) */}
         <ScaleZoomViewer onNavigateToFab={onOpenFab} />
 
         {/* 4. Section 02: Patterning Visual Story (2.5D Cutaways) */}
@@ -122,13 +97,13 @@ export const FabBasicsPage: React.FC<FabBasicsPageProps> = ({
         <ProcessVerbsStrip />
 
         {/* 7. Section 05: Compact Searchable Vocabulary Reference */}
-        <section id="all-terms" aria-labelledby="registry-heading" className="space-y-6 pt-4 text-left">
+        <section id="all-terms" aria-labelledby="registry-heading" className="space-y-6 pt-4 text-left scroll-mt-24">
           
           {/* Section Header with Large Editorial Number */}
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-slate-200 pb-6">
             <div>
               <div className="flex items-center gap-2 mb-2">
-                <span className="text-xs font-semibold text-[#00A6A6] tracking-wider uppercase bg-cyan-50 px-2.5 py-0.5 rounded-full border border-cyan-200/60 font-sans">
+                <span className="text-xs font-semibold text-[#145DB4] tracking-wider uppercase bg-[#EAF2FF] px-2.5 py-1 rounded-full border border-[#DCE5F2] font-sans">
                   05 · Curriculum Reference
                 </span>
                 <span className="text-xs text-slate-500 font-medium">
@@ -154,7 +129,7 @@ export const FabBasicsPage: React.FC<FabBasicsPageProps> = ({
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search all vocabulary..."
-                className="w-full px-4 py-2.5 text-sm rounded-xl border border-slate-300 bg-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#00A6A6] focus:border-transparent font-sans shadow-xs"
+                className="w-full min-h-[44px] px-4 py-2.5 text-sm rounded-xl border border-slate-300 bg-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#166FE5] focus:border-transparent font-sans shadow-xs"
               />
             </div>
           </div>
@@ -164,9 +139,9 @@ export const FabBasicsPage: React.FC<FabBasicsPageProps> = ({
             <button
               type="button"
               onClick={() => setSelectedCategory('all')}
-              className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
+              className={`min-h-[44px] px-4 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
                 selectedCategory === 'all'
-                  ? 'bg-[#102A43] text-white shadow-sm'
+                  ? 'bg-[#166FE5] text-white shadow-sm'
                   : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-100 hover:text-slate-900'
               }`}
             >
@@ -180,9 +155,9 @@ export const FabBasicsPage: React.FC<FabBasicsPageProps> = ({
                   key={catKey}
                   type="button"
                   onClick={() => setSelectedCategory(catKey)}
-                  className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
+                  className={`min-h-[44px] px-4 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
                     selectedCategory === catKey
-                      ? 'bg-[#102A43] text-white shadow-sm'
+                      ? 'bg-[#166FE5] text-white shadow-sm'
                       : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-100 hover:text-slate-900'
                   }`}
                 >
@@ -213,7 +188,7 @@ export const FabBasicsPage: React.FC<FabBasicsPageProps> = ({
                   setSelectedCategory('all');
                   setSearchQuery('');
                 }}
-                className="mt-3 text-xs font-semibold text-teal-600 hover:text-teal-700 underline cursor-pointer"
+                className="mt-3 text-xs font-semibold text-[#145DB4] hover:text-[#104D98] underline cursor-pointer"
               >
                 Reset filters
               </button>

@@ -14,12 +14,14 @@ export type SupportedWaferState = EngineWaferState | LegacyWaferState;
 export interface WaferCrossSectionSVGProps {
   waferState: SupportedWaferState;
   activeCheckpoint?: 'ADI' | 'AEI' | null;
+  showMetrologyCalipers?: boolean;
   className?: string;
 }
 
 export const WaferCrossSectionSVG: React.FC<WaferCrossSectionSVGProps> = ({
   waferState,
   activeCheckpoint = null,
+  showMetrologyCalipers = false,
   className = '',
 }) => {
   const prefersReducedMotion = useReducedMotion();
@@ -333,6 +335,69 @@ export const WaferCrossSectionSVG: React.FC<WaferCrossSectionSVGProps> = ({
             width={waferWidth}
             height={substrateY + substrateHeight - resistY + 20}
           />
+        )}
+
+        {/* ── METROLOGY PRECISION CALIPERS OVERLAY ── */}
+        {showMetrologyCalipers && (
+          <g id="metrology-calipers" className="font-mono text-[9px] select-none">
+            {/* Resist Thickness Caliper */}
+            {hasResist && (
+              <g id="caliper-resist">
+                <line x1={18} y1={resistY} x2={34} y2={resistY} stroke="#7B61FF" strokeWidth="1" />
+                <line x1={18} y1={resistY + resistHeight} x2={34} y2={resistY + resistHeight} stroke="#7B61FF" strokeWidth="1" />
+                <line x1={26} y1={resistY} x2={26} y2={resistY + resistHeight} stroke="#7B61FF" strokeWidth="1" strokeDasharray="2 2" />
+                <rect x={10} y={resistY + resistHeight / 2 - 7} width={32} height={14} rx="3" fill="#1E1B4B" stroke="#7B61FF" strokeWidth="0.8" />
+                <text x={26} y={resistY + resistHeight / 2 + 3} textAnchor="middle" fill="#C7D2FE" fontWeight="bold">
+                  300nm
+                </text>
+              </g>
+            )}
+
+            {/* Oxide Thickness Caliper */}
+            {hasOxide && (
+              <g id="caliper-oxide">
+                <line x1={18} y1={oxideY} x2={34} y2={oxideY} stroke="#00A6A6" strokeWidth="1" />
+                <line x1={18} y1={oxideY + oxideHeight} x2={34} y2={oxideY + oxideHeight} stroke="#00A6A6" strokeWidth="1" />
+                <line x1={26} y1={oxideY} x2={26} y2={oxideY + oxideHeight} stroke="#00A6A6" strokeWidth="1" strokeDasharray="2 2" />
+                <rect x={10} y={oxideY + oxideHeight / 2 - 7} width={32} height={14} rx="3" fill="#042F2E" stroke="#00A6A6" strokeWidth="0.8" />
+                <text x={26} y={oxideY + oxideHeight / 2 + 3} textAnchor="middle" fill="#99F6E4" fontWeight="bold">
+                  100nm
+                </text>
+              </g>
+            )}
+
+            {/* Substrate Baseline Caliper */}
+            <g id="caliper-substrate">
+              <line x1={18} y1={substrateY} x2={34} y2={substrateY} stroke="#64748B" strokeWidth="1" />
+              <line x1={18} y1={substrateY + substrateHeight} x2={34} y2={substrateY + substrateHeight} stroke="#64748B" strokeWidth="1" />
+              <line x1={26} y1={substrateY} x2={26} y2={substrateY + substrateHeight} stroke="#64748B" strokeWidth="1" strokeDasharray="2 2" />
+              <rect x={7} y={substrateY + substrateHeight / 2 - 7} width={38} height={14} rx="3" fill="#0F172A" stroke="#64748B" strokeWidth="0.8" />
+              <text x={26} y={substrateY + substrateHeight / 2 + 3} textAnchor="middle" fill="#CBD5E1" fontWeight="bold">
+                775µm
+              </text>
+            </g>
+
+            {/* Horizontal Critical Dimension (CD) Caliper when patterned */}
+            {((hasResist && resistPresenceMask.some((p) => !p) && resistPresenceMask.some(Boolean)) ||
+              (hasOxide && oxidePresenceMask.some((p) => !p) && oxidePresenceMask.some(Boolean))) && (
+              <g id="caliper-cd">
+                {(() => {
+                  const topPatternY = hasResist ? resistY : oxideY;
+                  return (
+                    <>
+                      <line x1={waferLeft + (6 / 16) * waferWidth} y1={topPatternY - 14} x2={waferLeft + (10 / 16) * waferWidth} y2={topPatternY - 14} stroke="#F59E0B" strokeWidth="1" />
+                      <line x1={waferLeft + (6 / 16) * waferWidth} y1={topPatternY - 18} x2={waferLeft + (6 / 16) * waferWidth} y2={topPatternY - 10} stroke="#F59E0B" strokeWidth="1" />
+                      <line x1={waferLeft + (10 / 16) * waferWidth} y1={topPatternY - 18} x2={waferLeft + (10 / 16) * waferWidth} y2={topPatternY - 10} stroke="#F59E0B" strokeWidth="1" />
+                      <rect x={waferLeft + (8 / 16) * waferWidth - 28} y={topPatternY - 22} width={56} height={16} rx="3" fill="#451A03" stroke="#F59E0B" strokeWidth="0.8" />
+                      <text x={waferLeft + (8 / 16) * waferWidth} y={topPatternY - 11} textAnchor="middle" fill="#FDE68A" fontWeight="bold">
+                        CD: 45nm
+                      </text>
+                    </>
+                  );
+                })()}
+              </g>
+            )}
+          </g>
         )}
 
         {/* ── BARE SURFACE INDICATOR (When no layers deposited) ── */}
