@@ -146,17 +146,19 @@ export default function WaferJourney() {
   return <main id="main-content" className="journey">
     <header className="journey-header"><a href="/#fab">← Virtual Fab</a><span>WAFER JOURNEY / DEPOSITION</span><span>EXPERIENCE PROTOTYPE</span></header>
     <div className="journey-stage">
-      {!threeScene && (scene === 7 ? <ReturnToCarrier progress={progress} /> : scene === 5 ? <DepositionPhoto progress={progress} /> : scene === 4 ? <ProcessChamber progress={progress} /> :
-        <div key={scene} className="journey-plate is-current" style={{ backgroundImage: `url(${motionBackgrounds[scene] ?? imageUrl(scene)})`, transform: scene >= 1 && scene <= 3 ? undefined : `scale(${1.025 + progress * .055}) translate3d(${(progress - .5) * (scene % 2 ? -1.2 : 1.2)}%, 0, 0)` }} aria-hidden="true" />)}
-      {threeMode && <div className="journey-three-stage" style={{ opacity: threeScene ? 1 : 0, pointerEvents: threeScene ? 'auto' : 'none', transform: scene === 5 ? `scale(${1 + smooth((progress - .84) / .16) * .55})` : undefined }}>
-        {scene === 3 && <div className="journey-three-background" style={{ backgroundImage: `url(${motionBackgrounds[3]})` }} />}
-        {(scene === 4 || scene === 5) && <div className="journey-chamber-background" />}
-        {scene === 7 && <div className="journey-return-background" />}
-        <WaferMotion3D scene={scene} progress={progress} coated={coated} onUnavailable={() => setThreeMode(false)} />
-        {scene === 7 && <div className="journey-return-seated" style={{ opacity: smooth((progress - .68) / .16) }} />}
-      </div>}
-      {!threeScene && <MovingEquipment scene={scene} progress={progress} />}
-      {!threeScene && scene >= 1 && scene <= 4 && <div className="journey-process-reveal" style={{ backgroundImage: `url(${imageUrl(scene)})`, opacity: smooth((progress - .88) / .12) }} aria-hidden="true" />}
+      <div className="journey-composition">
+        {!threeScene && (scene === 7 ? <ReturnToCarrier progress={progress} /> : scene === 5 ? <DepositionPhoto progress={progress} /> : scene === 4 ? <ProcessChamber progress={progress} /> :
+          <div key={scene} className="journey-plate is-current" style={{ backgroundImage: `url(${motionBackgrounds[scene] ?? imageUrl(scene)})`, transform: scene >= 1 && scene <= 3 ? undefined : `scale(${1.025 + progress * .055}) translate3d(${(progress - .5) * (scene % 2 ? -1.2 : 1.2)}%, 0, 0)` }} aria-hidden="true" />)}
+        {threeMode && <div className="journey-three-stage" style={{ opacity: threeScene ? 1 : 0, pointerEvents: threeScene ? 'auto' : 'none', transform: scene === 5 ? `scale(${1 + smooth((progress - .84) / .16) * .55})` : undefined }}>
+          {scene === 3 && <div className="journey-three-background" style={{ backgroundImage: `url(${motionBackgrounds[3]})` }} />}
+          {(scene === 4 || scene === 5) && <div className="journey-chamber-background" />}
+          {scene === 7 && <div className="journey-return-background" />}
+          <WaferMotion3D scene={scene} progress={progress} coated={coated} onUnavailable={() => setThreeMode(false)} />
+          {scene === 7 && <div className="journey-return-seated" style={{ opacity: smooth((progress - .68) / .16) }} />}
+        </div>}
+        {!threeScene && <MovingEquipment scene={scene} progress={progress} />}
+        {!threeScene && scene >= 1 && scene <= 4 && <div className="journey-process-reveal" style={{ backgroundImage: `url(${imageUrl(scene)})`, opacity: smooth((progress - .88) / .12) }} aria-hidden="true" />}
+      </div>
       <div className="journey-vignette" />
       <div className="journey-top"><span className="journey-tag">{scenes[scene].location}</span><span className="journey-tag">WAFER 01 · {coated ? 'Si + SiO₂' : 'BARE Si'}</span></div>
       <div className="journey-copy" aria-live="polite"><div className="journey-count">{String(scene + 1).padStart(2, '0')} / 08</div><h1>{scenes[scene].title}</h1><p>{scenes[scene].description}</p></div>
