@@ -4,6 +4,7 @@ export type SiteSection = 'home' | 'basics' | 'fab';
 
 interface SiteHeaderProps {
   activeSection: SiteSection;
+  floating?: boolean;
   onOpenHome: () => void;
   onOpenBasics: () => void;
   onOpenFab: () => void;
@@ -15,7 +16,7 @@ const sections: { id: SiteSection; label: string }[] = [
   { id: 'fab', label: 'Virtual Fab' },
 ];
 
-export const SiteHeader: React.FC<SiteHeaderProps> = ({ activeSection, onOpenHome, onOpenBasics, onOpenFab }) => {
+export const SiteHeader: React.FC<SiteHeaderProps> = ({ activeSection, floating = false, onOpenHome, onOpenBasics, onOpenFab }) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const openSection = (section: SiteSection) => {
     setMenuOpen(false);
@@ -25,14 +26,14 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ activeSection, onOpenHom
   };
 
   return (
-    <header onKeyDown={(event) => { if (event.key === 'Escape') setMenuOpen(false); }} className="sticky top-0 z-50 shrink-0 border-b border-[#DCE5F2] bg-white">
-      <div className="mx-auto flex h-14 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
+    <header onKeyDown={(event) => { if (event.key === 'Escape') setMenuOpen(false); }} className={floating ? 'pointer-events-none absolute inset-x-0 top-2 z-50' : 'sticky top-0 z-50 shrink-0 border-b border-[#DCE5F2] bg-white'}>
+      <div className={floating ? 'pointer-events-auto mx-auto flex h-12 w-max max-w-[calc(100%-1rem)] items-center justify-between gap-4 rounded-xl border border-[#DCE5F2] bg-white/95 px-2 shadow-[0_8px_28px_rgba(21,65,112,0.16)] backdrop-blur-md sm:px-3' : 'mx-auto flex h-14 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8'}>
         <button type="button" onClick={() => openSection('home')} aria-label="Silicon Journey Home" className="inline-flex min-h-[44px] items-center gap-2 rounded-lg text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#166FE5]">
           <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#166FE5] font-display text-[11px] font-bold tracking-wide text-white">SJ</span>
           <span className="font-display text-[11px] font-bold uppercase tracking-tight text-[#173348] min-[360px]:text-[13px] sm:text-base">Silicon Journey</span>
         </button>
 
-        <nav aria-label="Main navigation" className="hidden h-full items-center gap-6 md:flex">
+        <nav aria-label="Main navigation" className={`hidden h-full items-center md:flex ${floating ? 'gap-4' : 'gap-6'}`}>
           {sections.map((section) => section.id === activeSection ? (
             <span key={section.id} aria-current="page" className="inline-flex h-full items-center border-b-2 border-[#166FE5] pt-0.5 text-sm font-bold text-[#145DB4]">
               {section.label}
@@ -50,7 +51,7 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ activeSection, onOpenHom
       </div>
 
       {menuOpen && (
-        <nav id="site-mobile-navigation" aria-label="Mobile main navigation" className="absolute inset-x-0 top-full border-b border-[#DCE5F2] bg-white p-3 shadow-[0_16px_24px_rgba(21,65,112,0.12)] md:hidden">
+        <nav id="site-mobile-navigation" aria-label="Mobile main navigation" className={`pointer-events-auto absolute top-full border border-[#DCE5F2] bg-white p-3 shadow-[0_16px_24px_rgba(21,65,112,0.12)] md:hidden ${floating ? 'left-1/2 mt-2 w-[min(22rem,calc(100vw-1rem))] -translate-x-1/2 rounded-xl' : 'inset-x-0 border-x-0 border-t-0'}`}>
           {sections.map((section) => section.id === activeSection ? (
             <span key={section.id} aria-current="page" className="flex min-h-[48px] items-center rounded-lg border-l-[3px] border-[#166FE5] bg-[#EAF2FF] px-4 text-sm font-bold text-[#145DB4]">{section.label}</span>
           ) : (

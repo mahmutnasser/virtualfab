@@ -167,9 +167,9 @@ export const AppShell: React.FC<AppShellProps> = ({
       data-transition-state={transitionStatus}
       data-active-view={activeView}
       data-selected-step={selectedStepId}
-      className={`${activeView === 'fab-overview' ? 'min-h-screen' : 'h-screen'} w-full flex flex-col bg-[#F6F9FE] ${activeView === 'fab-overview' ? '' : 'overflow-hidden'} font-body`}
+      className={`${activeView === 'fab-overview' ? 'min-h-screen' : 'h-screen'} relative w-full flex flex-col bg-[#F6F9FE] ${activeView === 'fab-overview' ? '' : 'overflow-hidden'} font-body`}
     >
-      <SiteHeader activeSection="fab" onOpenHome={onOpenHome ?? (() => {})} onOpenBasics={() => onOpenBasics?.()} onOpenFab={handleBackToFab} />
+      <SiteHeader activeSection="fab" floating={activeView === 'station-focus'} onOpenHome={onOpenHome ?? (() => {})} onOpenBasics={() => onOpenBasics?.()} onOpenFab={handleBackToFab} />
 
       {/* Main Content Area */}
       <main
@@ -199,7 +199,7 @@ export const AppShell: React.FC<AppShellProps> = ({
         {activeView === 'station-focus' && (
           <div className="relative flex-1 w-full h-full flex flex-col overflow-hidden pointer-events-none z-10">
             {/* Local process controls stay separate from the global site navigation. */}
-            <div className="absolute top-0 left-0 right-0 md:right-[400px] lg:right-[440px] p-2 sm:p-3 lg:p-4 z-40 pointer-events-none">
+            <div className="absolute top-16 left-0 right-0 md:right-[400px] lg:right-[440px] p-2 sm:p-3 lg:p-4 z-40 pointer-events-none">
               <div className="pointer-events-auto">
                 <ProcessMapDisclosure
                   activeStepId={selectedStepId}
@@ -211,7 +211,7 @@ export const AppShell: React.FC<AppShellProps> = ({
             </div>
 
             {/* Station Focus Side Panel (Desktop right sidebar / Mobile bottom sheet) */}
-            <div className="absolute inset-0 pointer-events-none flex items-center justify-end z-30">
+            <div className="absolute inset-x-0 bottom-0 top-16 pointer-events-none flex items-center justify-end z-30">
               <div className="pointer-events-auto w-full md:w-auto h-full flex items-center">
                 <StationPanel
                   step={selectedStep}
