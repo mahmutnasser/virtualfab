@@ -19,9 +19,9 @@ export const STATION_PLATES: Record<string, string> = {
   start: '/images/plates/start_foop.jpg',
   deposition: '/images/plates/deposition.jpg',
   coat: '/images/plates/coat_develop_track.jpg',
-  lithography: '/images/plates/lithography.jpg',
+  lithography: '/images/plates/asml_twinscan.jpg',
   develop: '/images/plates/coat_develop_track.jpg',
-  adi: '/images/plates/metrology.jpg',
+  adi: '/images/plates/asml_yieldstar.jpg',
   etch: '/images/plates/etch.jpg',
   aei: '/images/plates/metrology.jpg',
   strip: '/images/plates/strip.jpg',
@@ -534,10 +534,14 @@ export class FabWorldScene {
           poseName: 'PHOTOREAL_LITHOGRAPHY',
         };
       case 'adi':
+        return {
+          platePath: STATION_PLATES['adi'],
+          poseName: 'PHOTOREAL_METROLOGY',
+        };
       case 'aei':
       case 'metrology':
         return {
-          platePath: STATION_PLATES['adi'],
+          platePath: STATION_PLATES['aei'],
           poseName: 'PHOTOREAL_METROLOGY',
         };
       case 'etch':

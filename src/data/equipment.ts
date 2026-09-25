@@ -84,12 +84,12 @@ export const FAB_EQUIPMENT_STATIONS: Record<string, EquipmentStation> = {
   },
   'EQ-LITHO-01': {
     id: 'EQ-LITHO-01',
-    name: 'Lithography Scanner · DUV/EUV examples',
-    shortName: 'Lithography Scanner · DUV/EUV examples',
+    name: 'ASML TWINSCAN Lithography Scanner · DUV/EUV',
+    shortName: 'ASML TWINSCAN Scanner',
     category: 'lithography',
     stepIds: ['lithography'],
     description:
-      'Generalized optical step-and-scan projection tool that projects circuit stencil patterns from a reticle photomask onto the photosensitive resist layer. The Virtual Fab uses a generalized educational scanner without implying a single tool interchanges DUV and EUV.',
+      'High-precision ASML TWINSCAN projection scanner that projects nanoscale circuit stencil patterns from a reticle photomask onto the photosensitive resist layer.',
     cleanroomBay: 'Bay 3 — Photolithography Exposure',
     technologyExamples: ['DUV (193nm Immersion)', 'EUV (13.5nm High-NA)'],
     dimensions: { width: 5.2, height: 3.6, depth: 4.8 },
@@ -99,7 +99,7 @@ export const FAB_EQUIPMENT_STATIONS: Record<string, EquipmentStation> = {
     color: '#F4F6F8',
     accentColor: '#00A6A6',
     statusLightColor: '#10B981',
-    realEquipmentReference: 'Twinscan EUV / DUV High-NA Scanner Monolith Enclosure',
+    realEquipmentReference: 'ASML TWINSCAN NXE / EXE Scanner',
   },
   'EQ-ETCH-01': {
     id: 'EQ-ETCH-01',
@@ -146,7 +146,7 @@ export const FAB_EQUIPMENT_STATIONS: Record<string, EquipmentStation> = {
     category: 'inspection',
     stepIds: ['adi', 'aei'],
     description:
-      'Cross-cutting process-control station visited at multiple checkpoints: After Develop Inspection (ADI) to verify photoresist stencils before destructive etch, and After Etch Inspection (AEI) to verify transferred film patterns.',
+      'Cross-cutting process-control station visited at multiple checkpoints: After Develop Inspection (ADI) to verify photoresist stencils with ASML YieldStar optical metrology, and After Etch Inspection (AEI) to verify transferred film patterns.',
     cleanroomBay: 'Bay 6 — Metrology, Inspection & Process Control',
     technologyExamples: ['Critical Dimension SEM (CD-SEM)', 'Optical Overlay Metrology', 'Broadband Optical Defect Inspector'],
     dimensions: { width: 2.6, height: 2.4, depth: 2.2 },
@@ -156,7 +156,7 @@ export const FAB_EQUIPMENT_STATIONS: Record<string, EquipmentStation> = {
     color: '#F4F6F8',
     accentColor: '#00A6A6',
     statusLightColor: '#10B981',
-    realEquipmentReference: 'Applied Materials VeritySEM / KLA Archer Overlay & Defect Inspector',
+    realEquipmentReference: 'ASML YieldStar (YS) / Applied Materials VeritySEM',
   },
 };
 
@@ -216,11 +216,11 @@ export const CLEANROOM_WAYPOINT_ROUTE: FabRouteWaypoint[] = [
     name: '3. Lithography / Exposure',
     type: 'operation',
     stationId: 'EQ-LITHO-01',
-    stationName: 'Lithography Scanner · DUV/EUV examples',
+    stationName: 'ASML TWINSCAN Lithography Scanner',
     position: [4.8, 1.75, -3.0],
     cameraTarget: [4.2, 1.6, -2.5],
     cameraPosition: [5.8, 2.4, 4.6],
-    description: 'Expose circuit patterns into photoresist',
+    description: 'Expose circuit patterns into photoresist using ASML TWINSCAN scanner',
   },
   {
     id: 'develop',
@@ -242,7 +242,7 @@ export const CLEANROOM_WAYPOINT_ROUTE: FabRouteWaypoint[] = [
     position: [19.8, 1.2, -3.0],
     cameraTarget: [19.3, 1.3, -2.5],
     cameraPosition: [20.7, 2.1, 4.0],
-    description: 'After Develop Inspection: conceptually compare developed resist pattern before etch',
+    description: 'After Develop Inspection: ASML YieldStar optical scatterometry and overlay check before etch',
   },
   {
     id: 'etch',

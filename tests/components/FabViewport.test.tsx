@@ -134,11 +134,13 @@ describe('FabViewport & Three.js 3D Fab World (VF-010)', () => {
   });
 
   describe('Bounded Texture Cache & Shared Plate Reuse', () => {
-    it('shares physical plate textures for Track (coat + develop), Metrology (adi + aei), and Overview (overview + repeat)', async () => {
+    it('reuses physical plate textures for Track (coat + develop) and Overview (overview + repeat), and dedicated plates for ASML Lithography & YieldStar ADI', async () => {
       const { STATION_PLATES } = await import('@/components/fab/three/FabWorldScene');
 
       expect(STATION_PLATES['coat']).toBe(STATION_PLATES['develop']);
-      expect(STATION_PLATES['adi']).toBe(STATION_PLATES['aei']);
+      expect(STATION_PLATES['lithography']).toBe('/images/plates/asml_twinscan.jpg');
+      expect(STATION_PLATES['adi']).toBe('/images/plates/asml_yieldstar.jpg');
+      expect(STATION_PLATES['aei']).toBe('/images/plates/metrology.jpg');
       expect(STATION_PLATES['overview']).toBe(STATION_PLATES['repeat']);
       expect(STATION_PLATES['fab-overview']).toBe(STATION_PLATES['repeat']);
     });

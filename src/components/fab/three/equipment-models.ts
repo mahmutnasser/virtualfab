@@ -751,6 +751,10 @@ export function createEquipmentModel(station: EquipmentStation): THREE.Group {
     case 'EQ-STRIP-01':
       model = createStripTool();
       break;
+    case 'EQ-ADI-01':
+      model = createMetrologyTool();
+      model.name = 'EQ-ADI-01';
+      break;
     case 'EQ-METRO-01':
       model = createMetrologyTool();
       break;

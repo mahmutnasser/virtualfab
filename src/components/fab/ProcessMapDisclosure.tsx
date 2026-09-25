@@ -64,6 +64,57 @@ export const ProcessMapDisclosure: React.FC<ProcessMapDisclosureProps> = ({
         </div>
       </div>
 
+      {variant === 'station' && (
+        <div className="border-t border-[#DCE5F2]/80 bg-[#F8FAFC]/95 px-3 py-2 sm:px-4">
+          <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar scroll-smooth py-0.5">
+            {CANONICAL_PROCESS_STEPS.map((step) => {
+              const active = step.id === activeStepId;
+              const completed = completedStepIds.includes(step.id);
+              const label =
+                step.id === 'lithography'
+                  ? 'ASML Litho'
+                  : step.id === 'adi'
+                    ? 'YS Metrology (ADI)'
+                    : step.id === 'aei'
+                      ? 'AEI Check'
+                      : step.name;
+
+              return (
+                <button
+                  key={step.id}
+                  type="button"
+                  onClick={() => onSelectStep(step.id)}
+                  aria-current={active ? 'step' : undefined}
+                  title={`${step.name} (${step.stationName})`}
+                  className={`inline-flex shrink-0 items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-mono transition-all cursor-pointer ${
+                    active
+                      ? 'bg-[#166FE5] text-white font-bold shadow-sm shadow-[#166FE5]/30 ring-2 ring-[#166FE5]/30'
+                      : completed
+                        ? 'bg-white text-slate-700 hover:bg-[#EAF2FF] hover:text-[#145DB4] border border-slate-200'
+                        : 'bg-white/80 text-slate-500 hover:bg-slate-100 hover:text-slate-800 border border-slate-200/80'
+                  }`}
+                >
+                  <span
+                    className={`w-4 h-4 rounded-full flex items-center justify-center text-[10px] font-bold ${
+                      active
+                        ? 'bg-white text-[#166FE5]'
+                        : completed
+                          ? 'bg-emerald-100 text-emerald-800'
+                          : 'bg-slate-100 text-slate-600'
+                    }`}
+                  >
+                    {step.stepNumber ?? (step.isCheckpoint ? '✓' : step.order === 'start' ? 'S' : '↺')}
+                  </span>
+                  <span className="font-sans font-medium text-xs whitespace-nowrap">
+                    {label}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
       {open && (
         <div id={panelId} className="absolute left-0 right-0 top-full z-50 mt-2 max-h-[min(55vh,360px)] overflow-y-auto rounded-xl border border-[#DCE5F2] bg-white p-3 shadow-[0_20px_50px_rgba(21,65,112,0.18)] sm:p-4">
           <p className="mb-3 text-xs text-[#667F94]">Select a station to inspect the wafer at that point in the cycle.</p>

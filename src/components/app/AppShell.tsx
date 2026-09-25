@@ -88,6 +88,24 @@ export const AppShell: React.FC<AppShellProps> = ({
     announce?.('Returned to Fab Overview.');
   };
 
+  const handleNextStation = () => {
+    const currentIndex = CANONICAL_PROCESS_STEPS.findIndex((s) => s.id === selectedStepId);
+    if (currentIndex >= 0 && currentIndex < CANONICAL_PROCESS_STEPS.length - 1) {
+      const nextStep = CANONICAL_PROCESS_STEPS[currentIndex + 1];
+      handleSelectStep(nextStep.id);
+    } else if (selectedStepId === 'repeat') {
+      handleBackToFab();
+    }
+  };
+
+  const handlePreviousStation = () => {
+    const currentIndex = CANONICAL_PROCESS_STEPS.findIndex((s) => s.id === selectedStepId);
+    if (currentIndex > 0) {
+      const prevStep = CANONICAL_PROCESS_STEPS[currentIndex - 1];
+      handleSelectStep(prevStep.id);
+    }
+  };
+
   /**
    * Smooth visual bridge when exiting the bright Wafer Lab (~200ms surface fade).
    * Snaps immediately without delay when prefers-reduced-motion is active or in tests.
@@ -218,6 +236,8 @@ export const AppShell: React.FC<AppShellProps> = ({
                   onInspect={handleInspectWafer}
                   onBack={handleBackToFab}
                   onOpenBasics={onOpenBasics}
+                  onNextStation={handleNextStation}
+                  onPreviousStation={handlePreviousStation}
                 />
               </div>
             </div>
