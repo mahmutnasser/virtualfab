@@ -232,6 +232,7 @@ export const AppShell: React.FC<AppShellProps> = ({
             <div className="absolute inset-x-0 bottom-0 top-16 pointer-events-none flex items-center justify-end z-30">
               <div className="pointer-events-auto w-full md:w-auto h-full flex items-center">
                 <StationPanel
+                  key={selectedStepId}
                   step={selectedStep}
                   onInspect={handleInspectWafer}
                   onBack={handleBackToFab}

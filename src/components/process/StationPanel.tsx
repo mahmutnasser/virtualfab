@@ -25,6 +25,8 @@ export const StationPanel: React.FC<StationPanelProps> = ({
   className = '',
 }) => {
   const headingRef = useRef<HTMLHeadingElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const asideRef = useRef<HTMLElement>(null);
   const previousActiveElement = useRef<HTMLElement | null>(null);
   const onBackRef = useRef(onBack);
   onBackRef.current = onBack;
@@ -60,6 +62,17 @@ export const StationPanel: React.FC<StationPanelProps> = ({
     };
   }, []);
 
+  useEffect(() => {
+    // When moving between process steps, always ensure the panel starts at the very top
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTop = 0;
+    }
+    if (asideRef.current) {
+      asideRef.current.scrollTop = 0;
+    }
+    headingRef.current?.focus({ preventScroll: true });
+  }, [step.id]);
+
   const stepBadgeText = step.isCheckpoint || step.order === 'checkpoint'
     ? `CHECKPOINT · ${step.checkpointKind ?? 'METROLOGY'}`
     : typeof step.stepNumber === 'number'
@@ -68,6 +81,7 @@ export const StationPanel: React.FC<StationPanelProps> = ({
 
   return (
     <aside
+      ref={asideRef}
       role="dialog"
       data-testid="station-panel"
       aria-modal={isMobile ? 'true' : undefined}
@@ -141,7 +155,7 @@ export const StationPanel: React.FC<StationPanelProps> = ({
         <p id="station-panel-desc" className="mt-3 text-sm leading-6 text-[#476176]">{step.description}</p>
       </header>
 
-      <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-5 py-5 sm:px-6">
+      <div ref={scrollContainerRef} className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-5 py-5 sm:px-6">
         {telemetry && (
           <section aria-label="Wafer state">
             <h3 className="mb-3 text-xs font-bold uppercase tracking-[0.13em] text-[#145DB4]">What changes on the wafer</h3>
